@@ -7,7 +7,7 @@ export default function NavBar()  {
                <img src={logo} alt='' />
             </div>
             <div>
-                <ul className='flex gap-6 font-light'>
+                <ul className='flex gap-6 font-light font-brreg text-sm text-[#636066]'>
                     <li className='border-b-2 border-ev-700 px-1 text-ev-700 font-semibold cursor-pointer'>Home</li>
                     <li className='cursor-pointer'>About Us</li>
                     <li className=' flex gap-1 items-center cursor-pointer'>Services <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
