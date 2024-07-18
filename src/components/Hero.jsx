@@ -1,6 +1,5 @@
 import React from "react"; 
 import { Link } from "react-router-dom";
-import Autoplay from "embla-carousel-autoplay"
 import { useState , useEffect, useRef} from "react";
 import { Skeleton } from "@/components/ui/skeleton"
 import EmblaCarousel from '../components/EmblaCarousel'
@@ -196,12 +195,12 @@ export default function Hero() {
                 </div>
             </section>
             <section className="bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover w-full ">
-                <div className="flex justify-between text-white py-9 px-52">
+                <div className="flex justify-between text-white py-9 px-52 max-md:flex-col">
                     <span className="text-center">
                         <span className="text-4xl font-brbold"><Counter targetNumber={5000} duration={5000} /></span>
                         <p className=" font-brmedium text-s " >Lives Saved</p>
                     </span>
-
+ 
                     <span className="text-center">
                         <span className="text-4xl font-brbold"> <Counter targetNumber={12705} duration={12705} /></span>
                         <p className=" font-brmedium text-s " >Calls Recieved</p>

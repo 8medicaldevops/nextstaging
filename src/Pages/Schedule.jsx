@@ -67,7 +67,11 @@ export default function Schedule () {
   };
 
   const handleCheckboxChange = (e) => {
-    setSchedule({ ...schedule, eventEndsSameDay: e.target.checked });
+    if (e.target.checked) {
+      setSchedule({ ...schedule, eventEndsSameDay: true, endDate: schedule.startDate });
+    } else {
+      setSchedule({ ...schedule, eventEndsSameDay: false });
+    }
   };
 
   const handleTimeChange = (field, value) => {

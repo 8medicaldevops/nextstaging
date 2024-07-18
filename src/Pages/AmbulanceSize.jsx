@@ -19,19 +19,37 @@ import {
     return hours;
   };
   
-  const calculateTotalCost = (smallAmbulanceCount, largeAmbulanceCount, medicsCount, hours) => {
-    // Round up the hours to the next whole hour
-    hours = Math.ceil(hours);
+const calculateTotalCost = (smallAmbulanceCount, largeAmbulanceCount, medicsCount, hours) => {
+  const smallAmbulanceCostPerHour = 8500; // Cost per hour for small ambulance
+  const largeAmbulanceCostPerHour = 10850; // Cost per hour for large ambulance
+  const medicCostPerHour = MEDIC_COST_PER_12_HOURS; // Cost per hour for medics
+
+  const complete12HourSets = Math.floor(hours / 12);
+  const remainingHours = hours % 12;
+
+  const smallAmbulanceTotal =
+    smallAmbulanceCount * (complete12HourSets * SMALL_AMBULANCE_COST + remainingHours * smallAmbulanceCostPerHour);
+  const largeAmbulanceTotal =
+    largeAmbulanceCount * (complete12HourSets * LARGE_AMBULANCE_COST + remainingHours * largeAmbulanceCostPerHour);
+  const medicsTotal = medicsCount * medicCostPerHour ;
+
+  return smallAmbulanceTotal + largeAmbulanceTotal + medicsTotal;
+};
+
+const getNumberOfDays = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    // Calculate the difference in time
+    const timeDiff = end.getTime() - start.getTime();
+    // Calculate the difference in days, ensuring to add one to include the end date's day
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+    return daysDiff;
+  };
   
-    const smallAmbulanceCostPerHour = 8500; // Cost per hour for small ambulance
-    const largeAmbulanceCostPerHour = LARGE_AMBULANCE_COST / 12; // Cost per hour for large ambulance
-    const medicCostPerHour = Math.ceil((MEDIC_COST_PER_12_HOURS / 12) * hours); // Cost per hour for medics
-  
-    const smallAmbulanceTotal = smallAmbulanceCount * smallAmbulanceCostPerHour * hours;
-    const largeAmbulanceTotal = largeAmbulanceCount * largeAmbulanceCostPerHour * hours;
-    const medicsTotal = medicsCount * medicCostPerHour;
-  
-    return smallAmbulanceTotal + largeAmbulanceTotal + medicsTotal;
+  const calculateFinalTotalCost = (smallAmbulanceCount, largeAmbulanceCount, medicsCount, hours, startDate, endDate) => {
+    const days = getNumberOfDays(startDate, endDate);
+    const dailyTotalCost = calculateTotalCost(smallAmbulanceCount, largeAmbulanceCount, medicsCount, hours);
+    return dailyTotalCost * days;
   };
 
 
@@ -76,38 +94,59 @@ export default function() {
 
       useEffect(() => {
         const calculateFee = () => {
-          const [startHours, startMinutes] = storedScheduleData.startTime.split(":").map(Number);
-          const [endHours, endMinutes] = storedScheduleData.endTime.split(":").map(Number);
-    
-          let totalHours = endHours - startHours;
-          let totalMinutes = endMinutes - startMinutes;
-    
-          if (totalMinutes < 0) {
-            totalHours -= 1;
-            totalMinutes += 60;
+            const [startHours, startMinutes] = storedScheduleData.startTime.split(":").map(Number);
+            const [endHours, endMinutes] = storedScheduleData.endTime.split(":").map(Number);
+      
+            let totalHours = endHours - startHours;
+            let totalMinutes = endMinutes - startMinutes;
+      
+            if (totalMinutes < 0) {
+              totalHours -= 1;
+              totalMinutes += 60;
+            }
+      
+            totalHours = roundUpToNextHour(totalHours, totalMinutes);
+      
+            const totalCost = calculateFinalTotalCost(
+              smallAmbulanceCount,
+              largeAmbulanceCount,
+              medicsCount,
+              totalHours,
+              storedScheduleData.startDate,
+              storedScheduleData.endDate
+            );
+      
+            setEstimatedFee(totalCost);
+          };
+      
+          if (
+            storedScheduleData.startTime &&
+            storedScheduleData.endTime &&
+            storedScheduleData.startDate &&
+            storedScheduleData.endDate
+          ) {
+            calculateFee();
           }
-    
-          totalHours = roundUpToNextHour(totalHours, totalMinutes);
-    
-          const totalCost = calculateTotalCost(smallAmbulanceCount, largeAmbulanceCount, medicsCount, totalHours);
-          setEstimatedFee(totalCost);
-        };
-    
-        if (storedScheduleData.startTime && storedScheduleData.endTime) {
-          calculateFee();
-        }
-      }, [storedScheduleData.startTime, storedScheduleData.endTime, smallAmbulanceCount, largeAmbulanceCount, medicsCount]);
+        }, [
+          storedScheduleData.startTime,
+          storedScheduleData.endTime,
+          storedScheduleData.startDate,
+          storedScheduleData.endDate,
+          smallAmbulanceCount,
+          largeAmbulanceCount,
+          medicsCount
+        ]);
     
     const navigate = useNavigate();
     const handleSubmit = (e) => {
       e.preventDefault();
       sessionStorage.setItem('ambulanceData', JSON.stringify(ambulanceData));
-      console.log({
-        smallAmbulanceCount,
-        largeAmbulanceCount,
-        medicsCount,
-        estimatedFee
-      });
+    //   console.log({
+    //     smallAmbulanceCount,
+    //     largeAmbulanceCount,
+    //     medicsCount,
+    //     estimatedFee
+    //   });
       navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order")
   };
     // Increment and decrement functions for small ambulance
