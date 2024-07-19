@@ -175,7 +175,7 @@ setActiveElement(value)
   };
 
   return (
-    <div className=" flex flex-col gap-12 py-20 px-[180px] w-full max-md:py-12 max-md:px-4 ">
+    <div className=" flex flex-col gap-12 py-20 px-[180px] w-full max-md:py-12 max-md:px-4 md:max-[1413px]:px-0 md:max-[1413px]:w-[90%]">
       <div className="text-center ">
         <p className="font-brsemi text-[40px] text-[#181719]">FAQs</p>
         <p className="font-brreg text-lg text-[#636066]  text-center">We have answered some of the most reoccurring questions we get<br/> from users.</p>
@@ -210,7 +210,7 @@ setActiveElement(value)
           <AccordionComponent category={activeElement} />
         </aside>
       </div>
-      <div className="flex justify-center py-12 px-[120px]  gap-12 rounded-[100px] bg-[url(./assets/images/Banner.png)] bg-[#F8F4FE] max-md:flex-col max-md:rounded-xl max-md:items-center">
+      <div className="flex justify-center py-12 px-[120px]  gap-12 rounded-[100px] bg-[url(./assets/images/Banner.png)] bg-[#F8F4FE] max-md:flex-col max-md:rounded-xl max-md:items-center md:max-[1413px]:px-24">
                     <p className="font-brsemi text-[32px] text-[#181719] max-md:text-center max-md:text-2xl max-md:w-[268px] ">Do you have any more question for us?</p>
                     <button className="text-white py-3 px-5 gap-1 rounded-[49px] bg-ev-700 font-brbold text-lg  ">Contact Us</button>
         </div>

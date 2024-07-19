@@ -4,7 +4,7 @@ import { useState , useEffect, useRef} from "react";
 import { Skeleton } from "@/components/ui/skeleton"
 import EmblaCarousel from '../components/EmblaCarousel'
 import '../App.css'
-import ambuBig from '../assets/images/ambu-big.jpeg'
+import ambuBig from '../assets/images/ambu-big-transformed.png'
 import doctor from '../assets/images/Doctor.png';
 import NewsLetter from "./NewsLetter";
 import Footer from "./Footer";
@@ -80,10 +80,8 @@ export default function Hero() {
     const whiteSteth = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M15 9.5C15.0001 9.0397 14.8732 8.5883 14.6331 8.19555C14.393 7.8028 14.0492 7.48395 13.6395 7.27415C13.2298 7.06434 12.7701 6.97172 12.3111 7.0065C11.8521 7.04127 11.4117 7.20209 11.0382 7.47123C10.6648 7.74037 10.373 8.10739 10.1948 8.53182C10.0167 8.95625 9.95917 9.42163 10.0286 9.87666C10.0981 10.3317 10.2919 10.7587 10.5885 11.1107C10.8852 11.4626 11.2733 11.7258 11.71 11.8713C11.6252 12.2618 11.4094 12.6115 11.0983 12.8623C10.7872 13.1132 10.3996 13.25 10 13.25H8.5C8.03587 13.25 7.59075 13.0656 7.26256 12.7374C6.93437 12.4093 6.75 11.9641 6.75 11.5V9.18125C8.73312 8.82 10.25 7.05063 10.25 4.94813V2.5C10.25 2.33585 10.2177 2.1733 10.1548 2.02165C10.092 1.86999 9.99996 1.73219 9.88388 1.61612C9.76781 1.50004 9.63001 1.40797 9.47835 1.34515C9.3267 1.28233 9.16415 1.25 9 1.25H8C7.80109 1.25 7.61032 1.32902 7.46967 1.46967C7.32902 1.61032 7.25 1.80109 7.25 2C7.25 2.19891 7.32902 2.38968 7.46967 2.53033C7.61032 2.67098 7.80109 2.75 8 2.75H8.75V4.94813C8.75 6.47313 7.53312 7.73063 6.03687 7.75C5.67265 7.75489 5.31108 7.68736 4.97317 7.55135C4.63525 7.41534 4.32773 7.21355 4.06845 6.9577C3.80917 6.70185 3.6033 6.39704 3.4628 6.06097C3.3223 5.7249 3.24997 5.36426 3.25 5V2.75H4C4.19891 2.75 4.38968 2.67098 4.53033 2.53033C4.67098 2.38968 4.75 2.19891 4.75 2C4.75 1.80109 4.67098 1.61032 4.53033 1.46967C4.38968 1.32902 4.19891 1.25 4 1.25H3C2.66848 1.25 2.35054 1.3817 2.11612 1.61612C1.8817 1.85054 1.75 2.16848 1.75 2.5V5C1.75004 5.99706 2.10064 6.96237 2.74045 7.72707C3.38027 8.49177 4.26859 9.00717 5.25 9.18313V11.5C5.25099 12.3617 5.59372 13.1877 6.203 13.797C6.81228 14.4063 7.63835 14.749 8.5 14.75H10C10.7937 14.7491 11.5596 14.4581 12.1537 13.9318C12.7477 13.4055 13.129 12.6802 13.2256 11.8925C13.7385 11.7361 14.1876 11.4193 14.507 10.9886C14.8264 10.558 14.9992 10.0362 15 9.5ZM12.5 10.5C12.3022 10.5 12.1089 10.4414 11.9444 10.3315C11.78 10.2216 11.6518 10.0654 11.5761 9.88269C11.5004 9.69996 11.4806 9.49889 11.5192 9.30491C11.5578 9.11093 11.653 8.93275 11.7929 8.7929C11.9327 8.65304 12.1109 8.5578 12.3049 8.51922C12.4989 8.48063 12.7 8.50043 12.8827 8.57612C13.0654 8.65181 13.2216 8.77998 13.3315 8.94443C13.4414 9.10888 13.5 9.30222 13.5 9.5C13.5 9.76522 13.3946 10.0196 13.2071 10.2071C13.0196 10.3946 12.7652 10.5 12.5 10.5Z" fill="#FFFFFF"/>
     </svg>
-    ;
-
-    const [activeService, setActiveService] = useState('standby');
-
+  
+  const [activeService, setActiveService] = useState('standby');
     const handleButtonClick = (service) => {
         setActiveService(service);
     };
@@ -256,14 +254,14 @@ export default function Hero() {
                     </span>
                 </div>
             </section>
-            <section className="flex justify-between bg-[#F9F9FA] py-32 px-36 gap-32 max-md:flex-col max-md:py-12 max-md:px-4 max-md:gap-9">
+            <section className="flex justify-between bg-[#F9F9FA] py-32 px-36 gap-32 max-md:flex-col max-md:py-12 max-md:px-4 max-md:gap-9 md:max-[1413px]:px-14">
                 <main>
                     <p className="font-brbold text-4xl text-[#181719]">Unparalleled
                     Healthcare Services</p>
                     <p className="font-brreg text-lg text-[#636066]">You are assured of top-notch medical care when you book any of our services.</p>
                 </main>
                 <aside className=" ">
-                    <div className="flex flex-wrap justify-between gap-6 max-md:flex-nowrap max-md:flex-col max-md:w-full">
+                    <div className="flex flex-wrap justify-between gap-6 max-md:flex-nowrap max-md:flex-col max-md:w-full  ">
                     {serviceContents.map((service, index) => (
                 <ServiceCard 
                     key={index}
@@ -282,7 +280,7 @@ export default function Hero() {
                 <p className="font-brreg text-lg text-[#636066]">We provide healthcare services that suits your needs</p>
                 </div>
                 <div className="flex gap-12 justify-between max-md:flex-col ">
-                    <main className=" flex flex-wrap gap-6 w-[696px] max-md:flex-col max-md:w-full  ">
+                    <main className="flex flex-wrap gap-6 w-[696px]  max-md:flex-col">
                     {wceContents.map((cont, index ) => (
                         <WceCard 
                         key={index}
@@ -292,7 +290,7 @@ export default function Hero() {
                         />
                     ))}
                     </main>
-                    <aside  className="flex items-end max-md:items-center max-md:justify-end">
+                    <aside  className=" absolute right-0 flex pt-32 items-end max-md:items-center max-md:justify-end">
                         <ScrollImage  />
 
                     </aside>
@@ -514,7 +512,7 @@ export function SkeletonCard() {
     }, []);
 
     return (
-        <div ref={sectionRef} className="w-[200px]">
+        <div ref={sectionRef} className="w-[400px]">
             <div>
                 <img
                     src={ambuBig}
@@ -525,6 +523,7 @@ export function SkeletonCard() {
         </div>
     );
 }
+
 
 
 // Testimonial carousel 
