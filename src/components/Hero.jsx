@@ -290,7 +290,7 @@ export default function Hero() {
                         />
                     ))}
                     </main>
-                    <aside  className=" absolute right-0 flex pt-32 items-end max-md:items-center max-md:justify-end">
+                    <aside  className=" flex items-end max-md:items-center max-md:justify-end">
                         <ScrollImage  />
 
                     </aside>
@@ -512,7 +512,7 @@ export function SkeletonCard() {
     }, []);
 
     return (
-        <div ref={sectionRef} className="w-[400px]">
+        <div ref={sectionRef} className="w-[200px]">
             <div>
                 <img
                     src={ambuBig}
