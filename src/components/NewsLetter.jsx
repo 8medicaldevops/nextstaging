@@ -3,19 +3,19 @@
 export default function NewsLetter () {
     return(
         <div className=" py-16  flex flex-col gap-8 rounded-[32px] bg-white items-center">
-            <div className="px-24 items-center gap-1 text-center">
+            <div className="px-24 items-center gap-1 text-center max-md:px-4 max-md:flex max-md:flex-col ">
 
            
-            <p className=" font-brsemi text-4xl text-[#000000]">Subscribe to our Newsletter</p>
+            <p className=" font-brsemi text-4xl text-[#000000] max-md:w-[300px] max-md:text-[32px] max-md:text-center ">Subscribe to our Newsletter</p>
             <p className=" font-brmedium text-[#636066]">Get relevant health care updates, resources and offers straight in your inbox</p>
            
             </div>
-            <form className="w-[90%] flex gap-2 items-center">
+            <form className="w-[90%] flex gap-2 items-center max-md:flex-col ">
                 <input
                 placeholder="Enter your email address here"
                 className=" font-brmedium text-[#9C9A9E] border-[1px]-[#F4F2F5] py-3 px-5 bg-[#F9F9FA] rounded-mm w-[80%]"
                 />
-                <button className=" font-brbold text-lg text-white py-3 px-5 bg-ev-700 rounded-mm">Subscribe</button>
+                <button className=" font-brbold text-lg text-white py-3 px-5 bg-ev-700 rounded-mm max-md:w-[90%]">Subscribe</button>
             </form>
         </div>
     );

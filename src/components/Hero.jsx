@@ -16,6 +16,14 @@ import {
     CarouselPrevious,
   } from "@/components/ui/carousel"
 import Faqs from "./Faqs";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
+  
 
   
 
@@ -80,61 +88,71 @@ export default function Hero() {
         setActiveService(service);
     };
 
-    
+    const handleSelectChange = (value) => {
+        setActiveService(value);
+    };
+
+    const sectionRef = useRef(null);
+
+    const scrollToSection = () => {
+        sectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    };
 
     const getServiceContent = () => {
         switch (activeService) {
             case 'standby':
-                return <div className="px-12 py-12 rounded-3xl bg-white">
+                return <div className="px-12 py-12 rounded-3xl bg-white  ">
                     <p className="font-brmedium text-ev-700 mb-2">Ambulance Standby</p>
-                    <div className="flex justify-between gap-32">
+                    <div className="flex justify-between gap-32 max-md:flex-col max-md:gap-4 ">
                     
-                    <main className="flex flex-col gap-6">
+                    <main className="flex flex-col gap-6 w-[464px] max-md:w-full ">
                         
-                        <p className="font-brsemi text-4xl">Book an ambulance to <br/> standby at your event</p>
-                        <Link to='StandBy' >
-                        <button className="bg-ev-700 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
-                        </Link>
+                        <p className="font-brsemi text-4xl max-md:text-[28px] ">Book an ambulance to standby at your event</p>
+                        
                     </main>
-                    <aside className="flex flex-col gap-3 w-1/2">
-                        <p className="font-brreg text-lg text-[#636066]">Be it film sporting events, film shoots, <br/> conferences or weddings, let's provide round <br/> the clock medical support.</p>
+                    <aside className="flex flex-col gap-3 w-[464px] max-md:w-full">
+                        <p className="font-brreg text-lg text-[#636066]">Be it film sporting events, film shoots,  conferences or weddings, let's provide round the clock medical support.</p>
                       <Link to='/StandBy'>
-                        <p className="font-brmedium text-ev-700 ">Book Now</p>
+                        <p className="font-brmedium text-ev-700 ">Learn more</p>
                         </Link>
                     </aside>
+                    
                     </div>
+                    <Link to='StandBy' >
+                        <button className="bg-ev-700 mt-4 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
+                        </Link>
                 </div>;
             case 'transport':
                 return <div className="px-12 py-12 rounded-3xl bg-white">
                 <p className="font-brmedium text-ev-700 mb-2">Ambulance Transport</p>
-                <div className="flex justify-between gap-32">
+                <div className="flex justify-between gap-32 max-md:flex-col max-md:gap-4">
                 
-                <main className="flex flex-col gap-6">
+                <main className="flex flex-col gap-6  w-[464px] max-md:w-full">
                     
-                    <p className="font-brsemi text-4xl">Transport a patient <br/>in need with our ambulance</p>
-                    <button className="bg-ev-700 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
+                    <p className="font-brsemi text-4xl max-md:text-[28px] ">Transport a patient in need with our ambulance</p>
+                   
                 </main>
-                <aside className="flex flex-col gap-3 w-1/2">
+                <aside className="flex flex-col gap-3  w-[464px] max-md:w-full">
                     <p className="font-brreg text-lg text-[#636066]">Arrange ambulance transport for a loved one or patient whether by land or air</p>
                     <p className="font-brmedium text-ev-700 ">Learn More</p>
                 </aside>
                 </div>
+                <button className="bg-ev-700 font-brbold mt-4 text-lg text-white rounded py-3 px-5 w-36">Learn more</button>
             </div>;
             case 'urgentCare':
                 return <div className="px-12 py-12 rounded-3xl bg-white">
-                    <p className="font-brmedium text-ev-700 mb-2">Urgent Care</p>
-                    <div className="flex justify-between gap-32">
+                    <p className="font-brmedium text-ev-700 mb-2 ">Urgent Care</p>
+                    <div className="flex justify-between gap-32 max-md:flex-col max-md:gap-4">
                     
-                    <main className="flex flex-col gap-6">
-                        
-                        <p className="font-brsemi text-4xl">Curate a medical <br/>care package to suit <br/> your health needs</p>
-                        <button className="bg-ev-700 font-brbold text-lg text-white rounded py-3 px-5 w-40">Get Started</button>
+                    <main className="flex flex-col gap-6 w-[464px] max-md:w-full">
+                        <p className="font-brsemi text-4xl max-md:text-[28px]">Curate a medical care package to suit your health needs</p>
                     </main>
-                    <aside className="flex flex-col gap-3 w-1/2">
+                    <aside className="flex flex-col gap-3 w-[464px] max-md:w-full">
                         <p className="font-brreg text-lg text-[#636066]">Need periodic ambulance transport or standby for your individual, family or business use? Curate a package to suit your needs.</p>
                         <p className="font-brmedium text-ev-700 ">Learn More</p>
                     </aside>
                     </div>
+                    <button className="bg-ev-700 font-brbold text-lg mt-4 text-white rounded py-3 px-5 w-40">Get Started</button>
                 </div>;
             default:
                 return <p>Select a service to see the details.</p>;
@@ -147,10 +165,10 @@ export default function Hero() {
     return(
         <div>
             <section className="flex flex-col justify-center items-center gap-9 bg-[#30056B] py-20">
-                <p className="font-brbold text-6xl text-white w-2/3 text-center">Get urgent ambulance <br/> and medical care services</p>
-                <p className=" font-brreg text-white w-1/2 text-center text-2xl rounded">We offer responsive and dependable ambulance and medical care services according to your needs.</p>
-                <div className="flex gap-4 items-center ">
-                    <button className="bg-[#F9091D] px-5 py-3 text-xl text-white font-brsemi rounded-mm cursor-pointer flex items-center gap-1">Report an Emergency 
+                <p className="font-brbold text-6xl text-white w-[694px] text-center max-md:text-5xl max-md:w-[396px] ">Get urgent ambulance and medical care services</p>
+                <p className=" font-brreg text-white w-[694px] text-center text-2xl rounded max-md:text-lg max-md:w-[396px] ">We offer responsive and dependable ambulance and medical care services according to your needs.</p>
+                <div className="flex gap-4 items-center max-md:flex-col max-md:w-[396px] ">
+                    <button className="bg-[#F9091D] px-5 py-3 text-xl text-white font-brsemi rounded-mm cursor-pointer flex items-center gap-1 max-md:w-full max-md:justify-center ">Report an Emergency 
                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0_1558_2496)">
                     <path d="M8.4175 5.99312L8.40715 6.05476C9.56297 6.24892 10.4375 7.29955 10.4375 8.5C10.4375 8.64918 10.4968 8.79226 10.6023 8.89775C10.7077 9.00324 10.8508 9.0625 11 9.0625C11.1492 9.0625 11.2923 9.00324 11.3977 8.89775C11.5032 8.79226 11.5625 8.64918 11.5625 8.5C11.5625 6.75778 10.2869 5.22932 8.59311 4.94528C8.52002 4.93239 8.44511 4.9341 8.37268 4.95029C8.30017 4.96651 8.23158 4.99693 8.17089 5.0398C8.1102 5.08267 8.0586 5.13714 8.01908 5.20007C7.97956 5.263 7.9529 5.33313 7.94064 5.40642C7.92838 5.47971 7.93076 5.5547 7.94764 5.62706C7.96453 5.69943 7.99559 5.76773 8.03902 5.82802C8.08245 5.88831 8.1374 5.9394 8.20069 5.97834C8.26398 6.01727 8.33436 6.04328 8.40776 6.05486L8.4175 5.99312ZM8.4175 5.99312C9.60437 6.1925 10.5 7.27 10.5 8.5C10.5 8.63261 10.5527 8.75979 10.6464 8.85355C10.7402 8.94732 10.8674 9 11 9C11.1326 9 11.2598 8.94732 11.3536 8.85355C11.4473 8.75979 11.5 8.63261 11.5 8.5C11.5 6.7875 10.2456 5.28562 8.5825 5.00688C8.51746 4.99537 8.45078 4.99687 8.38632 5.01128C8.32186 5.0257 8.2609 5.05274 8.20695 5.09085C8.153 5.12896 8.10714 5.17738 8.07201 5.23331C8.03688 5.28925 8.01318 5.35159 8.00228 5.41673C7.99138 5.48188 7.9935 5.54854 8.00851 5.61286C8.02352 5.67718 8.05113 5.73789 8.08973 5.79149C8.12834 5.84508 8.17718 5.89049 8.23344 5.9251C8.2897 5.95971 8.35226 5.98283 8.4175 5.99312ZM12.1462 2.64625C12.0762 2.71618 12.0286 2.8053 12.0092 2.90235C11.9899 2.99939 11.9998 3.09998 12.0377 3.1914C12.0756 3.28281 12.1397 3.36092 12.222 3.41586C12.3043 3.4708 12.4011 3.50008 12.5 3.5C12.5657 3.50005 12.6307 3.48716 12.6914 3.46207C12.7521 3.43697 12.8073 3.40017 12.8538 3.35375L13.3538 2.85375C13.4476 2.75993 13.5003 2.63268 13.5003 2.5C13.5003 2.36732 13.4476 2.24007 13.3538 2.14625C13.2599 2.05243 13.1327 1.99972 13 1.99972C12.8673 1.99972 12.7401 2.05243 12.6462 2.14625L12.1462 2.64625ZM12.8096 3.30953L12.8096 3.30956C12.7689 3.35016 12.7206 3.38236 12.6675 3.40431C12.6144 3.42627 12.5575 3.43755 12.5 3.4375H12.5C12.4134 3.43757 12.3287 3.41195 12.2567 3.36388C12.1847 3.31581 12.1286 3.24746 12.0954 3.16747C12.0623 3.08749 12.0536 2.99946 12.0705 2.91455C12.0874 2.82964 12.1292 2.75166 12.1904 2.69047L12.1904 2.69044L12.6904 2.19044C12.7725 2.10834 12.8839 2.06222 13 2.06222C13.1161 2.06222 13.2275 2.10834 13.3096 2.19044C13.3917 2.27254 13.4378 2.38389 13.4378 2.5C13.4378 2.61611 13.3917 2.72746 13.3096 2.80956L12.8096 3.30953ZM2.5 10.5625H2.5625V10.5V8.5C2.56248 7.78244 2.70448 7.07197 2.98033 6.40955C3.25617 5.74713 3.6604 5.14586 4.16972 4.64039C4.67903 4.13493 5.28335 3.73527 5.94784 3.46446C6.61234 3.19365 7.32386 3.05703 8.0414 3.0625L8.04141 3.0625C11.0158 3.08474 13.4375 5.55178 13.4375 8.5625V10.5V10.5625H13.5C13.7486 10.5625 13.9871 10.6613 14.1629 10.8371C14.3387 11.0129 14.4375 11.2514 14.4375 11.5V13C14.4375 13.2486 14.3387 13.4871 14.1629 13.6629C13.9871 13.8387 13.7486 13.9375 13.5 13.9375H2.5C2.25136 13.9375 2.0129 13.8387 1.83709 13.6629C1.66127 13.4871 1.5625 13.2486 1.5625 13V11.5C1.5625 11.2514 1.66127 11.0129 1.83709 10.8371C2.0129 10.6613 2.25136 10.5625 2.5 10.5625ZM13.5 13.0625H13.5625V13V11.5V11.4375H13.5H2.5H2.4375V11.5V13V13.0625H2.5H13.5ZM7.5625 1.5V1C7.5625 0.883968 7.60859 0.772688 7.69064 0.690641C7.77269 0.608594 7.88397 0.5625 8 0.5625C8.11603 0.5625 8.22731 0.608594 8.30936 0.690641C8.39141 0.772688 8.4375 0.883968 8.4375 1V1.5C8.4375 1.61603 8.39141 1.72731 8.30936 1.80936C8.22731 1.89141 8.11603 1.9375 8 1.9375C7.88397 1.9375 7.77269 1.89141 7.69064 1.80936C7.60859 1.72731 7.5625 1.61603 7.5625 1.5ZM3.33247 3.40445C3.27936 3.38245 3.2311 3.35021 3.19044 3.30956L2.69044 2.80956C2.60834 2.72746 2.56222 2.61611 2.56222 2.5C2.56222 2.38389 2.60834 2.27254 2.69044 2.19044C2.77254 2.10834 2.88389 2.06222 3 2.06222C3.11611 2.06222 3.22746 2.10834 3.30956 2.19044L3.80956 2.69044C3.85021 2.7311 3.88245 2.77936 3.90445 2.83247C3.92645 2.88558 3.93778 2.94251 3.93778 3C3.93778 3.05749 3.92645 3.11442 3.90445 3.16753C3.88245 3.22064 3.85021 3.2689 3.80956 3.30956C3.7689 3.35021 3.72064 3.38245 3.66753 3.40445C3.61442 3.42645 3.55749 3.43778 3.5 3.43778C3.44251 3.43778 3.38558 3.42645 3.33247 3.40445Z" fill="white" stroke="white" strokeWidth="0.125"/>
@@ -163,7 +181,7 @@ export default function Hero() {
                     </svg>
 
                     </button>
-                    <button className="bg-ev-700 px-5 py-3 text-xl text-white font-brsemi rounded-mm cursor-pointer flex items-center gap-1">Book a Service
+                    <button className="bg-ev-700 px-5 py-3 text-xl text-white font-brsemi rounded-mm cursor-pointer flex items-center gap-1 max-md:w-full max-md:justify-center " onClick={scrollToSection}>Book a Service
                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9.62 4.45331L13.6667 8.49998L9.62 12.5466" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                     <path d="M2.33337 8.5H13.5534" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
@@ -176,7 +194,8 @@ export default function Hero() {
             <EmblaCarousel slides={carouselImgs} options={{loop:true,stopOnMouseEnter:true,stopOnInteraction:false}} className="flex" />
             </section>
 
-            <section className="bg-[#F9F9FA] py-12 px-32 flex flex-col gap-9 ">
+            <section ref={sectionRef} className="bg-[#F9F9FA] py-12 px-32 flex flex-col gap-9 max-md:px-4 max-md:py-9">
+                <div className=" max-md:hidden">
                 <p className="font-brsemi text-3xl pb-6">Choose a Service</p>
                 <div className="flex gap-3">
                     <button className={`${buttonClass} ${activeService === 'standby' ? activeClass : ''}`} onClick={() => handleButtonClick('standby')}>
@@ -189,13 +208,27 @@ export default function Hero() {
                     {activeService === 'urgentCare' ?  whiteSteth : blackSteth}
                         Urgent Care</button>
                 </div>
+                </div>
+                <div className="md:hidden">
+                <Select onValueChange={handleSelectChange}>
+                <SelectTrigger className="w-[240px] rounded-mm border-[1px] border-[#E4E3E5] font-brmedium text-[#181719] ">
+                    <SelectValue placeholder={<div className="flex gap-2 items-center">{ambBlack}Ambulance standby</div> }/>
+                </SelectTrigger>
+                <SelectContent className="bg-white rounded-mm">
+                    <SelectItem value="standby"><div className="flex gap-2 items-center">{ambBlack}Ambulance standby</div></SelectItem>
+                    <SelectItem value="transport"><div className="flex gap-2 items-center">{ambBlack}Ambulance Transport</div></SelectItem>
+                    <SelectItem value="urgentCare"><div className="flex gap-2 items-center">{blackSteth}Urgent Care</div></SelectItem>
+                </SelectContent>
+                </Select>
+
+                </div>
 
                 <div>
                 {getServiceContent()}
                 </div>
             </section>
             <section className="bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover w-full ">
-                <div className="flex justify-between text-white py-9 px-52 max-md:flex-col">
+                <div className="flex justify-between text-white py-9 px-52 max-md:flex-col max-md:gap-12 max-md:py-12 max-md:px-4 ">
                     <span className="text-center">
                         <span className="text-4xl font-brbold"><Counter targetNumber={5000} duration={5000} /></span>
                         <p className=" font-brmedium text-s " >Lives Saved</p>
@@ -223,14 +256,14 @@ export default function Hero() {
                     </span>
                 </div>
             </section>
-            <section className="flex justify-between bg-[#F9F9FA] py-32 px-36 gap-32">
+            <section className="flex justify-between bg-[#F9F9FA] py-32 px-36 gap-32 max-md:flex-col max-md:py-12 max-md:px-4 max-md:gap-9">
                 <main>
                     <p className="font-brbold text-4xl text-[#181719]">Unparalleled
                     Healthcare Services</p>
                     <p className="font-brreg text-lg text-[#636066]">You are assured of top-notch medical care when you book any of our services.</p>
                 </main>
                 <aside className=" ">
-                    <div className="flex flex-wrap justify-between gap-6">
+                    <div className="flex flex-wrap justify-between gap-6 max-md:flex-nowrap max-md:flex-col max-md:w-full">
                     {serviceContents.map((service, index) => (
                 <ServiceCard 
                     key={index}
@@ -243,13 +276,13 @@ export default function Hero() {
                     </div>
                 </aside>
             </section>
-            <section className="pt-20 px-[148px] pb-[148px] flex flex-col gap-12">
+            <section className="pt-20 px-[148px] pb-[148px] flex flex-col gap-12 max-md:py-12 max-md:px-4 ">
                 <div className="flex flex-col gap-6">
                 <p className="font-brsemi text-5xl text-[#181719]">Why Choose EightMedical?</p>
                 <p className="font-brreg text-lg text-[#636066]">We provide healthcare services that suits your needs</p>
                 </div>
-                <div className="flex gap-12 justify-between">
-                    <main className=" flex flex-wrap gap-6 w-[696px] ">
+                <div className="flex gap-12 justify-between max-md:flex-col ">
+                    <main className=" flex flex-wrap gap-6 w-[696px] max-md:flex-col max-md:w-full  ">
                     {wceContents.map((cont, index ) => (
                         <WceCard 
                         key={index}
@@ -259,18 +292,18 @@ export default function Hero() {
                         />
                     ))}
                     </main>
-                    <aside  className="flex items-end">
+                    <aside  className="flex items-end max-md:items-center max-md:justify-center">
                         <ScrollImage  />
 
                     </aside>
                 </div>
             </section>
             <section className="  flex ">
-                <main className="">
+                <main className=" max-md:hidden">
                     <img src={doctor} alt="" className="h-full" />
                 </main>
-                <aside className="w-[70%] pt-[148px] pr-[180px] pb-[164px] pl-[120px] bg-[#2E0469] flex flex-col gap-8 bg-[url('./assets/images/MembershipSection.png')]">
-                    <p className="font-brsemi text-5xl text-white">Membership</p>
+                <aside className="w-[70%] pt-[148px] pr-[180px] pb-[164px] pl-[120px] bg-[#2E0469] flex flex-col gap-8 bg-[url('./assets/images/MembershipSection.png')] max-md:w-[100%] max-md:py-32 max-md:px-9 max-md:items-center ">
+                    <p className="font-brsemi text-5xl text-white max-md:text-[32px]">Membership</p>
                     <p className="font-brmedium text-[#F8F4FE] w-3/4">Enroll your family, organization, and customers in our plan for access to urgent and emergency care services.</p>
                     <span>
                     <button className="bg-ev-700 flex gap-1  text-white items-center  py-3 px-5 text-lg font-brbold rounded-mm"><p>Become a Member</p> <svg className="flex-shrink-0" width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -284,8 +317,8 @@ export default function Hero() {
                 
             </section>
             <section className="flex flex-col items-center w-full h-[543px] justify-center">
-                <p className="font-brsemi text-[40px] text-[#181719]">What People are Saying</p>
-                <p className="font-brreg text-lg text-[#636066]">Here's what customers have to say about our 24/7 support</p>
+                <p className="font-brsemi text-[40px] text-[#181719] max-md:text-center">What People are Saying</p>
+                <p className="font-brreg text-lg text-[#636066] max-md:text-center">Here's what customers have to say about our 24/7 support</p>
                 <div className=" flex py-8 w-[100%]">
                     <TestimonialCarousel />
                     
@@ -295,7 +328,7 @@ export default function Hero() {
                 <Faqs/>
             </section>
            
-            <section className="pt-[120px] px-[240px] pb-[148px] bg-[#6D09F9] bg-[url('./assets/images/Background.png')] flex justify-center">
+            <section className="pt-[120px] px-[240px] pb-[148px] bg-[#6D09F9] bg-[url('./assets/images/Background.png')] flex justify-center max-md:py-12 max-md:px-4 ">
                 <NewsLetter />
             </section>
             <section>
@@ -442,7 +475,7 @@ export function SkeletonCard() {
 
   export function WceCard({svg, title , desc}) {
     return (
-      <div className="flex flex-col  gap-4 px-6 py-6 rounded-xl bg-[#F9F9FA] w-[336px] border-[#E7D7FD] border border-solid">
+      <div className="flex flex-col  gap-4 px-6 py-6 rounded-xl bg-[#F9F9FA] w-[336px] border-[#E7D7FD] border border-solid max-md:w-full">
        <div>{svg}</div>
        <p className="font-brbold text-xl text-[#181719] ">{title}</p>
        <p className="font-brmedium text-[#636066]">{desc}</p>

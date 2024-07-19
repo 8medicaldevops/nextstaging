@@ -5,6 +5,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 
 const faqs = {
   Individuals: {
@@ -162,14 +170,34 @@ export default function Faqs() {
     setActiveElement(element);
   };
 
+  const handleSelect = (value) => {
+setActiveElement(value)
+  };
+
   return (
-    <div className=" flex flex-col gap-12 py-20 px-[180px] w-full">
+    <div className=" flex flex-col gap-12 py-20 px-[180px] w-full max-md:py-12 max-md:px-4 ">
       <div className="text-center ">
         <p className="font-brsemi text-[40px] text-[#181719]">FAQs</p>
         <p className="font-brreg text-lg text-[#636066]  text-center">We have answered some of the most reoccurring questions we get<br/> from users.</p>
       </div>
-      <div className="flex gap-12 px-6  ">
-        <main className="flex flex-col gap-1 py-6 w-1/3 cursor-pointer ">
+      <div className="flex gap-12 px-6 max-md:flex-col ">
+            <div className="md:hidden">
+              <Select onValueChange={handleSelect} >
+                <SelectTrigger className="w-[240px] rounded-mm border-[1px] border-[#E4E3E5] font-brmedium text-[#181719] ">
+                    <SelectValue placeholder="Individuals" />
+                </SelectTrigger>
+                <SelectContent className="bg-white rounded-mm">
+                    <SelectItem value="Individuals">Individuals</SelectItem>
+                    <SelectItem value="EventPlanners">Event Planners</SelectItem>
+                    <SelectItem value="Hospitals">Hospitals</SelectItem>
+                    <SelectItem value="Estates">Estates</SelectItem>
+                    <SelectItem value="Schools">Schools</SelectItem>
+                    <SelectItem value="ProductionCompanies">Production Companies</SelectItem>
+                    <SelectItem value="HMOs">HMOs</SelectItem>
+                </SelectContent>
+                </Select>
+                </div>
+        <main className="flex flex-col gap-1 py-6 w-1/3 cursor-pointer max-md:hidden ">
           <p onClick={() => toggleElement("Individuals")} className={activeElement === "Individuals" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Individuals</p>
           <p onClick={() => toggleElement("EventPlanners")} className={activeElement === "EventPlanners" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Event Planners</p>
           <p onClick={() => toggleElement("Hospitals")} className={activeElement === "Hospitals" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Hospitals</p>
@@ -182,9 +210,9 @@ export default function Faqs() {
           <AccordionComponent category={activeElement} />
         </aside>
       </div>
-      <div className="flex justify-center py-12 px-[120px]  gap-12 rounded-[100px] bg-[url(./assets/images/Banner.png)] bg-[#F8F4FE]">
-                    <p className="font-brsemi text-[32px] text-[#181719]">Do you have any more question for us?</p>
-                    <button className="text-white py-3 px-5 gap-1 rounded-[49px] bg-ev-700 font-brbold text-lg">Contact Us</button>
+      <div className="flex justify-center py-12 px-[120px]  gap-12 rounded-[100px] bg-[url(./assets/images/Banner.png)] bg-[#F8F4FE] max-md:flex-col max-md:rounded-xl max-md:items-center">
+                    <p className="font-brsemi text-[32px] text-[#181719] max-md:text-center max-md:text-2xl max-md:w-[268px] ">Do you have any more question for us?</p>
+                    <button className="text-white py-3 px-5 gap-1 rounded-[49px] bg-ev-700 font-brbold text-lg  ">Contact Us</button>
         </div>
     </div>
   );

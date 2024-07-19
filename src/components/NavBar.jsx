@@ -59,7 +59,9 @@ export default function NavBar() {
             >
             </button>
             <ul className='flex flex-col gap-6 font-light justify-center items-center font-brreg text-lg text-[#636066] mt-16'>
+                <Link to='/'>
               <li className='border-b-2 border-ev-700 px-1 text-ev-700 font-semibold cursor-pointer'>Home</li>
+                </Link>
               <li className='cursor-pointer'>About Us</li>
               <li className='flex gap-1 items-center cursor-pointer'>
                 Services
