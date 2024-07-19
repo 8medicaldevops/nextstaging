@@ -16,7 +16,7 @@ export default function () {
         <div>
             <NavBar />
             <div className="flex flex-col justify-center items-center bg-[#F9F9FA] h-[100vh]">
-            <div className="pt-9 max-w-[640px] h-[504px] rounded-2xl bg-white p-9">
+            <div className="pt-9 max-w-[640px] max-md:w-full h-[504px] rounded-2xl bg-white p-9">
                 <form className="flex flex-col gap-8" onSubmit={submitSelection}>
                     <div className="flex items-center gap-3">
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">

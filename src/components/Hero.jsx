@@ -292,7 +292,7 @@ export default function Hero() {
                         />
                     ))}
                     </main>
-                    <aside  className="flex items-end max-md:items-center max-md:justify-center">
+                    <aside  className="flex items-end max-md:items-center max-md:justify-end">
                         <ScrollImage  />
 
                     </aside>
@@ -304,7 +304,7 @@ export default function Hero() {
                 </main>
                 <aside className="w-[70%] pt-[148px] pr-[180px] pb-[164px] pl-[120px] bg-[#2E0469] flex flex-col gap-8 bg-[url('./assets/images/MembershipSection.png')] max-md:w-[100%] max-md:py-32 max-md:px-9 max-md:items-center ">
                     <p className="font-brsemi text-5xl text-white max-md:text-[32px]">Membership</p>
-                    <p className="font-brmedium text-[#F8F4FE] w-3/4">Enroll your family, organization, and customers in our plan for access to urgent and emergency care services.</p>
+                    <p className="font-brmedium text-[#F8F4FE] w-3/4 max-md:text-center">Enroll your family, organization, and customers in our plan for access to urgent and emergency care services.</p>
                     <span>
                     <button className="bg-ev-700 flex gap-1  text-white items-center  py-3 px-5 text-lg font-brbold rounded-mm"><p>Become a Member</p> <svg className="flex-shrink-0" width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9.62 4.32837L13.6667 8.37504L9.62 12.4217" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>

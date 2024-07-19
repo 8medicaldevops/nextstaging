@@ -164,7 +164,7 @@ export default function() {
         <div>
              <NavBar />
             <div className="flex flex-col justify-center items-center bg-[#F9F9FA] pt-9 pb-9">  
-                <div className="pt-9 max-w-[640px]   rounded-2xl flex flex-col gap-12 bg-white p-9">
+                <div className="pt-9 max-w-[640px] max-md:w-full   rounded-2xl flex flex-col gap-12 bg-white p-9">
                     <div className="flex items-center gap-3">
                         <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                         <rect width="52" height="52" rx="8.66667" fill="#F8F4FE"/>
