@@ -280,7 +280,7 @@ export default function Hero() {
                 <p className="font-brreg text-lg text-[#636066]">We provide healthcare services that suits your needs</p>
                 </div>
                 <div className="flex gap-12 justify-between max-md:flex-col ">
-                    <main className="flex flex-wrap gap-6 w-[696px]  max-md:flex-col">
+                    <main className="flex flex-wrap gap-6 w-[696px]  max-md:flex-col max-md:w-full">
                     {wceContents.map((cont, index ) => (
                         <WceCard 
                         key={index}
