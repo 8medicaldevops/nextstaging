@@ -1,6 +1,6 @@
  
 import { useState, useEffect } from "react";
-import { format, parse, differenceInHours  } from "date-fns"
+import { format, parse, differenceInMinutes  } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import NavBar from "../components/NavBar" ;
 import { Link , useNavigate } from "react-router-dom";
@@ -142,20 +142,24 @@ export default function Schedule () {
 };
 
 
-  const calculateHours = () => {
-    if (schedule.startTime && schedule.endTime) {
-      const startDateTime = parse(schedule.startTime, "HH:mm", new Date());
-      const endDateTime = parse(schedule.endTime, "HH:mm", new Date());
-      return differenceInHours(endDateTime, startDateTime);
-    }
-    return 0;
-  };
+const calculateHoursAndMinutes = () => {
+  if (schedule.startTime && schedule.endTime) {
+    const startDateTime = parse(schedule.startTime, "HH:mm", new Date());
+    const endDateTime = parse(schedule.endTime, "HH:mm", new Date());
+    const totalMinutes = differenceInMinutes(endDateTime, startDateTime);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return { hours, minutes };
+  }
+  return { hours: 0, minutes: 0 };
+};
 
-  const hours = calculateHours();
-  console.log({
-    ...schedule,
-    hours
-  }) 
+const { hours, minutes } = calculateHoursAndMinutes();
+console.log({
+  ...schedule,
+  hours,
+  minutes
+});
 
   
   const navigate = useNavigate();
@@ -310,7 +314,7 @@ export default function Schedule () {
                     <span>
                     <span className="flex justify-between max-md:gap-2">
                 <select 
-                    className="w-[278px] h-12 flex flex-col gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-md:w-full"
+                    className="w-[278px] h-12 flex items-center gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-md:w-full max-md:h-full"
                     value={schedule.startTime}
                     onChange={(e) => handleTimeChange('startTime', e.target.value)}
                 >
@@ -320,7 +324,7 @@ export default function Schedule () {
                     ))}
                 </select>
                 <select 
-                    className="w-[278px] h-12 flex flex-col  gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-md:w-full"
+                    className="w-[278px] h-12 flex items-center  gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-md:w-full max-md:h-full"
                     value={schedule.endTime}
                     onChange={(e) => handleTimeChange('endTime', e.target.value)}
                 >
@@ -335,7 +339,7 @@ export default function Schedule () {
             </span>
                     <span className="flex justify-between py-3 px-5 rounded-xl bg-[#F9F9FA]">
                       <p className="font-brsemi text-[#181719]">Event Duration:</p>
-                      <p className="font-brsemi text-xl text-[#6D09F9]">{hours}hrs</p>
+                      <p className="font-brsemi text-xl text-[#6D09F9]">{hours}:{minutes}hrs</p>
 
                     </span>
                     </div>
