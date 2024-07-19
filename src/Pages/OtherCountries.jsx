@@ -7,7 +7,7 @@ export default function OtherCountries () {
         <div>
             <NavBar />
             <div className="flex flex-col justify-center items-center bg-[#F9F9FA] h-[100vh]">
-            <div className="pt-9 max-w-[640px] max-md:w-full h-[504px]  rounded-2xl flex flex-col gap-12 bg-white p-9">
+            <div className="pt-9 max-w-[640px] max-md:w-full h-[504px]  rounded-2xl flex flex-col gap-12 bg-white p-9 max-md:p-4">
                     <div className="flex items-center gap-3">
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                     <rect width="52" height="52" rx="8.66667" fill="#F8F4FE"/>
@@ -30,7 +30,7 @@ export default function OtherCountries () {
                     </div>
                     
                     <div className="flex flex-col gap-6">
-                    <p className="text-xl font-brsemi text-[#181719]">For bookings outside Nigeria, contact us via</p>
+                    <p className="text-xl font-brsemi text-[#181719] max-md:w-[90%]">For bookings outside Nigeria, contact us via</p>
                     <div className="flex flex-col justify-between gap-6">
                        <div>
                         <span className="flex bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 w-[568px]">

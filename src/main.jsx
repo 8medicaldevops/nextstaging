@@ -15,12 +15,13 @@ import Schedule from './Pages/Schedule.jsx';
 import AmbulanceSize from './Pages/AmbulanceSize.jsx';
 import ConfirmOrder from './Pages/ConfirmOrder.jsx';
 import BookingSuccessful from './Pages/BookingSuccessful.jsx';
+import ErrorPage from './Pages/ErrorPage.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />, 
-    errorElement:<div>404 Not Found</div>, 
+    errorElement:<ErrorPage/>, 
   },
   {
     path: "/StandBy",

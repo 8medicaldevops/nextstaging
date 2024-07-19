@@ -16,7 +16,7 @@ export default function () {
         <div>
             <NavBar />
             <div className="flex flex-col justify-center items-center bg-[#F9F9FA] h-[100vh]">
-            <div className="pt-9 max-w-[640px] max-md:w-full h-[504px] rounded-2xl bg-white p-9">
+            <div className="pt-9 max-w-[640px] max-md:w-full h-[504px] rounded-2xl bg-white p-9 max-md:p-4">
                 <form className="flex flex-col gap-8" onSubmit={submitSelection}>
                     <div className="flex items-center gap-3">
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
@@ -39,19 +39,19 @@ export default function () {
                     </div>
                     <div className="flex flex-col gap-6">
                     <p className="text-xl font-brsemi text-[#181719]">Where is the location of the Standby event?</p>
-                    <div className="flex justify-between gap-6">
+                    <div className="flex justify-between gap-6 max-md:gap-3">
                         <div className={country === 'Nigeria' ? "flex flex-col items-center w-[278px] h-[210px] py-8 px-6 gap-5 border-[1px] border-ev-700 bg-white rounded-xl "  :"flex flex-col items-center w-[278px] h-[210px] py-8 px-6 gap-5 border-[1px] border-[#E4E3E5] bg-white rounded-xl "}
                         onClick={() => setCountry('Nigeria')}>
-                            <input type="radio" name="country" className=" bg-ev-700 text-ev-700 "  value="Nigeria" checked={country === 'Nigeria'} onChange={()=>setCountry('Nigeria')}  />
+                            <input type="radio" name="country" className=" bg-ev-700 appearance-none  "  value="Nigeria" checked={country === 'Nigeria'} onChange={()=>setCountry('Nigeria')}  />
                             <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fillRule="evenodd" clipRule="evenodd" d="M0 0H64V64H0V0Z" fill="white"/>
                             <path fillRule="evenodd" clipRule="evenodd" d="M42.6625 0H64V64H42.6625V0ZM0 0H21.3375V64H0V0Z" fill="#008753"/>
                             </svg>
                             <p className="font-brsemi text-lg text-[#636066]">Nigeria</p>
                         </div>
-                        <div className={country === 'Others' ? "flex flex-col items-center w-[278px] h-[210px] py-8 px-6 gap-5 border-[1px] border-ev-700 bg-white rounded-xl "  :"flex flex-col items-center w-[278px] h-[210px] py-8 px-6 gap-5 border-[1px] border-[#E4E3E5] bg-white rounded-xl "}
+                        <div className={country === 'Others' ? "flex flex-col items-center w-[278px] h-[210px] text-center py-8 px-6 gap-5 border-[1px] border-ev-700 bg-white rounded-xl "  :"flex flex-col items-center w-[278px] text-center h-[210px] py-8 px-6 gap-5 border-[1px] border-[#E4E3E5] bg-white rounded-xl "}
                          onClick={() => setCountry('Others')}>
-                        <input type="radio" name="country"  value="Others" checked={country === 'Others'} onChange={()=>setCountry('Others')}  />
+                        <input type="radio" className="appearance-none" name="country"  value="Others" checked={country === 'Others'} onChange={()=>setCountry('Others')}  />
                         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clipPath="url(#clip0_1592_11949)">
                         <path d="M32 64C49.6731 64 64 49.6731 64 32C64 14.3269 49.6731 0 32 0C14.3269 0 0 14.3269 0 32C0 49.6731 14.3269 64 32 64Z" fill="#6D09F9"/>
