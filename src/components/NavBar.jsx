@@ -90,25 +90,28 @@ export default function NavBar() {
             onClick={() => setIsMenuOpen(false)}
           ></div>
           <div
-            className={`fixed top-0 right-0 h-full rounded-l-mm w-3/4 bg-white transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? '' : 'translate-x-full'}`}
+            className={`fixed top-0 right-0 h-full rounded-l-mm w-2/3 bg-white transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? '' : 'translate-x-full'}`}
           > 
             <button
               className='absolute top-4 right-4 text-gray-700'
               onClick={() => setIsMenuOpen(false)}
             >
             </button>
-            <ul className='flex flex-col gap-6 font-light justify-center items-center font-brreg text-lg text-[#636066] mt-16'>
+            <ul className='flex flex-col gap-6 font-light justify-center items-end px-8 font-brreg text-lg text-[#636066] mt-16'>
                 <Link to='/'>
-              <li className='border-b-2 border-ev-700 px-1 text-ev-700 font-semibold cursor-pointer'>Home</li>
+              <li className={`cursor-pointer ${isActive('/') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Home</li>
                 </Link>
-              <li className='cursor-pointer'>About Us</li>
+                <Link to='AboutUs'>
+                
+              <li className={`cursor-pointer ${isActive('/AboutUs') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>About Us</li>
+              </Link>
               <li className='flex gap-1 items-center cursor-pointer'>
               <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="font-brreg text-lg text-[#636066]">Services</NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-white rounded-[15px] gap-4 flex flex-col   py-[40px] px-4">
-                  <NavigationMenuLink className=' w-[180px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
+                <NavigationMenuTrigger className="font-brreg text-lg p-0 text-[#636066]">Services</NavigationMenuTrigger>
+                <NavigationMenuContent className="bg-white rounded-[15px] gap-4 flex flex-col  fixed   text-right ease-in-out  top-[200px]  py-[40px] px-4">
+                  <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
                   Ambulance Standby
                   </NavigationMenuLink>
 
