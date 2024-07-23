@@ -16,6 +16,7 @@ import AmbulanceSize from './Pages/AmbulanceSize.jsx';
 import ConfirmOrder from './Pages/ConfirmOrder.jsx';
 import BookingSuccessful from './Pages/BookingSuccessful.jsx';
 import ErrorPage from './Pages/ErrorPage.jsx';
+import AboutUs from './Pages/AboutUs.jsx';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,13 @@ const router = createBrowserRouter([
     element: <HomePage />, 
     errorElement:<ErrorPage/>, 
   },
+  {
+    path: "/AboutUs",
+    element: <AboutUs />, 
+     
+  },
+
+  // Ambulance Booking paths
   {
     path: "/StandBy",
     element: <StandBy />, 
