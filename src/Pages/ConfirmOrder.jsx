@@ -4,9 +4,16 @@ import React from 'react';
 import { PaystackButton } from 'react-paystack';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useState, CSSProperties } from "react";
+//import ClipLoader from "react-spinners/ClipLoader";
+import { BeatLoader } from "react-spinners";
+
+
 
 
 export default function ConfirmOrder () {
+    let [loading, setLoading] = useState(false);
+    let [color, setColor] = useState("#6D09F9");
 
     const storedCallerData = JSON.parse(sessionStorage.getItem('callerData'));
     //console.log(storedCallerData);
@@ -56,7 +63,7 @@ export default function ConfirmOrder () {
 
     // Paystack functions for succes action
     const handlePaystackSuccessAction = async (reference) => {
-            
+        setLoading(!loading)
         const data = {
             callerDetails: {
               fullName: storedCallerData.fullName,
@@ -89,7 +96,9 @@ export default function ConfirmOrder () {
             navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
           } catch (error) {
             console.error("Error:", error);
-          }
+          } finally {
+            setLoading(false);
+        }
         };
   
       // you can call this function anything
@@ -117,10 +126,22 @@ export default function ConfirmOrder () {
       }
 
     return(
-        <div>
+        <div className={loading ? "overflow-y-hidden h-screen" : ""}>
              <NavBar />
-            <div className="flex flex-col justify-center items-center bg-[#F9F9FA] pt-9 pb-9">  
-                <div className="pt-9 max-w-[640px] max-lg:w-full  rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
+             {loading &&
+             <div className="absolute bg-black/15 h-dvh bg-blend-darken w-full">
+             <div className="flex justify-center items-center h-screen">
+               <BeatLoader
+               size={75}
+               color={color}
+               loading={loading}
+               />
+               </div>
+                </div> 
+                }
+            <div className=  "flex flex-col  justify-center items-center bg-[#F9F9FA] pt-9 pb-9" >  
+               
+                <div className="pt-9 max-w-[640px] max-lg:w-full   rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
                     <div className="flex items-center gap-3">
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                     <rect width="52" height="52" rx="8.66667" fill="#F8F4FE"/>
