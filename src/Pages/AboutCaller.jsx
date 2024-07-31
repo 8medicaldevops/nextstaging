@@ -403,7 +403,7 @@ export default function AboutCaller () {
                         <DialogDescription>
                         <div className="flex flex-col gap-6 ">
                    
-                    <div className="flex flex-col justify-between gap-6 max-lg:gap-6">
+                    <div className="flex flex-col justify-between gap-6 max-lg:gap-5">
                        <div>
                         <span className="flex items-center bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 w-full max-lg:p-1 ">
                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
