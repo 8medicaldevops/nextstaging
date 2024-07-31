@@ -176,7 +176,7 @@ const { hours, minutes } = calculateHoursAndMinutes();
             <NavBar />
             <div className="flex flex-col justify-center items-center bg-[#F9F9FA] pt-9 pb-9">
                
-            <div className="pt-9 max-w-[640px] max-md:w-full  rounded-2xl flex flex-col gap-12 bg-white p-9 max-md:p-4">
+            <div className="pt-9 max-w-[640px] max-lg:w-full  rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
                     <div className="flex items-center gap-3">
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                     <rect width="52" height="52" rx="8.66667" fill="#F8F4FE"/>
@@ -199,7 +199,7 @@ const { hours, minutes } = calculateHoursAndMinutes();
                     
                     </div>
                     <div>
-                      <div className="max-md:hidden">
+                      <div className="max-lg:hidden">
                     <svg width="568" height="51" viewBox="0 0 568 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="45.1998" y="0.4" width="23.2" height="23.2" rx="11.6" stroke="#6D09F9" strokeWidth="0.8"/>
                     <mask id="mask0_1489_4850"  maskUnits="userSpaceOnUse" x="48" y="4" width="17" height="16">
@@ -312,9 +312,9 @@ const { hours, minutes } = calculateHoursAndMinutes();
                         />
                     </span> */}
                     <span>
-                    <span className="flex justify-between max-md:gap-2">
+                    <span className="flex justify-between max-lg:gap-2">
                 <select 
-                    className="w-[278px] h-12 flex items-center gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-md:w-full max-md:h-full"
+                    className="w-[278px] h-12 flex items-center gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-lg:w-full max-lg:h-full"
                     value={schedule.startTime}
                     onChange={(e) => handleTimeChange('startTime', e.target.value)}
                 >
@@ -324,7 +324,7 @@ const { hours, minutes } = calculateHoursAndMinutes();
                     ))}
                 </select>
                 <select 
-                    className="w-[278px] h-12 flex items-center  gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-md:w-full max-md:h-full"
+                    className="w-[278px] h-12 flex items-center  gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-lg:w-full max-lg:h-full"
                     value={schedule.endTime}
                     onChange={(e) => handleTimeChange('endTime', e.target.value)}
                 >

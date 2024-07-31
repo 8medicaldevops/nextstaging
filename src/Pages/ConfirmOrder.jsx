@@ -120,7 +120,7 @@ export default function ConfirmOrder () {
         <div>
              <NavBar />
             <div className="flex flex-col justify-center items-center bg-[#F9F9FA] pt-9 pb-9">  
-                <div className="pt-9 max-w-[640px] max-md:w-full  rounded-2xl flex flex-col gap-12 bg-white p-9 max-md:p-4">
+                <div className="pt-9 max-w-[640px] max-lg:w-full  rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
                     <div className="flex items-center gap-3">
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                     <rect width="52" height="52" rx="8.66667" fill="#F8F4FE"/>
@@ -143,7 +143,7 @@ export default function ConfirmOrder () {
                     
                     </div>
                     <div>
-                        <div className="max-md:hidden">
+                        <div className="max-lg:hidden">
                     <svg width="568" height="51" viewBox="0 0 568 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="45.1998" y="0.4" width="23.2" height="23.2" rx="11.6" stroke="#6D09F9" strokeWidth="0.8"/>
                     <mask id="mask0_1489_5075" maskUnits="userSpaceOnUse" x="48" y="4" width="17" height="16">
@@ -323,20 +323,20 @@ export default function ConfirmOrder () {
                         </Link>
                     </span>
                     <div className="flex flex-wrap gap-3 justify-between">
-                    <span className="flex flex-col justify-between w-[278px]  py-3 px-5 rounded-xl bg-[#F9F9FA] max-md:w-full ">
+                    <span className="flex flex-col justify-between w-[278px]  py-3 px-5 rounded-xl bg-[#F9F9FA] max-lg:w-full ">
                         <p className=" font-brmedium text-[#181719] ">Full Name</p>
                         <p className="font-brreg text-[#6D6D6D]">{storedCallerData.fullName}</p>
                     </span>
-                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-md:w-full ">
+                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-lg:w-full ">
                         <p className=" font-brmedium text-[#181719]">Email Address</p>
                         <p className=" font-brreg text-[#6D6D6D]">{storedCallerData.emailAddress}</p>
                     </span>
-                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-md:w-full ">
+                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-lg:w-full ">
                         <p className=" font-brmedium text-[#181719]">Phone Number</p>
                         <p className=" font-brreg text-[#6D6D6D]">{storedCallerData.phoneNumber}</p>
                     </span>
                     {storedCallerData.companyName &&
-                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-md:w-full ">
+                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-lg:w-full ">
                         <p className=" font-brmedium text-[#181719]">Company Name</p>
                         <p className=" font-brreg text-[#6D6D6D]">{storedCallerData.companyName}</p>
                     </span>
@@ -357,24 +357,24 @@ export default function ConfirmOrder () {
                         </Link>
                     </span>
                     <div className="flex flex-wrap gap-3 justify-between">
-                    <span className="flex flex-col justify-between w-[278px]  py-3 px-5 rounded-xl bg-[#F9F9FA] max-md:w-full">
+                    <span className="flex flex-col justify-between w-[278px]  py-3 px-5 rounded-xl bg-[#F9F9FA] max-lg:w-full">
                         <p className=" font-brmedium text-[#181719] ">Venue Name</p>
                         <p className="font-brreg text-[#6D6D6D]">{storedEventData.venueName}</p>
                     </span>
-                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-md:w-full">
+                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-lg:w-full">
                         <p className=" font-brmedium text-[#181719]">Venue Address</p>
                         <p className=" font-brreg text-[#6D6D6D]">{storedEventData.venueAddress}</p>
                     </span>
-                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-md:w-full">
+                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-lg:w-full">
                         <p className=" font-brmedium text-[#181719]">Estimated No. Guest</p>
                         <p className=" font-brreg text-[#6D6D6D]">{storedEventData.guests}</p>
                     </span>
-                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-md:w-full">
+                    <span className="flex flex-col justify-between w-[278px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-lg:w-full">
                         <p className=" font-brmedium text-[#181719]">Event Type</p>
                         <p className=" font-brreg text-[#6D6D6D]">{storedEventData.eventType}</p>
                     </span>
                     { storedEventData.description &&
-                    <span className="flex flex-col  w-[568px] h-[143px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-md:w-full">
+                    <span className="flex flex-col  w-[568px] h-[143px] py-3 px-5 rounded-xl bg-[#F9F9FA] max-lg:w-full">
                         <p className=" font-brmedium text-[#181719]">Description</p>
                         <p className=" font-brreg text-[#6D6D6D]">{storedEventData.description}</p>
                     </span>
@@ -385,32 +385,32 @@ export default function ConfirmOrder () {
            <section className="bg-white max-w-[640px] flex flex-col gap-3 p-6 w-full">
             <p className="font-brsemi text-2xl text-[#181719]">Booking Policies</p>
             <div className="flex flex-wrap gap-3 justify-between">
-            <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-md:w-full ">
+            <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
            <p className="text-[#F96D09] font-brbold">Duration of Cover Policy</p>
         <span className="text-sm text-[#636066] font-brreg ">
            Duration of cover is between <p> 3, 6, 9 or 12 hours.</p> For extended periods,  hourly rate of <p> N10,000 </p> applies thereafter.
            </span>
             </div>
-            <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-md:w-full ">
+            <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
            <p className="text-[#F96D09] font-brbold">Confirmation & Cancellation Policy</p>
            <span className="text-sm text-[#636066] font-brreg">
            1. 75% payment confirms booking
            <br/> 2.Cancellations for any reason are allowed up to Two hours in before the scheduled time.
            </span>
             </div>
-            <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-md:w-full">
+            <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full">
            <p className="text-[#F96D09] font-brbold">Arrival & Departure Policy</p>
            <span className="text-sm text-[#636066] font-brreg">
            We arrive at least one (1) hour before your scheduled start time and depart one (1) hour after your scheduled end time.
            </span>
             </div>
-            <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-md:w-full ">
+            <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
            <p className="text-[#F96D09] font-brbold">No-Cash Policy</p>
            <span className="text-sm text-[#636066] font-brreg">
            We do not accept payment via cash. We accept payment via wire transfers or online banking.
            </span>
             </div>
-            <div className=" bg-[#FEF0E6] w-[592px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-md:w-full max-md:h-[220px] ">
+            <div className=" bg-[#FEF0E6] w-[592px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full max-lg:h-[220px] ">
            <p className="text-[#F96D09] font-brbold">Refund Policy</p>
            <span className="text-sm text-[#636066] font-brreg">
             1. Notification not received or received 1 days or less before the event or appointment, 100% of the quoted event or appointment fee applies.
@@ -422,7 +422,7 @@ export default function ConfirmOrder () {
            </section>
         
             </div>
-            <div className="flex justify-end py-6 px-20 max-md:px-4">
+            <div className="flex justify-end py-6 px-20 max-lg:px-4">
                 <span className="flex items-center gap-9">
                     <button className="font-brsemi text-[#181719] text-lg" onClick={toggleCancel}>Cancel</button>
                     <PaystackButton {...componentProps} />    

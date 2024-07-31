@@ -18,7 +18,7 @@ import { Link } from "react-router-dom"
             </svg>
 
             <p className="font-brbold  text-3xl">Booking Successful!</p>
-            <p className="text-lg text-[#48444F] font-brsemi text-center w-[560px] max-md:w-[90%]">You have successfully made a reservation for ambulance standby at your location. We will contact you for more information.</p>
+            <p className="text-lg text-[#48444F] font-brsemi text-center w-[560px] max-lg:w-[90%]">You have successfully made a reservation for ambulance standby at your location. We will contact you for more information.</p>
             <Link to='/' >
             <button className="w-[244px] py-3 px-9 bg-[#6D09F9] rounded-mm font-brsemi text-white ">Done</button>
             </Link>

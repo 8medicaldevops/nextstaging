@@ -17,6 +17,13 @@ import ConfirmOrder from './Pages/ConfirmOrder.jsx';
 import BookingSuccessful from './Pages/BookingSuccessful.jsx';
 import ErrorPage from './Pages/ErrorPage.jsx';
 import AboutUs from './Pages/AboutUs.jsx';
+import ServicesEr from './Pages/ServicesEr.jsx';
+import ServicesAgt from './Pages/ServicesAgt.jsx';
+import ServicesAmb from './Pages/ServicesAmb.jsx';
+import ServicesUg from './Pages/ServicesUg.jsx';
+import Impact from './Pages/Impact.jsx';
+import OtherBookings from './Pages/OtherBookings.jsx';
+
 
 const router = createBrowserRouter([
   {
@@ -29,6 +36,38 @@ const router = createBrowserRouter([
     element: <AboutUs />, 
      
   },
+  {
+    path: "/ServiceEr",
+    element: <ServicesEr />, 
+     
+  },
+  {
+    path: "/ServiceAgt",
+    element: <ServicesAgt />, 
+     
+  },
+  {
+    path: "/ServiceAmb",
+    element: <ServicesAmb />, 
+     
+  },
+  {
+    path: "/ServiceUg",
+    element: <ServicesUg />, 
+     
+  },
+  {
+    path: "/Impact",
+    element: <Impact />, 
+     
+  },
+  {
+    path: "/OtherBookings",
+    element: <OtherBookings />, 
+     
+  },
+ 
+ 
 
   // Ambulance Booking paths
   {

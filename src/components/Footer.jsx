@@ -32,8 +32,8 @@
             </svg>
 
             </div>
-            <p className="font-brmedium text-lg text-white max-md:text-center">Responsive Emergency Care Where and When Needed</p>
-            <span className="flex gap-6 max-md:hidden">
+            <p className="font-brmedium text-lg text-white max-lg:text-center">Responsive Emergency Care Where and When Needed</p>
+            <span className="flex gap-6 max-lg:hidden">
                 <div className="flex gap-1 items-center text-sm text-[#B3B3C3] font-brreg">
                 <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_1447_128728)">
@@ -64,13 +64,13 @@
                 <p>24 Hours Everyday</p>
                 </div>
             </span>
-            <span className="flex gap-9 font-brreg text-[#B3B3C3] max-md:flex-col max-md:items-center">
+            <span className="flex gap-9 font-brreg text-[#B3B3C3] max-lg:flex-col max-lg:items-center">
                 <p>Emergency Response</p>
                 <p>Ambulance Standby</p>
                 <p>Ambulance Transport</p>
                 <p>Urgent Care</p>
             </span>
-            <span className="flex gap-6 max-md:flex-col max-md:items-center md:hidden">
+            <span className="flex gap-6 max-lg:flex-col max-lg:items-center lg:hidden">
                 <div className="flex gap-1 items-center text-sm text-[#B3B3C3] font-brreg">
                 <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_1447_128728)">
@@ -106,7 +106,7 @@
 
             <div className="flex flex-col gap-8 w-[80%]">
                 <div className="border-[1px] border-[#3B3B65]"></div>
-                <div className=" gap-12 flex justify-between max-md:flex-col max-md:items-center ">
+                <div className=" gap-12 flex justify-between max-lg:flex-col max-lg:items-center ">
                 <p className="font-brmedium text-[#B3B3C3]">© 2024 8medical. All rights reserved.</p>
                 <span className="flex items-center gap-6">
                 <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 export default function() {
     return(
-        <div className="flex flex-col items-center p-24 gap-32 max-md:p-4 max-md:gap-9">
+        <div className="flex flex-col items-center p-24 gap-32 max-lg:p-4 max-lg:gap-9">
             <div className="">
             <svg width="186" height="40" viewBox="0 0 186 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_1811_16966)">
@@ -129,7 +129,7 @@ export default function() {
             </svg>
             </div>
             <p className="text-5xl text-center font-brbold">Page not found</p>
-            <p className="font-brsemi text-center text-lg text-[#636066] w-1/2 max-md:w-full">It seems like the page you are looking for cannot be found. We recommend returning to the homepage to proceed.</p>
+            <p className="font-brsemi text-center text-lg text-[#636066] w-1/2 max-lg:w-full">It seems like the page you are looking for cannot be found. We recommend returning to the homepage to proceed.</p>
             <Link to='/'>
             <button className="bg-ev-700 text-lg py-3 px-5 rounded-mm font-brsemi text-white flex gap-1 items-center">Return home 
 

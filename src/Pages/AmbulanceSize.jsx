@@ -164,7 +164,7 @@ export default function() {
         <div>
              <NavBar />
             <div className="flex flex-col justify-center items-center bg-[#F9F9FA] pt-9 pb-9">  
-                <div className="pt-9 max-w-[640px] max-md:w-full   rounded-2xl flex flex-col gap-12 bg-white p-9 max-md:p-4">
+                <div className="pt-9 max-w-[640px] max-lg:w-full   rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
                     <div className="flex items-center gap-3">
                         <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                         <rect width="52" height="52" rx="8.66667" fill="#F8F4FE"/>
@@ -185,7 +185,7 @@ export default function() {
                         <p className="font-brsemi text-3xl text-[#181719] ">Ambulance Standby</p>
                     </div>
                     <div>
-                        <div className="max-md:hidden">
+                        <div className="max-lg:hidden">
                         <svg width="568" height="51" viewBox="0 0 568 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="45.1998" y="0.4" width="23.2" height="23.2" rx="11.6" stroke="#6D09F9" strokeWidth="0.8"/>
                         <mask id="mask0_1600_15165"  maskUnits="userSpaceOnUse" x="48" y="4" width="17" height="16">
@@ -277,7 +277,7 @@ export default function() {
                     <div className="flex flex-col gap-9">
                     <p className="font-brsemi text-lg text-[#181719]">Ambulance Sizes</p>
                     <div className="flex justify-between">
-                        <span className="w-[278px] h-[191px] flex flex-col gap-4 rounded-xl px-6 pt-6 pb-9 bg-[#E4E3E5] max-md:w-[190px] ">
+                        <span className="w-[278px] h-[191px] flex flex-col gap-4 rounded-xl px-6 pt-6 pb-9 bg-[#E4E3E5] max-lg:w-[190px] ">
                             <p className="font-brsemi text-[#181719] ">Mini Ambulance</p>
                             <div className="flex justify-center">
                             <svg width="160" height="96" viewBox="0 0 160 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -340,7 +340,7 @@ export default function() {
                             </svg>
                             </div>
                         </span>
-                        <span className="w-[278px] h-[191px] flex flex-col gap-4 rounded-xl px-6 pt-6 pb-9 bg-[#E4E3E5] max-md:w-[190px] ">
+                        <span className="w-[278px] h-[191px] flex flex-col gap-4 rounded-xl px-6 pt-6 pb-9 bg-[#E4E3E5] max-lg:w-[190px] ">
                         <p className="font-brsemi text-[#181719] ">Large Ambulance</p>
                             <div className="flex justify-center">
                             <svg width="196" height="96" viewBox="0 0 196 96" fill="none" xmlns="http://www.w3.org/2000/svg">
