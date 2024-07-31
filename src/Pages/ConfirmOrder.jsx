@@ -386,16 +386,15 @@ export default function ConfirmOrder () {
             <p className="font-brsemi text-2xl text-[#181719]">Booking Policies</p>
             <div className="flex flex-wrap gap-3 justify-between">
             <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
-           <p className="text-[#F96D09] font-brbold">Duration of Cover Policy</p>
-        <span className="text-sm text-[#636066] font-brreg ">
-           Duration of cover is between <p> 3, 6, 9 or 12 hours.</p> For extended periods,  hourly rate of <p> N10,000 </p> applies thereafter.
+           <p className="text-[#F96D09] font-brbold">No-Cash Policy</p>
+           <span className="text-sm text-[#636066] font-brreg">
+           We do not accept payment via cash. We accept payment via wire transfers or online banking.
            </span>
             </div>
             <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
-           <p className="text-[#F96D09] font-brbold">Confirmation & Cancellation Policy</p>
-           <span className="text-sm text-[#636066] font-brreg">
-           1. 75% payment confirms booking
-           <br/> 2.Cancellations for any reason are allowed up to Two hours in before the scheduled time.
+           <p className="text-[#F96D09] font-brbold">Duration of Cover Policy</p>
+        <span className="text-sm text-[#636066] font-brreg ">
+          <p>Duration of cover is for the period booked. For overtime, and hourly rate of #25000 applied thereafter.</p>
            </span>
             </div>
             <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full">
@@ -405,9 +404,10 @@ export default function ConfirmOrder () {
            </span>
             </div>
             <div className=" bg-[#FEF0E6] w-[290px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
-           <p className="text-[#F96D09] font-brbold">No-Cash Policy</p>
+           <p className="text-[#F96D09] font-brbold">Confirmation & Cancellation Policy</p>
            <span className="text-sm text-[#636066] font-brreg">
-           We do not accept payment via cash. We accept payment via wire transfers or online banking.
+           1. 100% payment confirms booking
+           <br/> 2.Cancellations for any reason are allowed up to Two hours in before the scheduled time.
            </span>
             </div>
             <div className=" bg-[#FEF0E6] w-[592px] h-[180px] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full max-lg:h-[220px] ">

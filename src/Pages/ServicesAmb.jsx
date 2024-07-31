@@ -32,7 +32,7 @@ export default function ServicesAmb() {
                         <p className="w-[448px] text-[#666666] font-brreg max-lg:flex max-lg:text-center text-lg max-lg:w-full ">From small pop-up gatherings to high-profile conferences and weddings, all events carry the potential for unforeseen emergencies. Our comprehensive ambulance standby services ensure that your event is covered by and equipped with the best emergency response team money can buy. Most importantly, we ensure that you and your event are free from liability.</p>
                         </div>
                         <div className="max-lg:flex max-lg:justify-center">
-                        <button onClick={()=>navigate("/OtherBookings")} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
+                        <button onClick={()=>navigate("/StandBy")} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
                         Book Now
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -87,44 +87,35 @@ export default function ServicesAmb() {
                     <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Book an ambulance to standby at your event today</p>
                     {/* <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
                     </div>
-                    <button className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Book Ambulance Transport</button>
+                    <button onClick={()=>navigate("/StandBy")} className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Book Ambulance Standby</button>
                 </span>
                 </section>
                 
                 <section className="bg-white   flex flex-col gap-3 p-6 w-full">
                     <p className="font-brsemi text-2xl text-[#181719]">Booking Policies</p>
                     <div className="flex flex-wrap gap-3 justify-between">
-                    <div className=" bg-[#FEF0E6] w-3/12  rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
-                <p className="text-[#F96D09] font-brbold">Duration of Cover Policy</p>
+                    <div className=" bg-[#FEF0E6] w-[45%]  rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
+                <p className="text-[#F96D09] font-brbold">Cancellation</p>
                 <span className="text-sm text-[#636066] font-brreg ">
-                Duration of cover is between  3, 6, 9 or 12 hours. For extended periods,  hourly rate of  N10,000  applies thereafter.
+                Cancellations for any reason are allowed up to One hour in before the scheduled time.
                 </span>
                     </div>
-                    <div className=" bg-[#FEF0E6] w-3/12 rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
-                <p className="text-[#F96D09] font-brbold">Confirmation & Cancellation Policy</p>
-                <span className="text-sm text-[#636066] font-brreg">
-                1. 75% payment confirms booking
-                <br/> 2.Cancellations for any reason are allowed up to Two hours in before the scheduled time.
-                </span>
-                    </div>
-                    <div className=" bg-[#FEF0E6] w-3/12 rounded-xl p-6 flex flex-col gap-0 max-lg:w-full">
-                <p className="text-[#F96D09] font-brbold">Arrival & Departure Policy</p>
-                <span className="text-sm text-[#636066] font-brreg">
-                We arrive at least one (1) hour before your scheduled start time and depart one (1) hour after your scheduled end time.
-                </span>
-                    </div>
-                    <div className=" bg-[#FEF0E6] w-3/12 rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
+                    <div className=" bg-[#FEF0E6] w-[45%] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
                 <p className="text-[#F96D09] font-brbold">No-Cash Policy</p>
                 <span className="text-sm text-[#636066] font-brreg">
-                We do not accept payment via cash. We accept payment via wire transfers or online banking.
+                We do not take cash as a form of payment. Kindly make payment for your service via POS or Transfers only.
                 </span>
                     </div>
-                    <div className=" bg-[#FEF0E6] w-3/12 h-full rounded-xl p-6 flex flex-col gap-0 max-lg:w-full max-lg:h-[330px] ">
+                    <div className=" bg-[#FEF0E6] w-[45%] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full">
+                <p className="text-[#F96D09] font-brbold">Arrival Policy</p>
+                <span className="text-sm text-[#636066] font-brreg">
+                We operate an appointment only service. Please arrive at least 10 mins early for your scheduled appointment. Please note that we provide a 15 mins grace period for appointment times. Should you arrive any time after this we may not be able to guarantee a service.
+                </span>
+                    </div>
+                    <div className=" bg-[#FEF0E6] w-[45%] rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
                 <p className="text-[#F96D09] font-brbold">Refund Policy</p>
                 <span className="text-sm text-[#636066] font-brreg">
-                    1. Notification not received or received 1 days or less before the event or appointment, 100% of the quoted event or appointment fee applies.
-                <br/> 2. Notification received 8-14 days before the event or appointment, 50% of the quoted event fee applies.
-                <br/> 3. Notification reviewed 15 days or more before the event or appointment - no fee applies
+                For any situation where the service booked has to be cancelled, only 75% of the fee paid shall be refunded after cancellation.
                 </span>
                     </div>
                     </div>

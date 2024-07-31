@@ -74,48 +74,15 @@ export default function ServicesEr() {
                     <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Save our Emergency Line</p>
                     <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p>
                     </div>
-                    <button className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Save Number</button>
+                    <button className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">
+                        <a href="tel:+2348098888763">
+                        Save Number
+                        </a>
+                        </button>
                 </span>
                 </section>
 
-                <section className="bg-white   flex flex-col gap-3 p-6 w-full">
-                    <p className="font-brsemi text-2xl text-[#181719]">Booking Policies</p>
-                    <div className="flex flex-wrap gap-3 justify-between">
-                    <div className=" bg-[#FEF0E6] w-3/12  rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
-                <p className="text-[#F96D09] font-brbold">Duration of Cover Policy</p>
-                <span className="text-sm text-[#636066] font-brreg ">
-                Duration of cover is between  3, 6, 9 or 12 hours. For extended periods,  hourly rate of  N10,000  applies thereafter.
-                </span>
-                    </div>
-                    <div className=" bg-[#FEF0E6] w-3/12 rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
-                <p className="text-[#F96D09] font-brbold">Confirmation & Cancellation Policy</p>
-                <span className="text-sm text-[#636066] font-brreg">
-                1. 75% payment confirms booking
-                <br/> 2.Cancellations for any reason are allowed up to Two hours in before the scheduled time.
-                </span>
-                    </div>
-                    <div className=" bg-[#FEF0E6] w-3/12 rounded-xl p-6 flex flex-col gap-0 max-lg:w-full">
-                <p className="text-[#F96D09] font-brbold">Arrival & Departure Policy</p>
-                <span className="text-sm text-[#636066] font-brreg">
-                We arrive at least one (1) hour before your scheduled start time and depart one (1) hour after your scheduled end time.
-                </span>
-                    </div>
-                    <div className=" bg-[#FEF0E6] w-3/12 rounded-xl p-6 flex flex-col gap-0 max-lg:w-full ">
-                <p className="text-[#F96D09] font-brbold">No-Cash Policy</p>
-                <span className="text-sm text-[#636066] font-brreg">
-                We do not accept payment via cash. We accept payment via wire transfers or online banking.
-                </span>
-                    </div>
-                    <div className=" bg-[#FEF0E6] w-3/12 h-full rounded-xl p-6 flex flex-col gap-0 max-lg:w-full max-lg:h-[330px] ">
-                <p className="text-[#F96D09] font-brbold">Refund Policy</p>
-                <span className="text-sm text-[#636066] font-brreg">
-                    1. Notification not received or received 1 days or less before the event or appointment, 100% of the quoted event or appointment fee applies.
-                <br/> 2. Notification received 8-14 days before the event or appointment, 50% of the quoted event fee applies.
-                <br/> 3. Notification reviewed 15 days or more before the event or appointment - no fee applies
-                </span>
-                    </div>
-                    </div>
-                </section>
+                
                 
                 <section className="py-20 flex flex-col gap-9">
                     <p className="font-brsemi text-[#181719] text-[40px] max-lg:text-4xl ">Other Services</p>

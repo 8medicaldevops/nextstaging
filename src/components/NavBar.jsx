@@ -45,7 +45,7 @@ export default function NavBar() {
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className={`cursor-pointer p-0 ${isActive('/ServiceEr') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Services</NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-white rounded-[15px] gap-4 flex flex-col   py-[40px] px-4">
+                <NavigationMenuContent className="bg-white rounded-[15px] gap-4 flex flex-col py-[40px] px-4">
                   <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
                     <Link to="/ServiceAmb">
                   Ambulance Standby
@@ -77,7 +77,9 @@ export default function NavBar() {
           <li className={`cursor-pointer ${isActive('/Impact') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Impact</li>
           </Link>
           {/* <li className={`cursor-pointer ${isActive('/Blog') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Blog</li> */}
-          {/* <li className={`cursor-pointer ${isActive('/Contact') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Contact</li> */}
+          <Link to= "/OtherBookings">
+          <li className={`cursor-pointer ${isActive('/Contact') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Contact</li>
+          </Link>
         </ul>
       </div>
       <div className='md:hidden'>
@@ -150,8 +152,10 @@ export default function NavBar() {
               <Link to="/Impact">
               <li className='cursor-pointer'>Impact</li>
               </Link>
-              {/* <li className='cursor-pointer'>Blog</li>
-              <li className='cursor-pointer'>Contact</li> */}
+              {/* <li className='cursor-pointer'>Blog</li> */}
+              <Link to="/OtherBookings">
+              <li className='cursor-pointer'>Contact</li>
+              </Link>
             </ul>
           </div>
         </div>
