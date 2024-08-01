@@ -30,10 +30,12 @@ export default function OtherCountries () {
                     </div>
                     
                     <div className="flex flex-col gap-6">
-                    <p className="text-xl font-brsemi max-lg:text-center text-[#181719] max-lg:w-[90%]">For bookings outside Nigeria, contact us via</p>
+                    <p className="text-xl font-brsemi max-lg:text-center text-[#181719] max-lg:w-full">For bookings outside Nigeria, contact us via</p>
                     <div className="flex flex-col justify-between gap-6">
                        <div>
+                       <a href="mailto:hello@8medical.co">
                         <span className="flex bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 max-md:w-full w-[568px]">
+                            
                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12.5" r="12" fill="#6D09F9"/>
                         <path d="M15.125 7.1875H8.875C7 7.1875 5.75 8.125 5.75 10.3125V14.6875C5.75 16.875 7 17.8125 8.875 17.8125H15.125C17 17.8125 18.25 16.875 18.25 14.6875V10.3125C18.25 8.125 17 7.1875 15.125 7.1875ZM15.4187 10.9938L13.4625 12.5563C13.05 12.8875 12.525 13.05 12 13.05C11.475 13.05 10.9437 12.8875 10.5375 12.5563L8.58125 10.9938C8.38125 10.8313 8.35 10.5312 8.50625 10.3312C8.66875 10.1312 8.9625 10.0938 9.1625 10.2562L11.1188 11.8187C11.5938 12.2 12.4 12.2 12.875 11.8187L14.8313 10.2562C15.0312 10.0938 15.3313 10.125 15.4875 10.3312C15.65 10.5312 15.6187 10.8313 15.4187 10.9938Z" fill="#F4F1FF"/>
@@ -41,10 +43,14 @@ export default function OtherCountries () {
 
                             <p className="pr-[5px]">Email</p>
                             <p className="pl-2 border-l-[1px] border-[#E4E3E5] ">hello@8medical.co</p>
+                           
                         </span>
+                        </a>
                        </div>
                        <div>
+                       <a href="tel:+2348098888763">
                         <span className="flex bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 max-md:w-full w-[568px]">
+                        
                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12.5" r="12" fill="#6D09F9"/>
                         <path d="M11.9062 14.3438L10.75 15.5C10.5062 15.7438 10.1188 15.7438 9.86875 15.5063C9.8 15.4375 9.73125 15.375 9.6625 15.3063C9.01875 14.6563 8.4375 13.975 7.91875 13.2625C7.40625 12.55 6.99375 11.8375 6.69375 11.1313C6.4 10.4188 6.25 9.7375 6.25 9.0875C6.25 8.6625 6.325 8.25625 6.475 7.88125C6.625 7.5 6.8625 7.15 7.19375 6.8375C7.59375 6.44375 8.03125 6.25 8.49375 6.25C8.66875 6.25 8.84375 6.2875 9 6.3625C9.1625 6.4375 9.30625 6.55 9.41875 6.7125L10.8688 8.75625C10.9813 8.9125 11.0625 9.05625 11.1188 9.19375C11.175 9.325 11.2063 9.45625 11.2063 9.575C11.2063 9.725 11.1625 9.875 11.075 10.0188C10.9938 10.1625 10.875 10.3125 10.725 10.4625L10.25 10.9563C10.1812 11.025 10.15 11.1063 10.15 11.2063C10.15 11.2563 10.1563 11.3 10.1688 11.35C10.1875 11.4 10.2063 11.4375 10.2188 11.475C10.3313 11.6813 10.525 11.95 10.8 12.275C11.0812 12.6 11.3812 12.9313 11.7062 13.2625C11.7687 13.325 11.8375 13.3875 11.9 13.45C12.15 13.6938 12.1562 14.0938 11.9062 14.3438Z" fill="#F4F1FF"/>
@@ -53,7 +59,9 @@ export default function OtherCountries () {
 
                             <p className="">Phone</p>
                             <p className="pl-2 border-l-[1px] border-[#E4E3E5]">+2348098888763</p>
+                           
                         </span>
+                        </a>
                        </div>
                         </div>
                     </div>
