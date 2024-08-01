@@ -182,7 +182,7 @@ export default function Hero() {
     const navigate = useNavigate();
     return(
         <div>
-            <section className="flex flex-col justify-center items-center gap-9 bg-[#30056B] bg-[url(src/assets/images/Siren.gif)] bg-no-repeat bg-cover bg-center bg-blend-soft-light  py-20">
+            <section className="flex flex-col justify-center items-center gap-9 bg-[#30056B] bg-[url(Siren.gif)] bg-no-repeat bg-cover bg-center bg-blend-soft-light  py-20">
                 <p className="font-brbold text-6xl text-white w-[694px] text-center max-lg:text-5xl max-lg:w-[396px] ">Get urgent ambulance and medical care services</p>
                 <p className=" font-brreg text-white w-[694px] text-center text-2xl rounded max-lg:text-lg max-lg:w-[396px] ">We offer responsive and dependable ambulance and medical care services according to your needs.</p>
                 <div className="flex gap-4 items-center max-lg:flex-col max-lg:w-[396px] ">
