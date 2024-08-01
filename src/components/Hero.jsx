@@ -250,24 +250,32 @@ export default function Hero() {
             <section className="bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover w-full ">
                 <div className="flex justify-between text-white py-9 px-52 max-lg:flex-col max-lg:gap-12 max-xl:px-36 max-lg:py-12 max-lg:px-4 ">
                 <span className="text-center">
-                        <span className="text-4xl flex justify-center  font-brbold"><Counter targetNumber={15000} duration={5000} />+</span>
+                        <span className="text-4xl flex justify-center  font-brbold">
+                            {/* <Counter targetNumber={15000} duration={5000} /> */}
+                            15000+</span>
                         <p className=" font-brmedium text-s " >Calls Recieved</p>
                     </span>
  
                     <span className="text-center">
-                        <span className="text-4xl flex justify-center font-brbold"><Counter targetNumber={8000} duration={5000} />+</span>
+                        <span className="text-4xl flex justify-center font-brbold">
+                            {/* <Counter targetNumber={8000} duration={5000} /> */}
+                            8000+</span>
                         <p className=" font-brmedium text-s " >Lives Saved</p>
                     </span>
  
                     <span className="text-center">
-                        <span className="text-4xl flex justify-center  font-brbold"> <Counter targetNumber={400} duration={12705} />+</span>
+                        <span className="text-4xl flex justify-center  font-brbold"> 
+                            {/* <Counter targetNumber={400} duration={12705} /> */}
+                            400+</span>
                         <p className=" font-brmedium text-s " >First responders</p>
                     </span>
 
                     
 
                     <span className="text-center">
-                        <span className="text-4xl font-brbold"><Counter targetNumber={10} duration={500} /></span>
+                        <span className="text-4xl font-brbold">
+                            {/* <Counter targetNumber={10} duration={500} /> */}
+                            10</span>
                         <p className=" font-brmedium text-s " >Avg. Response Time <br/>
                         (Mins)</p>
                     </span>
