@@ -3,13 +3,18 @@ import NavBar from "@/components/NavBar";
 import air from "../assets/images/airtransport.png";
 import emergency from "../assets/images/playersemergency.png";
 import { Link , useNavigate } from "react-router-dom";
+import BookServiceModal from "@/components/BookServiceModal";
+import { useState, useEffect } from "react";
 //import air from "../../public/air.png"
 
 
 
 
 export default function ServicesAgt() {
-    const navigate = useNavigate();
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    });
+    const [bookingModal, setBookingModal] = useState(false);
     return(
         <div>
             <NavBar />
@@ -34,7 +39,7 @@ export default function ServicesAgt() {
                         In partnership with trusted allies featuring emergency-ready jets and helicopters, our team of dedicated doctors and paramedics guarantees safe and expert air transportation.</p>
                         </div>
                         <div className="max-lg:flex max-lg:justify-center">
-                        <button onClick={()=>navigate("/OtherBookings")} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
+                        <button onClick={()=>setBookingModal(true)} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
                         Book Now
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -48,6 +53,7 @@ export default function ServicesAgt() {
                         <img src={air} alt="A picture of air recieving emergency response from 8medical" />
                     </aside>
                 </section>
+                <BookServiceModal isModalOpen={bookingModal} isModalClosed={()=>setBookingModal(false)}/>
                 <section className="py-12 flex flex-col gap-20" >
                     <span className="flex justify-center gap-2 text-[#181719] font-brsemi text-[40px] items-center max-lg:flex-col max-lg:text-4xl">
                         <p>How to Book an</p>
@@ -89,7 +95,7 @@ export default function ServicesAgt() {
                     <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Book our Ambulance Transport Service Today</p>
                     {/* <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
                     </div>
-                    <button onClick={()=>navigate("/OtherBookings")} className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Book Ambulance Transport</button>
+                    <button onClick={()=>setBookingModal(true)} className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Book Ambulance Transport</button>
                 </span>
                 </section>
                 

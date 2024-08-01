@@ -278,7 +278,7 @@ export default function() {
                     <p className="font-brsemi text-lg text-[#181719]">Ambulance Sizes</p>
                     <div className="flex justify-between">
                         <span className="w-[278px] h-[191px] flex flex-col gap-4 rounded-xl px-6 pt-6 pb-9 bg-[#E4E3E5] max-lg:w-[190px] ">
-                            <p className="font-brsemi text-[#181719] ">Mini Ambulance</p>
+                            <p className="font-brsemi text-[#181719] ">Small Ambulance</p>
                             <div className="flex justify-center">
                             <svg width="160" height="96" viewBox="0 0 160 96" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M154.486 75.1067L4.68104 76.6753C2.25829 76.7007 0.307617 78.6719 0.307617 81.0948V83.3583C0.307617 85.7963 2.28172 87.7738 4.71966 87.778L154.873 88.0382C157.465 88.0427 159.504 85.8263 159.284 83.2438L158.936 79.1513C158.74 76.8462 156.799 75.0825 154.486 75.1067Z" fill="#091119"/>

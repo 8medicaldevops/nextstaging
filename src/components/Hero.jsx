@@ -24,6 +24,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import ComingSoon from "./ComingSoon";
+import BookServiceModal from "./BookServiceModal";
   
 
   
@@ -48,7 +49,10 @@ const carouselImgs = [
 
 
 export default function Hero() {
+    // coming soon modal
     const [isModalOpen, setIsModalOpen] = useState(false);
+    // other services yet to be integrated use boooking modal 
+    const [bookingModal, setBookingModal] = useState(false);
 
     const ambBlack = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clipPath="url(#clip0_1503_172)">
@@ -93,9 +97,15 @@ export default function Hero() {
     };
 
     const sectionRef = useRef(null);
+    const newsLetterRef = useRef(null);
 
     const scrollToSection = () => {
         sectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const scrollToNewsLetter = () => {
+        setIsModalOpen(false);
+        newsLetterRef.current.scrollIntoView({ behavior: 'smooth' });
     };
 
     const getServiceContent = () => {
@@ -119,7 +129,7 @@ export default function Hero() {
                     
                     </div>
                     <Link to='StandBy' >
-                        <button className="bg-ev-700 mt-4 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
+                        <button  className="bg-ev-700 mt-4 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
                         </Link>
                 </div>;
             case 'transport':
@@ -139,9 +149,9 @@ export default function Hero() {
                     </Link>
                 </aside>
                 </div>
-                <Link to="/OtherBookings">
-                <button className="bg-ev-700 font-brbold mt-4 text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
-                </Link>
+                
+                <button onClick={()=>setBookingModal(true)} className="bg-ev-700 font-brbold mt-4 text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
+                
             </div>;
             case 'urgentCare':
                 return <div className="px-12 py-12 rounded-3xl bg-white">
@@ -158,9 +168,9 @@ export default function Hero() {
                         </Link>
                     </aside>
                     </div>
-                    <Link to="/OtherBookings">
-                    <button className="bg-ev-700 font-brbold text-lg mt-4 text-white rounded py-3 px-5 w-40">Get Started</button>
-                    </Link>
+                    
+                    <button onClick={()=>setBookingModal(true)} className="bg-ev-700 font-brbold text-lg mt-4 text-white rounded py-3 px-5 w-40">Get Started</button>
+                    
                 </div>;
             default:
                 return <p>Select a service to see the details.</p>;
@@ -172,7 +182,7 @@ export default function Hero() {
     const navigate = useNavigate();
     return(
         <div>
-            <section className="flex flex-col justify-center items-center gap-9 bg-[#30056B] py-20">
+            <section className="flex flex-col justify-center items-center gap-9 bg-[#30056B]  py-20">
                 <p className="font-brbold text-6xl text-white w-[694px] text-center max-lg:text-5xl max-lg:w-[396px] ">Get urgent ambulance and medical care services</p>
                 <p className=" font-brreg text-white w-[694px] text-center text-2xl rounded max-lg:text-lg max-lg:w-[396px] ">We offer responsive and dependable ambulance and medical care services according to your needs.</p>
                 <div className="flex gap-4 items-center max-lg:flex-col max-lg:w-[396px] ">
@@ -235,6 +245,7 @@ export default function Hero() {
                 <div>
                 {getServiceContent()}
                 </div>
+                <BookServiceModal isModalOpen={bookingModal} isModalClosed={()=>setBookingModal(false)} />
             </section>
             <section className="bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover w-full ">
                 <div className="flex justify-between text-white py-9 px-52 max-lg:flex-col max-lg:gap-12 max-xl:px-36 max-lg:py-12 max-lg:px-4 ">
@@ -281,6 +292,7 @@ export default function Hero() {
                     image={service.image}
                     title={service.title}
                     desc={service.desc}
+                    link={service.link}
                 />
             ))}
                     
@@ -324,7 +336,7 @@ export default function Hero() {
 
                     </button>
                     </span>
-                    <ComingSoon isModalOpen={isModalOpen} isModalClosed={()=>setIsModalOpen(false)} />
+                    <ComingSoon isModalOpen={isModalOpen} scrollView={scrollToNewsLetter} isModalClosed={()=>setIsModalOpen(false)} />
                 </aside>
                 
             </section>
@@ -340,7 +352,7 @@ export default function Hero() {
                 <Faqs/>
             </section>
            
-            <section className="pt-[120px] px-[240px] pb-[148px] bg-[#6D09F9] bg-[url('./assets/images/Background.png')] flex justify-center max-lg:py-12 max-lg:px-4 ">
+            <section ref={newsLetterRef} className="pt-[120px] px-[240px] pb-[148px] bg-[#6D09F9] bg-[url('./assets/images/Background.png')] flex justify-center max-lg:py-12 max-lg:px-4 ">
                 <NewsLetter />
             </section>
             <section>
@@ -401,26 +413,31 @@ export function SkeletonCard() {
        image:'../air.png',
        title:'Air and Ground Ambulance Transport',
        desc: 'Our state-of-the-art air and ground ambulances, staffed by skilled professionals, are ready 24/7 for rapid transport or specialized care.',
+       link: '/ServiceAgt'
     },
     { 
         image:'../ServiceImage.png',
         title:'Ambulance Standby',
         desc: 'We provide ambulance standby for events or emergencies, ensuring immediate assistance with trained staff and well-equipped ambulances.',
+        link: '/ServiceAmb'
      },
      { 
         image:'../ug.png',
         title:'Urgent Care',
         desc: `We address non-life threatening medical issues to ensure that they don't escalate.'`,
+        link: '/ServiceUg'
      },
      { 
         image:'../er.png',
         title:'Emergency Response',
         desc: 'Be it night or day, you can count on our emergency response team to show up.',
+        link: '/ServiceEr'
      },
 ]
 
-  export function ServiceCard({ image, title, desc}) {
+  export function ServiceCard({ image, title, desc, link}) {
     return (
+        <Link to={link}>
       <div className="flex flex-col  gap-6">
         {image ? (
             <img src={image} alt="" className="h-[180px] w-[324px] max-lg:w-[324px] max-lg:h-[180px] max-xl:w-[225px] max-xl:h-[125px] rounded-xl" />
@@ -437,6 +454,7 @@ export function SkeletonCard() {
           
         </div>
       </div>
+      </Link>
     )
   }
 
@@ -526,7 +544,7 @@ export function SkeletonCard() {
     }, []);
 
     return (
-        <div ref={sectionRef} className="w-[200px]">
+        <div ref={sectionRef} className="w-[400px] max-2xl:w-[200px]">
             <div>
                 <img
                     src={ambuBig}
@@ -597,15 +615,15 @@ const testimonies = [
 
 export function Testimonial({ image, name, title, review }) {
     return (
-      <div className="bg-[#F9F9FA] rounded-xl flex flex-col gap-3  p-5 w-[330px] h-[231px]">
-        <div className="flex gap-2" >
+      <div className="bg-[#F9F9FA] rounded-xl flex flex-col-reverse  gap-3  p-5 w-[330px] h-[231px]">
+        <div className="flex gap-2 items-center border-[#E4E3E5] pt-2 border-t-[1px]" >
           <img src={image} alt="" className="w-8 h-8 rounded" />
           <span>
             <p className="font-brbold text-sm text-[#181719]">{name}</p>
             <p className="font-brreg text-sm text-[#636066]">{title}</p>
           </span>
         </div>
-        <span>
+        <span className="">
           <p className="font-brmedium text-[#181719] w-[290px] ">{review}</p>
         </span>
       </div>

@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import ambulance from "../assets/images/ambulancetransport.png";
 import emergency from "../assets/images/playersemergency.png";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 //import air from "../../public/air.png"
 
 
@@ -10,6 +11,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function ServicesAmb() {
     const navigate = useNavigate();
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    });
     return(
         <div>
             <NavBar />

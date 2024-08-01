@@ -33,6 +33,7 @@ export default function OtherBookings () {
                     <p className="text-xl font-brsemi text-[#181719] max-md:w-full max-lg:w-[90%]">To complete your request, contact us via</p>
                     <div className="flex flex-col justify-between gap-6">
                        <div>
+                       <a href="mailto:hello@8medical.co">
                         <span className="flex bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 max-md:w-full w-[568px]">
                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12.5" r="12" fill="#6D09F9"/>
@@ -42,8 +43,10 @@ export default function OtherBookings () {
                             <p className="pr-[5px]">Email</p>
                             <p className="pl-2 border-l-[1px] border-[#E4E3E5] ">hello@8medical.co</p>
                         </span>
+                        </a>
                        </div>
                        <div>
+                       <a href="tel:+2348098888763">
                         <span className="flex bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 max-md:w-full w-[568px]">
                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12.5" r="12" fill="#6D09F9"/>
@@ -54,6 +57,7 @@ export default function OtherBookings () {
                             <p className="">Phone</p>
                             <p className="pl-2 border-l-[1px] border-[#E4E3E5]">+2348098888763</p>
                         </span>
+                        </a>
                        </div>
                         </div>
                     </div>

@@ -173,7 +173,7 @@ export default function AboutCaller () {
 
                     </div>
                     <div className="flex flex-col gap-6">
-                    <p className="font-brsemi text-lg text-[#181719]">Caller Details</p>
+                    <p className="font-brsemi text-lg text-[#181719]">Contact person details</p>
                     <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
                         <span>
                         <label htmlFor="" className="font-brsemi text-sm text-[#636066] " >Full Name of Contact Person</label>

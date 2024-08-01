@@ -717,7 +717,7 @@ import {
                 <div className="flex flex-col gap-6 items-center">
                <p className="font-brbold text-[32px] text-[#181719]">Coming Soon!</p>
                <p className="font-brreg text-lg text-[#636066] text-center">Subscribe to our newsletter to receive firsthand updates on our services.</p>
-               <button className="flex items-center gap-1 py-3 px-6 font-brbold text-lg rounded-mm text-white bg-ev-700">Suscribe now
+               <button onClick={props.scrollView} className="flex items-center gap-1 py-3 px-6 font-brbold text-lg rounded-mm text-white bg-ev-700">Suscribe now
                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.62003 3.95337L13.6667 8.00004L9.62003 12.0467" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M2.33334 8H13.5533" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
