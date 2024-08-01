@@ -89,14 +89,22 @@ module.exports = {
       keyframes: {
         siren: {
           '0%, 100%': {
-            'background-position': 'top left, bottom right',
-            opacity: '0.7',
-            filter: 'blur(10px)',
+            transform: 'scale(1)',
+            opacity: '1',
           },
           '50%': {
-            'background-position': 'top right, bottom left',
-            opacity: '0.9',
-            filter: 'blur(15px)',
+            transform: 'scale(1.2)',
+            opacity: '0.7',
+          },
+        },
+        radiate: {
+          '0%, 100%': {
+            transform: 'scale(1)',
+            opacity: '0.5',
+          },
+          '50%': {
+            transform: 'scale(1.5)',
+            opacity: '0.2',
           },
         },
       
@@ -115,6 +123,7 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "siren": 'siren 2s infinite',
+        radiate: 'radiate 3s infinite',
       },
       fontFamily: {
         'brlight' : 'firmalight',
