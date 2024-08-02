@@ -1,6 +1,6 @@
  
 import { useState, useEffect } from "react";
-import { format, parse, differenceInMinutes  } from "date-fns"
+import { format, parse, differenceInMinutes, formatDate  } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import NavBar from "../components/NavBar" ;
 import { Link , useNavigate } from "react-router-dom";
@@ -35,6 +35,7 @@ export default function Schedule () {
                     setSelectedDate(format(new Date(storedFormData.startDate), 'yyyy-MM-dd'));
                 }
             }
+            //console.log(storedFormData);
     }, []);
 
     useEffect(() => {
@@ -48,16 +49,30 @@ export default function Schedule () {
       alert("Invalid date selected");
       return;
   }
-  
-  const formattedDate = format(date, 'yyyy-MM-dd');
-  const updatedSchedule = { ...schedule, [field]: date };
 
-  if (field === 'startDate') {
-    setSelectedDate(formattedDate);
-    if (schedule.eventEndsSameDay) {
-        updatedSchedule.endDate = date;
+ 
+  
+    const formattedDate = format(date, 'yyyy-MM-dd');
+    const updatedSchedule = { ...schedule, [field]: date };
+
+    // Convert the formatted dates back to Date objects for comparison
+    const startDate = schedule.startDate ? new Date(schedule.startDate) : null;
+    const endDate = formattedDate ? new Date(formattedDate) : null;
+
+    if (field === 'startDate') {
+        setSelectedDate(formattedDate);
+        if (schedule.eventEndsSameDay) {
+            updatedSchedule.endDate = date;
+        }
     }
-}
+
+    if (field === 'endDate') {
+        if (startDate && endDate < startDate) {
+            // Validate that endDate is not earlier than startDate
+            alert("End date cannot be earlier than the start date");
+            return;
+        }
+    }
 
   setSchedule(updatedSchedule);
 
@@ -77,75 +92,92 @@ export default function Schedule () {
   const handleTimeChange = (field, value) => {
     let newSchedule = { ...schedule, [field]: value };
 
-    // Get current time
     const now = new Date();
     const currentTime = now.toTimeString().slice(0, 5);
     const today = format(new Date(), 'yyyy-MM-dd');
-    
-    // end time should not be less than start time 
-    if (field === 'endTime') {
-      if (newSchedule.startTime && newSchedule.startTime > value) {
-          newSchedule.endTime = value;
-         alert("End time cannot be earlier than the start time");
-          return;
-      }
-  }
 
-    // Check if selected date is today and validate against current time
-    if (selectedDate === today) {
-        if (field === 'startTime') {
-            if (value < currentTime) {
-                alert("Start time cannot be earlier than the current time");
-                return;
-            }
-            if (newSchedule.endTime && newSchedule.endTime < value) {
-                newSchedule.endTime = value; // Adjust end time to be same as start time if it was earlier
-            }
-        } else if (field === 'endTime') {
-            if (newSchedule.startTime && newSchedule.startTime > value) {
-                alert("End time cannot be earlier than the start time");
-                return;
-            }
+    const stripAmPmSuffix = (time12) => {
+        // Remove the "AM" or "PM" suffix
+        return time12.replace(/ (AM|PM)/, '');
+      };
+    
+      // Strip suffix from times for comparison
+      const strippedStartTime = newSchedule.startTime ? stripAmPmSuffix(newSchedule.startTime) : '';
+      const strippedEndTime = newSchedule.endTime ? stripAmPmSuffix(newSchedule.endTime) : '';
+      const strippedValue = stripAmPmSuffix(value);
+    
+      // Validate that end time is not earlier than start time
+      if (field === 'endTime') {
+        if (strippedStartTime && strippedStartTime > strippedValue) {
+          alert("End time cannot be earlier than the start time");
+          return;
         }
-    }
+      }
+    
+      // Check if selected date is today and validate against current time
+      if (selectedDate === today) {
+        if (field === 'startTime') {
+          if (strippedValue < currentTime) {
+            alert("Start time cannot be earlier than the current time");
+            return;
+          }
+          if (strippedEndTime && strippedEndTime < strippedValue) {
+            newSchedule.endTime = value; // Adjust end time to be same as start time if it was earlier
+          }
+        } else if (field === 'endTime') {
+          if (strippedStartTime && strippedStartTime > strippedValue) {
+            alert("End time cannot be earlier than the start time");
+            return;
+          }
+        }
+      }
 
     setSchedule(newSchedule);
   };
 
+  const stripAmPmSuffix = (time12) => {
+    return time12.replace(/ (AM|PM)/, '');
+  };
+  
   const generateTimeOptions = (startTime, isStartTime) => {
     const times = [];
     const now = new Date();
     const currentTime = now.toTimeString().slice(0, 5);
     const today = format(new Date(), 'yyyy-MM-dd');
-
+  
     for (let h = 0; h < 24; h++) {
-        for (let m = 0; m < 60; m += 15) {
-            const time = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-
-            if (selectedDate === today) {
-                if (isStartTime) {
-                    // Disable past times for start time if it's today
-                    if (time < currentTime) continue;
-                } else {
-                    // Disable times earlier than start time for end time
-                    if (startTime && time <= startTime) continue;
-                }
-            } else {
-              if (!isStartTime && startTime && time <= startTime) continue;
+      for (let m = 0; m < 60; m += 15) {
+        const time24 = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        const suffix = h < 12 ? 'AM' : 'PM';
+        const hour12 = h % 12 || 12;
+        const time12 = `${hour12}:${String(m).padStart(2, '0')} ${suffix}`;
+  
+        if (selectedDate === today) {
+          if (isStartTime) {
+            if (time24 < currentTime) continue;
+          } else {
+            if (startTime && time24 <= startTime) continue;
           }
-
-            times.push(time);
+        } else {
+          if (!isStartTime && startTime && time24 <= startTime) continue;
         }
+        times.push({ time24, time12 });
+      }
     }
-
     return times;
-};
+  };
 
 
 const calculateHoursAndMinutes = () => {
   if (schedule.startTime && schedule.endTime) {
-    const startDateTime = parse(schedule.startTime, "HH:mm", new Date());
-    const endDateTime = parse(schedule.endTime, "HH:mm", new Date());
+    const stripAmPmSuffix = (time12) => {
+        // Remove the "AM" or "PM" suffix
+        return time12.replace(/ (AM|PM)/, '');
+      };
+    const strippedStartTime = stripAmPmSuffix(schedule.startTime);
+    const strippedEndTime = stripAmPmSuffix(schedule.endTime);
+    const startDateTime = parse(strippedStartTime, 'HH:mm', new Date());
+    const endDateTime = parse(strippedEndTime, 'HH:mm', new Date());
     const totalMinutes = differenceInMinutes(endDateTime, startDateTime);
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
@@ -155,12 +187,19 @@ const calculateHoursAndMinutes = () => {
 };
 
 const { hours, minutes } = calculateHoursAndMinutes();
-// console.log({
-//   ...schedule,
-//   hours,
-//   minutes
-// });
 
+const getNumberOfDays = () => {
+    const start = new Date(schedule.startDate);
+    const end = new Date(schedule.endDate);
+    // Calculate the difference in time
+    const timeDiff = end.getTime() - start.getTime();
+    // Calculate the difference in days, ensuring to add one to include the end date's day
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+    return daysDiff;
+  };
+
+  const daysDiff = getNumberOfDays()
+  //console.log(daysDiff)
   
   const navigate = useNavigate();
   const handleSubmit = (e) => {
@@ -169,6 +208,15 @@ const { hours, minutes } = calculateHoursAndMinutes();
     //console.log(schedule);
     navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size")
 };
+
+    const formatTime = (time) => {
+        if (!time) return '';
+        const [hours, minutes] = time.split(':');
+        const date = new Date();
+        date.setHours(parseInt(hours, 10));
+        date.setMinutes(parseInt(minutes, 10));
+        return format(date, 'h:mm a');
+    };
 
 
     return(
@@ -319,8 +367,8 @@ const { hours, minutes } = calculateHoursAndMinutes();
                     onChange={(e) => handleTimeChange('startTime', e.target.value)}
                 >
                     <option value="" disabled>Select start time</option>
-                    {generateTimeOptions(null, true).map(time => (
-                        <option key={time} value={time}>{time}</option>
+                    {generateTimeOptions(null, true).map(({ time24, time12 }) => (
+                        <option key={time24} value={time24}>{time12}</option>
                     ))}
                 </select>
                 <select 
@@ -329,18 +377,27 @@ const { hours, minutes } = calculateHoursAndMinutes();
                     onChange={(e) => handleTimeChange('endTime', e.target.value)}
                 >
                     <option  value="" disabled>Select end time</option>
-                    {generateTimeOptions(schedule.startTime, false).map(time => (
-                        <option key={time} value={time}>{time}</option>
+                    {generateTimeOptions(schedule.startTime, false).map(({ time24, time12 }) => (
+                        <option key={time24} value={time24}>{time12}</option>
                     ))}
                 </select>
                
             </span>
-            <small className="flex items-center gap-1 text-[#636066]"> <p className="text-red-700">*</p> Shift coverage is determined per 12-hour period.</small>
+            <small className="flex items-center gap-1 text-[#636066]"> <p className="text-red-700">*</p> Medics shift coverage is determined per 12-hour period.</small>
             </span>
+            <span>
                     <span className="flex justify-between py-3 px-5 rounded-xl bg-[#F9F9FA]">
                       <p className="font-brsemi text-[#181719]">Event Duration:</p>
+                      <span className="flex items-center gap-1">
                       <p className="font-brsemi text-xl text-[#6D09F9]">{hours}:{minutes}hrs</p>
-
+                      {daysDiff > 1 &&
+                       <p className="font-brsemi text-xl text-[#6D09F9]">|{daysDiff}Days</p>
+                        }
+                       </span>
+                    </span>
+                    {daysDiff > 1 &&
+                    <small className="flex items-center gap-1 text-[#636066]"> <p className="text-red-700">*</p> You are selecting to book standby from {format(schedule.startDate,'yyyy-MM-dd')} to {format(schedule.endDate,'yyyy-MM-dd')} within time periods of {formatTime(schedule.startTime)} to {formatTime(schedule.endTime)} on each day</small>
+                    }
                     </span>
                     </div>
                     
@@ -367,12 +424,18 @@ const { hours, minutes } = calculateHoursAndMinutes();
 }
 
 
-export function DatePickerDemo({ date, setDate, placeholder }) {
+export function DatePickerDemo({ date, setDate, placeholder,minDate }) {
+  const [open, setOpen] = useState(false);
   const today = new Date();
+
+  const handleDateSelect = (selectedDate) => {
+    setDate(selectedDate);
+    setOpen(false); // Close the popover after selecting a date
+  };
 
   return (
       <div>
-          <Popover>
+          <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                   <Button
                       variant={"outline"}
@@ -380,6 +443,7 @@ export function DatePickerDemo({ date, setDate, placeholder }) {
                           "w-full rounded-xl p-3 border-[1px] border-[#E4E3E5] h-12 justify-start text-left font-normal",
                           !date && "text-muted-foreground"
                       )}
+                      onClick={() => setOpen(true)} // Open the popover on button click
                   >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {date ? format(date, "PPP") : <span>{placeholder}</span>}
@@ -389,11 +453,12 @@ export function DatePickerDemo({ date, setDate, placeholder }) {
                   <Calendar
                       mode="single"
                       selected={date}
-                      onSelect={setDate}
+                      onSelect={handleDateSelect}
                       initialFocus
                       disabled={[
                           { before: today }
                       ]}
+                      minDate={minDate} // Apply minimum date constraint
                   />
               </PopoverContent>
           </Popover>

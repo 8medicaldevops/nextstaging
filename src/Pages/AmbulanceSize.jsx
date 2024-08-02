@@ -22,7 +22,7 @@ import {
 const calculateTotalCost = (smallAmbulanceCount, largeAmbulanceCount, medicsCount, hours) => {
   const smallAmbulanceCostPerHour = 8500; // Cost per hour for small ambulance
   const largeAmbulanceCostPerHour = 10850; // Cost per hour for large ambulance
-  const medicCostPerHour = MEDIC_COST_PER_12_HOURS; // Cost per hour for medics
+  //const medicCostPerHour = MEDIC_COST_PER_12_HOURS; // Cost per hour for medics
 
   const complete12HourSets = Math.floor(hours / 12);
   const remainingHours = hours % 12;
@@ -31,7 +31,9 @@ const calculateTotalCost = (smallAmbulanceCount, largeAmbulanceCount, medicsCoun
     smallAmbulanceCount * (complete12HourSets * SMALL_AMBULANCE_COST + remainingHours * smallAmbulanceCostPerHour);
   const largeAmbulanceTotal =
     largeAmbulanceCount * (complete12HourSets * LARGE_AMBULANCE_COST + remainingHours * largeAmbulanceCostPerHour);
-  const medicsTotal = medicsCount * medicCostPerHour ;
+  // Calculate medics cost
+  const medicCostPer12HourSet = Math.ceil(hours / 12) * MEDIC_COST_PER_12_HOURS;
+  const medicsTotal = medicsCount * medicCostPer12HourSet;
 
   return smallAmbulanceTotal + largeAmbulanceTotal + medicsTotal;
 };
