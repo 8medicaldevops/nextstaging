@@ -228,7 +228,7 @@ export default function Hero() {
                         Urgent Care</button>
                 </div>
                 </div>
-                <div className="md:hidden">
+                <div className="lg:hidden">
                 <Select onValueChange={handleSelectChange}>
                 <SelectTrigger className="w-[240px] rounded-mm border-[1px] border-[#E4E3E5] font-brmedium text-[#181719] ">
                     <SelectValue placeholder={<div className="flex gap-2 items-center">{ambBlack}Ambulance standby</div> }/>

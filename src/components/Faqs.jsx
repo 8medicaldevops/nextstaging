@@ -184,7 +184,7 @@ setActiveElement(value)
         <p className="font-brreg text-lg text-[#636066]  text-center">We have answered some of the most reoccurring questions we get<br/> from users.</p>
       </div>
       <div className="flex gap-12 px-6 max-lg:flex-col ">
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <Select onValueChange={handleSelect} >
                 <SelectTrigger className="w-[240px] rounded-mm border-[1px] border-[#E4E3E5] font-brmedium text-[#181719] ">
                     <SelectValue placeholder="Individuals" />
