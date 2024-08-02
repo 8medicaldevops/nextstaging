@@ -342,7 +342,7 @@ const getNumberOfDays = () => {
                     setDate={(date) => handleDateChange('endDate', date)}
                     placeholder="End Date"
                     />}
-                    <span className="flex gap-1">
+                    <span className="flex items-center gap-1">
                         <input type="checkbox" className=" indeterminate:bg-[#A7A8A9] checked:bg-blue-500"
                         checked={schedule.eventEndsSameDay}
                         onChange={handleCheckboxChange} />
