@@ -78,10 +78,10 @@ export default function AboutEvent () {
                     </defs>
                     </svg>
 
-                    <p className="font-brsemi text-3xl max-sm:text-2xl text-[#181719] ">Ambulance Standby</p>
+                    <p className="font-brsemi text-3xl max-sm:text-2xl max-[410px]:text-2xl text-[#181719] ">Ambulance Standby</p>
                     
                     </div>
-                    <div>
+                    <div className="flex flex-col items-center">
                     <div className="max-md:hidden">
                     <svg width="568" height="51" viewBox="0 0 568 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="45.1998" y="0.4" width="23.2" height="23.2" rx="11.6" stroke="#6D09F9" strokeWidth="0.8"/>
@@ -116,7 +116,7 @@ export default function AboutEvent () {
                     </svg>
                     </div>
 
-                    <div className="md:hidden max-sm:hidden">
+                    <div className="md:hidden max-[410px]:hidden">
                     <svg width="396" height="49" viewBox="0 0 396 49" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="27.9996" y="1.18882" width="23.2" height="23.2" rx="11.6" stroke="#6D09F9" strokeWidth="0.8"/>
                     <mask id="mask0_1535_5734"  maskUnits="userSpaceOnUse" x="31" y="4" width="17" height="17">
@@ -150,7 +150,7 @@ export default function AboutEvent () {
                     </svg>
 
                     </div>
-                    <div className="min-[424px]:hidden">
+                    <div className="min-[410px]:hidden">
                     <div className=" flex justify-center">
                     <svg width="310" height="57" viewBox="0 0 310 57" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="19.4" y="1.18882" width="23.2" height="23.2" rx="11.6" stroke="#6D09F9" stroke-width="0.8"/>

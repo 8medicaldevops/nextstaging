@@ -15,7 +15,7 @@ import {
         <Dialog open={props.isModalOpen}>
             
         
-        <DialogContent className="bg-none w-full bg-white max-md:rounded-[24px] max-md:w-[95%] md:rounded-[24px] py-12 ">
+        <DialogContent className="bg-none w-full rounded-[44px] bg-white max-md:rounded-[84px] max-mm:rounded-[24px] max-mm:px-0 max-md:w-[95%] md:rounded-[24px] py-12 ">
             <DialogHeader className="bg-white  gap-6 " >
                 <div className=" flex px-2 justify-end cursor-pointer">
             <button onClick={props.isModalClosed}><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
