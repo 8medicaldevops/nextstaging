@@ -32,7 +32,7 @@ export default function ServicesAmb() {
                         </clipPath>
                         </defs>
                         </svg>
-                        <p className="text-[40px] w-[448px] text-[#2E0469] font-brbold max-lg:flex max-lg:justify-center max-lg:w-full max-lg:text-4xl">Ambulance Standby</p>
+                        <p className="text-[40px] w-[448px] text-[#2E0469] font-brbold max-lg:flex max-lg:justify-center max-lg:w-full max-lg:text-4xl text-center">Ambulance Standby</p>
                         <p className="w-[448px] text-[#666666] font-brreg max-lg:flex max-lg:text-center text-lg max-lg:w-full ">From small pop-up gatherings to high-profile conferences and weddings, all events carry the potential for unforeseen emergencies. Our comprehensive ambulance standby services ensure that your event is covered by and equipped with the best emergency response team money can buy. Most importantly, we ensure that you and your event are free from liability.</p>
                         </div>
                         <div className="max-lg:flex max-lg:justify-center">
@@ -51,12 +51,12 @@ export default function ServicesAmb() {
                     </aside>
                 </section>
                 <section className="py-12 flex flex-col gap-20" >
-                    <span className="flex justify-center gap-2 text-[#181719] font-brsemi text-[40px] items-center max-lg:flex-col max-lg:text-4xl">
+                    <span className="flex justify-center gap-2 text-[#181719] text-center font-brsemi text-[40px] items-center max-lg:flex-col max-lg:text-4xl">
                         <p>How to Book an</p>
                         <p className="text-ev-700">Ambulance Standby</p>
                     </span>
                     <div className="flex justify-center gap-12 flex-wrap items-center max-lg:flex-col max-lg:items-center max-lg:gap-16">
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                             <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">1</div>
                                 <p className="font-brbold text-[20px] text-[#181719]">State Standby Location</p>
                                 <span className="flex flex-col gap-2">
@@ -65,28 +65,28 @@ export default function ServicesAmb() {
                             <p className="font-brmedium text-ev-700">hello@8medical.co</p> */}
                             </span>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">2</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Schedule Standby Date and Time Duration</p>
                             <p className="font-brmedium text-center text-[#636066]">Enter the date and the time duration of your event for the standby.</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">3</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Specify Number of Ambulance and Medical Personnel</p>
                             <p className="font-brmedium text-[#636066]">Enter the number of medics and ambulances you want at your event location.</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">4</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Confirm Your Details and Make Payments</p>
                             <p className="font-brmedium text-[#636066]">Review the information you provided to ensure accuracy before proceeding to payment.</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">5</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Prepare for our Arrival</p>
                             <p className="font-brmedium text-[#636066]">Reserve a space for providing care at your event.</p>
                         </span>
                     </div>
-                    <span className="py-12 px-16 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
+                    <span className="py-12 px-16 max-sm:px-4 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
                         <div className="flex flex-col gap-1 ">
                     <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Book an ambulance to standby at your event today</p>
                     {/* <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
@@ -127,10 +127,10 @@ export default function ServicesAmb() {
                 
                 <section className="py-20 flex flex-col gap-9">
                     <p className="font-brsemi text-[#181719] text-[40px] max-lg:text-4xl ">Other Services</p>
-                    <div className="flex flex-wrap justify-between max-lg:flex-col max-lg:gap-9">
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full">
+                    <div className="flex flex-wrap justify-between max-md:flex-col max-lg:gap-24 max-md:gap-9">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full">
                             <Link to="/ServiceAgt">
-                            <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
+                            <div className="h-[180px] w-[309.33px] max-md:w-full max-lg:h-full">
                             <img  className="w-full" src='air.png' alt="air and ambulance transport" />
                             </div>
                             <p className="font-brsemi text-[20px] text-[#181719]">Air and Ground Ambulance Transport</p>
@@ -143,7 +143,7 @@ export default function ServicesAmb() {
                             </span>
                             </Link>
                         </span>
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full">
                         <Link to="/ServiceEr">
                         <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
                             <img className="w-full h-full max-lg:h-[180px] max-lg:rounded-xl  object-center object-cover rounded-mm"  src={emergency} alt="air and ambulance transport" />
@@ -158,7 +158,7 @@ export default function ServicesAmb() {
                             </span>
                             </Link>
                         </span>
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full">
                         <Link to="/ServiceUg">
                         <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
                             <img className="w-full" src='ugtwo.png' alt="air and ambulance transport" />

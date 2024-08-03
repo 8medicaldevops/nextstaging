@@ -213,9 +213,9 @@ setActiveElement(value)
           <AccordionComponent category={activeElement} />
         </aside>
       </div>
-      <div className="flex justify-center py-12 px-[120px]  gap-12 rounded-[100px] bg-[url(./assets/images/Banner.png)] bg-[#F8F4FE] max-lg:flex-col max-lg:rounded-xl max-lg:items-center md:max-[1413px]:px-24">
-                    <p className="font-brsemi text-[32px] text-[#181719] max-lg:text-center max-lg:text-2xl max-lg:w-[268px] ">Do you have any more question for us?</p>
-                    <button onClick={()=>{navigate("/OtherBookings")}} className="text-white py-3 px-5 gap-1 rounded-[49px] bg-ev-700 font-brbold text-lg  ">Contact Us</button>
+      <div className="flex justify-center py-12 px-[120px]  gap-12 rounded-[100px] bg-[url(./assets/images/Banner.png)] max-sm:px-2 bg-[#F8F4FE] max-lg:flex-col max-lg:rounded-xl max-lg:items-center md:max-[1413px]:px-24">
+                    <p className="font-brsemi text-[32px] text-[#181719] max-lg:text-center max-lg:text-2xl max-lg:w-[268px] max-sm:w-full ">Do you have any more question for us?</p>
+                    <button onClick={()=>{navigate("/OtherBookings")}} className="text-white py-3 px-5 gap-1  rounded-[49px] bg-ev-700 font-brbold text-lg  ">Contact Us</button>
         </div>
     </div>
   );

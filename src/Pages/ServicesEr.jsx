@@ -19,7 +19,7 @@ export default function ServicesEr() {
             <NavBar />
             <div className="px-[128px] max-xl:px-6 max-lg:px-4">
                 <section className="flex items-center justify-between py-9 max-lg:flex-col max-lg:gap-12">
-                    <main className="flex flex-col  gap-9">
+                    <main className="flex flex-col text-center gap-9">
                         <div className="flex flex-col max-lg:flex max-lg:items-center gap-6">
                         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="64" height="64" rx="10.6667" fill="#FEE6E8"/>
@@ -51,12 +51,12 @@ export default function ServicesEr() {
                 </section>
                 <BookServiceModal isModalOpen={bookingModal} isModalClosed={()=>setBookingModal(false)}/>
                 <section className="py-12 flex flex-col gap-20" >
-                    <span className="flex justify-center gap-2 text-[#181719] font-brsemi text-[40px] items-center max-lg:flex-col max-lg:text-4xl">
+                    <span className="flex justify-center text-center gap-2 text-[#181719] font-brsemi text-[40px] items-center max-lg:flex-col max-lg:text-4xl">
                         <p>How to Report an</p>
                         <p className="text-ev-700">Emergency</p>
                     </span>
                     <div className="flex justify-center gap-6 flex-wrap max-lg:flex-col max-lg:items-center max-lg:gap-16">
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                             <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">1</div>
                                 <p className="font-brbold text-[20px] text-[#181719]">Contact Us</p>
                                 <span className="flex flex-col gap-2">
@@ -64,18 +64,18 @@ export default function ServicesEr() {
                             <p className="font-brmedium text-ev-700">+2348098888763</p>
                             </span>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">2</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Provide Information about the Emergency</p>
                             <p className="font-brmedium text-center text-[#636066]">Provide us with the following; type of emergency, number of individuals involved and location.</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">3</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Await our Arrival</p>
                             <p className="font-brmedium text-[#636066]">Give extra useful information, then provide first aid if capable.</p>
                         </span>
                     </div>
-                    <span className="py-12 px-16 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
+                    <span className="py-12 px-16 max-sm:px-4 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
                         <div className="flex flex-col gap-1 ">
                     <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Save our Emergency Line</p>
                     <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p>
@@ -92,8 +92,8 @@ export default function ServicesEr() {
                 
                 <section className="py-20 flex flex-col gap-9">
                     <p className="font-brsemi text-[#181719] text-[40px] max-lg:text-4xl ">Other Services</p>
-                    <div className="flex flex-wrap justify-between max-lg:flex-col max-lg:gap-9">
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full">
+                    <div className="flex flex-wrap justify-between max-md:flex-col  max-md:gap-9 max-lg:gap-24">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full">
                             <Link to="/ServiceAgt">
                             <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
                             <img  className="w-full" src='air.png' alt="air and ambulance transport" />
@@ -108,7 +108,7 @@ export default function ServicesEr() {
                             </span>
                             </Link>
                         </span>
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full ">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full ">
                         <Link to="/ServiceAmb">
                         <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
                             <img className="w-full" src='ServiceImage.png' alt="air and ambulance transport" />
@@ -123,7 +123,7 @@ export default function ServicesEr() {
                             </span>
                             </Link>
                         </span>
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full">
                         <Link to="/ServiceUg">
                         <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
                             <img className="w-full" src='ugtwo.png' alt="air and ambulance transport" />

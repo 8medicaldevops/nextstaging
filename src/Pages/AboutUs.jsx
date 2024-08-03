@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
     return(
         <div>
             <NavBar />
-            <div className="bg-[url(./assets/images/abt-bg.jpeg)]  bg-[#43039C61]/50 accent-[#37018330] bg-blend-overlay max-2xl:bg-[center_bottom_-22rem] max-xl:bg-[center_bottom_-7rem] max-lg:h-[40vh]  max-lg:bg-[center_top_-6rem] max-md:h-[30vh] max-md:bg-[center_top_-1rem] bg-[center_bottom_-38rem] bg-cover bg-no-repeat h-[50vh] flex items-end max-lg:justify-center px-10 pb-[80px]">
+            <div className="bg-[url(./assets/images/abt-bg.jpeg)]  bg-[#43039C61]/50 accent-[#37018330] bg-blend-overlay max-2xl:bg-[center_bottom_-22rem] max-xl:bg-[center_bottom_-7rem] max-lg:h-[40vh]  max-lg:bg-[center_top_-6rem] max-md:h-[30vh] max-md:bg-[center_top_-1rem] bg-[center_bottom_-38rem] bg-cover bg-no-repeat h-[50vh] flex items-end max-lg:justify-center px-10 pb-[80px] max-md:pb-10">
             <p className="text-white text-[56px] font-brbold max-lg:text-5xl">
                 About Us
                </p>

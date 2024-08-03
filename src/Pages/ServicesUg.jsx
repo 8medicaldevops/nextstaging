@@ -47,12 +47,12 @@ export default function ServicesUg() {
                 </section>
                 <BookServiceModal isModalOpen={bookingModal} isModalClosed={()=>setBookingModal(false)}/>
                 <section className="py-12 flex flex-col gap-20" >
-                    <span className="flex justify-center gap-2 text-[#181719] font-brsemi text-[40px] items-center max-lg:flex-col max-lg:text-4xl">
+                    <span className="flex text-center justify-center gap-2 text-[#181719] font-brsemi text-[40px] items-center max-lg:flex-col max-lg:text-4xl">
                         <p>How to Order an</p>
                         <p className="text-ev-700">Urgent Care</p>
                     </span>
                     <div className="flex justify-center gap-12 flex-wrap items-center max-lg:flex-col max-lg:items-center max-lg:gap-16">
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                             <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">1</div>
                                 <p className="font-brbold text-[20px] text-[#181719]">Contact Us</p>
                                 <span className="flex flex-col gap-2">
@@ -61,28 +61,28 @@ export default function ServicesUg() {
                             <p className="font-brmedium text-ev-700">hello@8medical.co</p>
                             </span>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">2</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Provide Patient’s Details</p>
                             <p className="font-brmedium text-center text-[#636066]">Give us the required personal and medical information of the patient(s).</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">3</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Schedule Appointment</p>
                             <p className="font-brmedium text-[#636066]">Choose a desired date and time for the care to be administered in your home or a medical facility.</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">4</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Confirm Your Details and Make Payments</p>
                             <p className="font-brmedium text-[#636066]">Review your information before proceeding to payment.</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">5</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Prepare for our Arrival</p>
                             <p className="font-brmedium text-[#636066]">Get the patient ready for care. We will arrive 30mins before the selected time.</p>
                         </span>
                     </div>
-                    <span className="py-12 px-16 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
+                    <span className="py-12 px-16 max-sm:px-4 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
                         <div className="flex flex-col gap-1 ">
                     <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Get the medical care that suits your health needs today</p>
                     {/* <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
@@ -123,8 +123,8 @@ export default function ServicesUg() {
                 
                 <section className="py-20 flex flex-col gap-9">
                     <p className="font-brsemi text-[#181719] text-[40px] max-lg:text-4xl ">Other Services</p>
-                    <div className="flex flex-wrap justify-between max-lg:flex-col max-lg:gap-9">
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full">
+                    <div className="flex flex-wrap justify-between max-md:flex-col max-md:gap-9 max-lg:gap-24">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full">
                             <Link to="/ServiceAgt" >
                             <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
                             <img  className="w-full" src='air.png' alt="air and ambulance transport" />
@@ -139,7 +139,7 @@ export default function ServicesUg() {
                             </span>
                             </Link>
                         </span>
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full ">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full ">
                         <Link to="/ServiceAmb" >
                         <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
                             <img className="w-full" src='ServiceImage.png' alt="air and ambulance transport" />
@@ -154,7 +154,7 @@ export default function ServicesUg() {
                             </span>
                             </Link>
                         </span>
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full">
                         <Link to="/ServiceEr" >
                         <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
                             <img className="w-full h-full max-lg:h-[180px] max-lg:rounded-xl  object-center object-cover rounded-mm"  src={emergency} alt="air and ambulance transport" />

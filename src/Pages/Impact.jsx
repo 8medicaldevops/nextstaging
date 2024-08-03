@@ -16,7 +16,7 @@ export default function Impact () {
         <div>
             <NavBar/>
             <div>
-             <section  className="bg-[url(./assets/images/impactbackground.jpeg)]  bg-[#43039C61]/50 accent-[#37018330] bg-blend-overlay max-2xl:bg-[center_bottom_-22rem] max-xl:bg-[center_bottom_-7rem] max-lg:h-[40vh]  max-lg:bg-[center_top_-6rem] max-md:h-[30vh] max-md:bg-[center_top_-3rem] bg-[center_bottom_-38rem] bg-cover bg-no-repeat h-[50vh] flex items-end justify-center pb-[80px] ">
+             <section  className="bg-[url(./assets/images/impactbackground.jpeg)]  bg-[#43039C61]/50 accent-[#37018330] bg-blend-overlay max-2xl:bg-[center_bottom_-22rem] max-xl:bg-[center_bottom_-7rem] max-lg:h-[40vh]  max-lg:bg-[center_top_-6rem] max-md:h-[30vh] max-md:bg-[center_top_-3rem] bg-[center_bottom_-38rem] bg-cover bg-no-repeat  h-[50vh] flex items-end justify-center pb-[80px] max-md:pb-10 ">
                <p className="text-white text-[64px] font-brbold">
                 Impact
                </p>

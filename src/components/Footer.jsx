@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
  export default function Footer () {
     return(
-        <div className="bg-[#04041A] py-12 flex flex-col gap-9 items-center w-full">
+        <div className="bg-[#04041A] py-12 flex flex-col gap-9 items-center max-sm:text-center w-full">
             <div>
             <svg width="262" height="57" viewBox="0 0 262 57" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_1459_26854)">

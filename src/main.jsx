@@ -23,6 +23,7 @@ import ServicesAmb from './Pages/ServicesAmb.jsx';
 import ServicesUg from './Pages/ServicesUg.jsx';
 import Impact from './Pages/Impact.jsx';
 import OtherBookings from './Pages/OtherBookings.jsx';
+import BookingError from './Pages/BookingError.jsx';
 
 
 const router = createBrowserRouter([
@@ -103,6 +104,12 @@ const router = createBrowserRouter([
     path: "/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful",
     element: <BookingSuccessful />,  
   },
+  {
+    path: "/BookingError",
+    element: <BookingError />, 
+     
+  },
+ 
     
   
   

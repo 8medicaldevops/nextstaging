@@ -55,12 +55,12 @@ export default function ServicesAgt() {
                 </section>
                 <BookServiceModal isModalOpen={bookingModal} isModalClosed={()=>setBookingModal(false)}/>
                 <section className="py-12 flex flex-col gap-20" >
-                    <span className="flex justify-center gap-2 text-[#181719] font-brsemi text-[40px] items-center max-lg:flex-col max-lg:text-4xl">
+                    <span className="flex justify-center text-center gap-2 text-[#181719] font-brsemi text-[40px] items-center max-lg:flex-col max-lg:text-4xl">
                         <p>How to Book an</p>
                         <p className="text-ev-700">Ambulance Transport</p>
                     </span>
                     <div className="flex justify-center gap-12 flex-wrap items-center max-lg:flex-col max-lg:items-center max-lg:gap-16">
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                             <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">1</div>
                                 <p className="font-brbold text-[20px] text-[#181719]">Contact Us</p>
                                 <span className="flex flex-col gap-2">
@@ -69,28 +69,28 @@ export default function ServicesAgt() {
                             <p className="font-brmedium text-ev-700">hello@8medical.co</p>
                             </span>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">2</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Provide Information about the Transport</p>
                             <p className="font-brmedium text-center text-[#636066]">Provide us with useful information such as the type of transport, pickup and drop off points e.t.c.</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">3</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Schedule Date and Time for Transport </p>
                             <p className="font-brmedium text-[#636066]">Inform us of your preferred date and time for the patient’s transport.</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">4</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Confirm Your Details and Make Payments</p>
                             <p className="font-brmedium text-[#636066]">Review your information before proceeding to payment.</p>
                         </span>
-                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] w-[325.33px] py-9 px-6">
+                        <span className="bg-[#F9F9FA] rounded-xl text-center flex flex-col gap-5 h-[225px] max-sm:w-full w-[325.33px] py-9 px-6">
                         <div className="h-10 w-10 bg-ev-700 rounded-full flex items-center justify-center self-center -mt-14 font-brreg text-xl text-white">5</div>
                             <p className="font-brbold text-[20px] text-[#181719]">Prepare for Transport</p>
                             <p className="font-brmedium text-[#636066]">Get the patient ready for transport, we will arrive 30mins before selected time.</p>
                         </span>
                     </div>
-                    <span className="py-12 px-16 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
+                    <span className="py-12 px-16 max-sm:px-4 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
                         <div className="flex flex-col gap-1 ">
                     <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Book our Ambulance Transport Service Today</p>
                     {/* <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
@@ -129,13 +129,13 @@ export default function ServicesAgt() {
                     </div>
                 </section>
                 
-                <section className="py-20 flex flex-col gap-9">
+                <section className="py-20 flex flex-col  gap-9">
                     <p className="font-brsemi text-[#181719] text-[40px] max-lg:text-4xl ">Other Services</p>
-                    <div className="flex flex-wrap justify-between max-lg:flex-col max-lg:gap-9">
+                    <div className="flex flex-wrap justify-between   max-md:flex-col max-lg:gap-14 max-md:gap-9">
                         
-                    <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full">
+                    <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full">
                     <Link to="/ServiceEr" >
-                        <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
+                        <div className="h-[180px] w-[309.33px] max-md:w-full max-lg:h-full">
                             <img className="w-full h-full max-lg:h-[180px] max-lg:rounded-xl object-center object-cover rounded-mm"  src={emergency} alt="air and ambulance transport" />
                             </div>
                             <p className="font-brsemi text-[20px] text-[#181719]">Emergency Response</p>
@@ -148,10 +148,10 @@ export default function ServicesAgt() {
                             </span>
                             </Link>
                         </span>
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full ">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full ">
                         <Link to="/ServiceAmb" >
                         <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
-                            <img className="w-full" src='ServiceImage.png' alt="air and ambulance transport" />
+                            <img className="w-full h-full max-lg:h-[180px]" src='ServiceImage.png' alt="air and ambulance transport" />
                             </div>
                             <p className="font-brsemi text-[20px] text-[#181719]">Ambulance Standby</p>
                             <span className="flex items-center gap-2">
@@ -163,7 +163,7 @@ export default function ServicesAgt() {
                             </span>
                             </Link>
                         </span>
-                        <span className="flex flex-col gap-6 w-[309.33px] max-lg:w-full">
+                        <span className="flex flex-col gap-6 w-[309.33px] max-md:w-full">
                         <Link to="/ServiceUg" >
                         <div className="h-[180px] w-[309.33px] max-lg:w-full max-lg:h-full">
                             <img className="w-full" src='ugtwo.png' alt="air and ambulance transport" />

@@ -37,7 +37,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
         <Dialog open={props.isModalOpen}>
             
         
-        <DialogContent className="bg-none w-full bg-white max-md:rounded-[24px] max-md:w-[95%] md:rounded-[24px] py-12 ">
+        <DialogContent className="bg-none w-full bg-white max-md:rounded-[24px] max-md:w-[95%] max-sm:w-[100%] md:rounded-[24px] py-12 ">
             <DialogHeader className="bg-white  gap-6 " >
                 <div className=" flex px-2 justify-end cursor-pointer">
             <button onClick={props.isModalClosed}><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -18,9 +18,14 @@ export default function NewsLetter () {
             setEmailAddress(value);
         
     };
+    console.log(emailAddress)
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (!emailAddress.trim()) {
+            // alert("Please enter a valid email address.");
+            return;
+          }
         axios.post('https://eightmedicalbackend.onrender.com/newsletter/subscribe', {
             email: emailAddress,
           })
@@ -32,16 +37,16 @@ export default function NewsLetter () {
           .catch(function (error) {
             console.log(error);
           });
-
+        
 
     }
     return(
         
         <div className=" py-16  flex flex-col gap-8 rounded-[32px] bg-white items-center">
-            <div className="px-24 items-center gap-1 text-center max-lg:px-4 max-lg:flex max-lg:flex-col ">
+            <div className="px-24 items-center gap-1 text-center max-lg:px-4 max-sm:px-2 max-lg:flex max-lg:flex-col ">
 
            
-            <p className=" font-brsemi text-4xl text-[#000000] max-lg:w-[300px] max-lg:text-[32px] max-lg:text-center ">Subscribe to our Newsletter</p>
+            <p className=" font-brsemi text-4xl text-[#000000] max-lg:w-[300px] max-lg:text-[32px] max-sm:text-2xl max-lg:text-center ">Subscribe to our Newsletter</p>
             <p className=" font-brmedium text-[#636066]">Get relevant health care updates, resources and offers straight in your inbox</p>
            
             </div>
@@ -54,9 +59,9 @@ export default function NewsLetter () {
                 onChange={handleInputChange}
                 />
                 
-                <button type="submit" disabled={!isValidEmail} className={isValidEmail ? " font-brbold text-lg text-white py-3 px-5 bg-ev-700 rounded-mm max-lg:w-[90%]":" font-brbold text-lg text-white py-3 px-5 bg-ev-300 rounded-mm max-lg:w-[90%]"}>Subscribe</button>
+                <button type="submit" disabled={!isValidEmail } className={isValidEmail ? " font-brbold text-lg text-white py-3 px-5 bg-ev-700 rounded-mm max-lg:w-[90%]":" font-brbold text-lg text-white py-3 px-5 bg-ev-300 rounded-mm max-lg:w-[90%]"}>Subscribe</button>
             </form>
-            {!isValidEmail && (
+            {!isValidEmail &&  (
                         <small className="text-red-500">Invalid email address.</small>
                          )}
                 <Suscribed isModalOpen={isModalOpen} isModalClosed={()=>setIsModalOpen(false)} />         

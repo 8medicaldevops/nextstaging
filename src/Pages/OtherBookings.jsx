@@ -26,11 +26,11 @@ export default function OtherBookings () {
                     </defs>
                     </svg>
 
-                    <p className="font-brsemi text-3xl text-[#181719] ">Reach out to us</p>
+                    <p className="font-brsemi text-3xl max-sm:text-2xl text-[#181719] ">Reach out to us</p>
                     </div>
                     
                     <div className="flex flex-col gap-6">
-                    <p className="text-xl font-brsemi text-[#181719] max-md:w-full max-lg:w-[90%]">To complete your request, contact us via</p>
+                    <p className="text-xl font-brsemi text-[#181719] max-md:w-full max-lg:w-[90%] text-center">To complete your request, contact us via</p>
                     <div className="flex flex-col justify-between gap-6">
                        <div>
                        <a href="mailto:hello@8medical.co">
