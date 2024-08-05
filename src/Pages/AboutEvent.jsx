@@ -237,10 +237,23 @@ export default function AboutEvent () {
                             placeholder: "Enter venue address",
                             onFocus:{outline:'none'},
                             styles: {
+                                control: (provided) => ({
+                                    ...provided,
+                                    
+                                    border:'1px solid #E4E3E5',
+                                    borderRadius:'8px',
+                                    padding:'0px 6px',
+                                    height:'48px',
+                                    outline:'none'
+                                }),
+                                placeholder: (provided) => ({
+                                    ...provided,
+                                    color:'#9C9A9E'
+                                }),
                                 input: (provided) => ({
                                 ...provided,
                                 border: 'none',
-                                padding: '0px 8px',
+                                padding: '0px 0px',
                                 color: '#232323',
                                 maxWidth: '100%',
                                 height:'40px'
@@ -255,7 +268,7 @@ export default function AboutEvent () {
                                 ...provided,
                                 color: '#232323',
                                 outline: 'none',
-                                padding: '0px 8px',
+                                padding: '0px 0px',
                                 }),
                             },
                             }}
