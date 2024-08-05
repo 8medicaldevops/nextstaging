@@ -18,7 +18,7 @@ export default function NewsLetter () {
             setEmailAddress(value);
         
     };
-    console.log(emailAddress)
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -30,7 +30,7 @@ export default function NewsLetter () {
             email: emailAddress,
           })
           .then(function (response) {
-            console.log(response);
+            //console.log(response);
             setIsModalOpen(true);
             setEmailAddress('');
           })

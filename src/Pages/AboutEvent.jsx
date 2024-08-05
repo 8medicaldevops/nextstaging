@@ -9,6 +9,8 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+  import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+  import './../index.css';
   
 
 export default function AboutEvent () {
@@ -43,6 +45,16 @@ export default function AboutEvent () {
 
     const handleSelectChange = (field, value) => {
         setEventData({ ...eventData, [field]: value });
+      };
+
+      const handleAddressSelect = (value) => {
+        const event = {
+          target: {
+            name: 'venueAddress',
+            value: value.label,
+          },
+        };
+        handleInputChange(event);
       };
 
     const handleSubmit = (e) => {
@@ -204,12 +216,51 @@ export default function AboutEvent () {
 
                         <span>
                         <label htmlFor="" className="font-brsemi text-sm text-[#636066] "  >Enter venue address</label>
-                        <input type="text"
+                        {/* <input type="text"
                         className="border-[1px] border-[#E4E3E5] h-12 w-[568px] rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none max-lg:w-full "
                         placeholder="Enter venue address"
                         value={eventData.venueAddress}
                         name="venueAddress"
-                        onChange={handleInputChange} />
+                        onChange={handleInputChange} /> */}
+                        <div className="font-brreg ">
+                         <GooglePlacesAutocomplete
+                            apiKey="AIzaSyDZ970Ry5YgadEPFdw9FnPkbZPcMFO_oK4"
+                            autocompletionRequest={{
+                               
+                                componentRestrictions: {
+                                  country: ['ng'],
+                                }
+                              }}
+                            selectProps={{
+                            value: eventData.venueAddress ? { label: eventData.venueAddress, value: eventData.venueAddress } : null,
+                            onChange: handleAddressSelect,
+                            placeholder: "Enter venue address",
+                            onFocus:{outline:'none'},
+                            styles: {
+                                input: (provided) => ({
+                                ...provided,
+                                border: 'none',
+                                padding: '12px 10px',
+                                color: '#232323',
+                                maxWidth: '100%',
+                                }),
+                                option: (provided) => ({
+                                ...provided,
+                                color: '#232323',
+                                border: 'none',
+                                outline: 'none',
+                                }),
+                                singleValue: (provided) => ({
+                                ...provided,
+                                color: '#232323',
+                                borderRadius: '80px',
+                                outline: 'none',
+                                padding: '0px 10px',
+                                }),
+                            },
+                            }}
+                        />
+                        </div>
                         </span>
 
                         <span>
