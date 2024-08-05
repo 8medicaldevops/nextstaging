@@ -222,7 +222,7 @@ export default function AboutEvent () {
                         value={eventData.venueAddress}
                         name="venueAddress"
                         onChange={handleInputChange} /> */}
-                        <div className="font-brreg ">
+                        <div className="font-brreg rounded-xl  ">
                          <GooglePlacesAutocomplete
                             apiKey="AIzaSyDZ970Ry5YgadEPFdw9FnPkbZPcMFO_oK4"
                             autocompletionRequest={{
@@ -240,9 +240,10 @@ export default function AboutEvent () {
                                 input: (provided) => ({
                                 ...provided,
                                 border: 'none',
-                                padding: '12px 10px',
+                                padding: '0px 10px',
                                 color: '#232323',
                                 maxWidth: '100%',
+                                height:'40px'
                                 }),
                                 option: (provided) => ({
                                 ...provided,
@@ -253,7 +254,6 @@ export default function AboutEvent () {
                                 singleValue: (provided) => ({
                                 ...provided,
                                 color: '#232323',
-                                borderRadius: '80px',
                                 outline: 'none',
                                 padding: '0px 10px',
                                 }),
