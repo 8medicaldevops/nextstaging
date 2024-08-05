@@ -240,7 +240,7 @@ export default function AboutEvent () {
                                 input: (provided) => ({
                                 ...provided,
                                 border: 'none',
-                                padding: '0px 10px',
+                                padding: '0px 8px',
                                 color: '#232323',
                                 maxWidth: '100%',
                                 height:'40px'
@@ -255,7 +255,7 @@ export default function AboutEvent () {
                                 ...provided,
                                 color: '#232323',
                                 outline: 'none',
-                                padding: '0px 10px',
+                                padding: '0px 8px',
                                 }),
                             },
                             }}
