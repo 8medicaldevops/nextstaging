@@ -290,7 +290,7 @@ export default function Hero() {
                 <main>
                     <p className="font-brbold text-4xl max-lg:text-center  text-[#181719]">Unparalleled
                     Healthcare Services</p>
-                    <p className="font-brreg text-lg text-center text-[#636066]">You are assured of top-notch medical care when you book any of our services.</p>
+                    <p className="font-brreg text-lg max-lg:text-center text-[#636066]">You are assured of top-notch medical care when you book any of our services.</p>
                 </main>
                 <aside className=" ">
                     <div className="flex flex-wrap justify-between gap-6 max-lg:gap-12 max-md:flex-nowrap max-md:flex-col max-lg:w-full ">
