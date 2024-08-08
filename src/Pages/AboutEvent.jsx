@@ -224,7 +224,7 @@ export default function AboutEvent () {
                         onChange={handleInputChange} /> */}
                         <div className="font-brreg rounded-xl  ">
                          <GooglePlacesAutocomplete
-                            apiKey="AIzaSyDZ970Ry5YgadEPFdw9FnPkbZPcMFO_oK4"
+                            apiKey= {import.meta.env.VITE_PLACES_KEY}
                             autocompletionRequest={{
                                
                                 componentRestrictions: {

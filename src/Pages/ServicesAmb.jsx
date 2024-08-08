@@ -32,10 +32,11 @@ export default function ServicesAmb() {
                         </clipPath>
                         </defs>
                         </svg>
-                        <p className="text-[40px] w-[448px] text-[#2E0469] font-brbold max-lg:flex max-lg:justify-center max-lg:w-full max-lg:text-4xl text-center">Ambulance Standby</p>
+                        <p className="text-[40px] w-[448px] text-[#2E0469] font-brbold max-lg:flex max-lg:justify-center max-lg:w-full max-lg:text-4xl max-lg:text-center">Ambulance Standby</p>
                         <p className="w-[448px] text-[#666666] font-brreg max-lg:flex max-lg:text-center text-lg max-lg:w-full ">From small pop-up gatherings to high-profile conferences and weddings, all events carry the potential for unforeseen emergencies. Our comprehensive ambulance standby services ensure that your event is covered by and equipped with the best emergency response team money can buy. Most importantly, we ensure that you and your event are free from liability.</p>
                         </div>
                         <div className="max-lg:flex max-lg:justify-center">
+                            {import.meta.env.VITE_READY_TO_LAUNCH === 'Ready' &&
                         <button onClick={()=>navigate("/StandBy")} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
                         Book Now
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,6 +45,17 @@ export default function ServicesAmb() {
                         </svg>
 
                         </button>
+                        }
+                           {import.meta.env.VITE_READY_TO_LAUNCH === 'notReady' &&
+                        <button onClick={()=>navigate("/OtherBookings")} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
+                        Book Now
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+
+                        </button>
+                        }
                         </div>
                     </main>
                     <aside>
@@ -91,7 +103,12 @@ export default function ServicesAmb() {
                     <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Book an ambulance to standby at your event today</p>
                     {/* <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
                     </div>
+                    {import.meta.env.VITE_READY_TO_LAUNCH === 'Ready' &&
                     <button onClick={()=>navigate("/StandBy")} className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Book Ambulance Standby</button>
+                    }
+                     {import.meta.env.VITE_READY_TO_LAUNCH === 'notReady' &&
+                    <button onClick={()=>navigate("/OtherBookings")} className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Book Ambulance Standby</button>
+                    }
                 </span>
                 </section>
                 

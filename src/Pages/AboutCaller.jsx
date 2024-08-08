@@ -269,7 +269,7 @@ export default function AboutCaller () {
                         <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                         </button>
-                    <DialogContent className=" flex gap-6 bg-white p-6 border-none rounded-[12px] h-[665px] max-lg:w-[90%] max-lg:h-[75%] max-mm:h-[100%] w-[580px] max-sm:p-1">
+                    <DialogContent className=" flex gap-6 bg-white p-6 border-none rounded-[12px] h-[665px] max-lg:w-[90%] max-lg:h-[75%] max-mm:h-[90%] w-[580px] max-sm:p-1">
                         <DialogHeader>
                         <DialogTitle >
                             <div className="flex flex-col pb-6 gap-6 items-center max-lg:pb-0">
