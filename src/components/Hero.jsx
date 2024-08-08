@@ -128,9 +128,15 @@ export default function Hero() {
                     </aside>
                     
                     </div>
-                    <Link to='StandBy' >
-                        <button  className="bg-ev-700 mt-4 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
-                        </Link>
+                    
+                    {import.meta.env.VITE_READY_TO_LAUNCH === 'Ready' &&
+                        <button onClick={()=>navigate('/Standby')}  className="bg-ev-700 mt-4 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
+                        
+                    }
+                       { import.meta.env.VITE_READY_TO_LAUNCH === 'notReady' &&
+                        <button onClick={()=>setBookingModal(true)}  className="bg-ev-700 mt-4 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
+                       
+                        } 
                 </div>;
             case 'transport':
                 return <div className="px-12 py-12 rounded-3xl bg-white">
@@ -570,52 +576,87 @@ export function SkeletonCard() {
 
 const testimonies = [
     {
-        image : './profile.png',
-        name : 'Edward Berge',
-        title : 'Investor Paradigm Agent',
-        review : `The ambulance was in good condition, the paramedics were polite, empathic, professional and patient. Best service provision ever. I'm most impressed.
+        image : '',
+        name : 'Adaobi Onyekachi',
+        title : '',
+        review : `The medical team was quick, caring, and professional. Exceptional service, truly impressed.
 “`
     },
     {
-        image : './profile.png',
-        name : 'Edward Berge',
-        title : 'Investor Paradigm Agent',
-        review : `The ambulance was in good condition, the paramedics were polite, empathic, professional and patient. Best service provision ever. I'm most impressed.
+        image : '',
+        name : 'Tunde Bakare',
+        title : '',
+        review : `Best healthcare experience ever. The paramedics were so calm and efficient. Highly recommended!
 “`
     },
     {
-        image : './profile.png',
-        name : 'Edward Berge',
-        title : 'Investor Paradigm Agent',
-        review : `The ambulance was in good condition, the paramedics were polite, empathic, professional and patient. Best service provision ever. I'm most impressed.
+        image : '',
+        name : 'Funmi Adewale',
+        title : '',
+        review : `Quick response, friendly staff, and excellent care. Couldn't ask for better service!
 “`
     },
     {
-        image : './profile.png',
-        name : 'Edward Berge',
-        title : 'Investor Paradigm Agent',
-        review : `The ambulance was in good condition, the paramedics were polite, empathic, professional and patient. Best service provision ever. I'm most impressed.
+        image : '',
+        name : 'Chukwuma Okafor',
+        title : '',
+        review : `The team arrived promptly and handled everything with utmost professionalism. Highly satisfied.
 “`
     },
     {
-        image : './profile.png',
-        name : 'Edward Berge',
-        title : 'Investor Paradigm Agent',
-        review : `The ambulance was in good condition, the paramedics were polite, empathic, professional and patient. Best service provision ever. I'm most impressed.
+        image : '',
+        name : 'Ngozi Uche',
+        title : '',
+        review : `Efficient, caring, and professional. The service exceeded all my expectations.
 “`
     },
     {
-        image : './profile.png',
-        name : 'Edward Berge',
-        title : 'Investor Paradigm Agent',
-        review : `The ambulance was in good condition, the paramedics were polite, empathic, professional and patient. Best service provision ever. I'm most impressed.
+        image : '',
+        name : 'Segun Adebayo',
+        title : '',
+        review : `From start to finish, the service was top-notch. The paramedics were incredibly compassionate.
 “`
     },
     {
-        image : './profile.png',
-        name : 'Edward Berge',
-        title : 'Investor Paradigm Agent',
-        review : `The ambulance was in good condition, the paramedics were polite, empathic, professional and patient. Best service provision ever. I'm most impressed.
+        image : '',
+        name : 'Ezinne Chukwu',
+        title : '',
+        review : `I was amazed by the prompt and professional service. The team was very reassuring and kind.
+“`
+    },
+    {
+        image : '',
+        name : 'Kola Falana',
+        title : '',
+        review : `They arrived on time, and the care was outstanding. I felt safe and well taken care of.
+“`
+    },
+    {
+        image : '',
+        name : 'Rashida Mohammed',
+        title : '',
+        review : `The service was efficient, and the paramedics were empathetic. They made a stressful situation easier.
+“`
+    },
+    {
+        image : '',
+        name : 'Bola Ojo',
+        title : '',
+        review : `Fast, reliable, and very professional. The paramedics were truly wonderful and attentive.
+“`
+    },
+    {
+        image : '',
+        name : 'Obinna Eze',
+        title : '',
+        review : `Outstanding service. The paramedics were patient, understanding, and very professional.
+“`
+    },
+    {
+        image : '',
+        name : 'Folake Babalola',
+        title : '',
+        review : `The response time was amazing, and the care was exceptional. I highly recommend their service
 “`
     },
  
@@ -625,7 +666,7 @@ export function Testimonial({ image, name, title, review }) {
     return (
       <div className="bg-[#F9F9FA] rounded-xl flex flex-col-reverse  gap-3  p-5 w-[330px] h-[231px]">
         <div className="flex gap-2 items-center border-[#E4E3E5] pt-2 border-t-[1px]" >
-          <img src={image} alt="" className="w-8 h-8 rounded" />
+          {/* <img src={image} alt="" className="w-8 h-8 rounded" /> */}
           <span>
             <p className="font-brbold text-sm text-[#181719]">{name}</p>
             <p className="font-brreg text-sm text-[#636066]">{title}</p>
