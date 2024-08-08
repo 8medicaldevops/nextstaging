@@ -58,7 +58,7 @@ export default function ConfirmOrder () {
         reference: (new Date()).getTime().toString(),
         email: storedCallerData.emailAddress,
         amount: storedAmbulanceData.estimatedFee * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
-        publicKey: 'pk_test_b0c05f074c10dfa5e558124e70af003d549c7c6f',
+        publicKey: import.meta.env.VITE_PAYSTACK_KEY,
       };
 
     // Paystack functions for succes action
