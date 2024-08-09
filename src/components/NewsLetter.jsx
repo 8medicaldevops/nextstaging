@@ -6,6 +6,7 @@ export default function NewsLetter () {
     const [isValidEmail, setIsValidEmail] = useState(true);
     const [emailAddress, setEmailAddress] = useState('');
     const [isModalOpen,setIsModalOpen] = useState(false);
+    const [emailAddressEntered,setEmailAddressEntered] = useState(true)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -26,6 +27,11 @@ export default function NewsLetter () {
             // alert("Please enter a valid email address.");
             return;
           }
+          if (emailAddressEntered) {
+            // Email validation regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            setEmailAddressEntered(emailRegex.test(value));
+        }
         axios.post('https://eightmedicalbackend.onrender.com/newsletter/subscribe', {
             email: emailAddress,
           })
@@ -53,7 +59,7 @@ export default function NewsLetter () {
             <form onSubmit={handleSubmit} className="w-[90%] flex  gap-2 items-center max-lg:flex-col ">
                 <input
                 placeholder="Enter your email address here"
-                className=" font-brmedium text-[#9C9A9E] border-[1px]-[#F4F2F5] py-3 px-5 bg-[#F9F9FA] rounded-mm w-[80%]"
+                className=" font-brmedium text-[#9C9A9E] border-[1px]-[#F4F2F5] py-3 px-5 max-lg:w-full bg-[#F9F9FA] outline-none rounded-mm w-[80%]"
                 value={emailAddress}
                 name="emailAddress"
                 onChange={handleInputChange}
@@ -61,7 +67,7 @@ export default function NewsLetter () {
                 
                 <button type="submit" disabled={!isValidEmail } className={isValidEmail ? " font-brbold text-lg text-white py-3 px-5 bg-ev-700 rounded-mm max-lg:w-[90%]":" font-brbold text-lg text-white py-3 px-5 bg-ev-300 rounded-mm max-lg:w-[90%]"}>Subscribe</button>
             </form>
-            {!isValidEmail &&  (
+            {!emailAddressEntered &&  (
                         <small className="text-red-500">Invalid email address.</small>
                          )}
                 <Suscribed isModalOpen={isModalOpen} isModalClosed={()=>setIsModalOpen(false)} />         
