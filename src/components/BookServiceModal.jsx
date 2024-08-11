@@ -37,8 +37,8 @@ import CopyToClipboard from "react-copy-to-clipboard";
         <Dialog open={props.isModalOpen}>
             
         
-        <DialogContent className="bg-none w-full bg-white max-md:rounded-[24px] max-md:w-[95%] max-sm:w-[100%] md:rounded-[24px] py-10 ">
-            <DialogHeader className="bg-white  gap-6 " >
+        <DialogContent className="bg-none w-full bg-white max-md:rounded-[24px] max-md:w-[95%] max-sm:w-[100%] md:rounded-[24px] pb-10 ">
+            <DialogHeader className="bg-white  gap-0 " >
                 <div className=" flex px-2 justify-end cursor-pointer">
             <button onClick={props.isModalClosed}><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18 3C9.735 3 3 9.735 3 18C3 26.265 9.735 33 18 33C26.265 33 33 26.265 33 18C33 9.735 26.265 3 18 3ZM23.04 21.45C23.475 21.885 23.475 22.605 23.04 23.04C22.815 23.265 22.53 23.37 22.245 23.37C21.96 23.37 21.675 23.265 21.45 23.04L18 19.59L14.55 23.04C14.325 23.265 14.04 23.37 13.755 23.37C13.47 23.37 13.185 23.265 12.96 23.04C12.525 22.605 12.525 21.885 12.96 21.45L16.41 18L12.96 14.55C12.525 14.115 12.525 13.395 12.96 12.96C13.395 12.525 14.115 12.525 14.55 12.96L18 16.41L21.45 12.96C21.885 12.525 22.605 12.525 23.04 12.96C23.475 13.395 23.475 14.115 23.04 14.55L19.59 18L23.04 21.45Z" fill="#F9091D"/>

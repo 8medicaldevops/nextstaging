@@ -10,29 +10,33 @@ export default function NewsLetter () {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+         // Clear the email validation error as soon as the user starts typing
+        setEmailAddressEntered(true);
+
+        // Update the corresponding state based on the input name
         if (name === 'emailAddress') {
-            // Email validation regex
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            setIsValidEmail(emailRegex.test(value));
+            setEmailAddress(value.trim());
         }
-        
-            setEmailAddress(value);
         
     };
     
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // Ensure the email address is not empty
         if (!emailAddress.trim()) {
-            // alert("Please enter a valid email address.");
+            // Set error state if email is empty
+            setEmailAddressEntered(false);
             return;
-          }
-          if (emailAddressEntered) {
-            // Email validation regex
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            setEmailAddressEntered(emailRegex.test(value));
         }
-        axios.post('https://eightmedicalbackend.onrender.com/newsletter/subscribe', {
+
+        // Validate the email address
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailAddress)) {
+            setEmailAddressEntered(false);
+            return;
+        }
+        axios.post(import.meta.env.VITE_NEWSLETTER_API, {
             email: emailAddress,
           })
           .then(function (response) {
@@ -65,7 +69,7 @@ export default function NewsLetter () {
                 onChange={handleInputChange}
                 />
                 
-                <button type="submit" disabled={!isValidEmail } className={isValidEmail ? " font-brbold text-lg text-white py-3 px-5 bg-ev-700 rounded-mm max-lg:w-[90%]":" font-brbold text-lg text-white py-3 px-5 bg-ev-300 rounded-mm max-lg:w-[90%]"}>Subscribe</button>
+                <button type="submit" disabled={!emailAddressEntered } className={emailAddressEntered ? " font-brbold text-lg text-white py-3 px-5 bg-ev-700 rounded-mm max-lg:w-[90%]":" font-brbold text-lg text-white py-3 px-5 bg-ev-300 rounded-mm max-lg:w-[90%]"}>Subscribe</button>
             </form>
             {!emailAddressEntered &&  (
                         <small className="text-red-500">Invalid email address.</small>
