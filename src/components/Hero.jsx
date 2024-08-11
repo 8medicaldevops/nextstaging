@@ -189,8 +189,8 @@ export default function Hero() {
     const navigate = useNavigate();
     return(
         <div>
-            <section className="flex flex-col justify-center items-center gap-9 bg-[#30056B] bg-[url(./assets/Siren.gif)] bg-no-repeat bg-cover bg-center lg:h-[85vh] bg-blend-soft-light  py-20">
-                <p className="font-brbold text-[56px] text-white w-[794px] text-center max-lg:text-5xl max-lg:w-[396px] max-sm:w-full ">Get urgent ambulance and medical care services</p>
+            <section className="flex flex-col justify-center items-center gap-6 bg-[#30056B] bg-[url(./assets/Siren.gif)] bg-no-repeat bg-cover bg-center lg:h-[85vh] bg-blend-soft-light  py-20">
+                <p className="font-brbold text-[56px] text-white w-[794px] text-center max-lg:text-5xl max-lg:w-[396px] max-sm:w-full leading-snug ">Get urgent ambulance and medical care services</p>
                 <p className=" font-brreg text-white w-[694px] text-center text-2xl rounded max-lg:text-lg max-lg:w-[396px] max-sm:w-full ">We offer responsive and dependable ambulance and medical care services according to your needs.</p>
                 <div className="flex gap-4 items-center max-lg:flex-col max-lg:w-[396px] max-sm:w-full max-sm:px-1 ">
                     
@@ -300,7 +300,7 @@ export default function Hero() {
                     <p className="font-brreg text-lg max-lg:text-center text-[#636066]">You are assured of top-notch medical care when you book any of our services.</p>
                 </main>
                 <aside className=" ">
-                    <div className="flex flex-wrap justify-between 2xl:gap-36 gap-6 max-lg:gap-12 max-md:flex-nowrap max-md:flex-col max-lg:w-full ">
+                    <div className="flex flex-wrap justify-between 2xl:gap-24 gap-6 max-lg:gap-12 max-md:flex-nowrap max-md:flex-col max-lg:w-full ">
                     {serviceContents.map((service, index) => (
                 <ServiceCard 
                     key={index}

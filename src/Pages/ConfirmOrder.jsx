@@ -91,7 +91,7 @@ export default function ConfirmOrder () {
           };
       
           try {
-            const response = await axios.post("https://eightmedicalbackend.onrender.com/order", data);
+            const response = await axios.post(import.meta.env.VITE_BOOKING_API, data);
             //console.log("Response:", response.data);
             navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
           } catch (error) {
