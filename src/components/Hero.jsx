@@ -293,7 +293,7 @@ export default function Hero() {
                     </span>
                 </div>
             </section>
-            <section className="flex justify-between max-lg:items-center bg-[#F9F9FA] py-32 px-36 max-md:px-2 gap-32 max-lg:flex-col max-lg:py-12 max-xl:px-8 max-xl:gap-4 max-lg:px-4 max-lg:gap-9 ">
+            <section className="flex justify-between max-lg:items-center bg-[#F9F9FA] py-32 px-36 max-md:px-2 gap-32 max-[1428px]:px-9 max-lg:flex-col max-lg:py-12 max-xl:px-8 max-xl:gap-4 max-lg:px-4 max-lg:gap-9 ">
                 <main>
                     <p className="font-brbold text-4xl max-lg:text-center  text-[#181719]">Unparalleled
                     Healthcare Services</p>
