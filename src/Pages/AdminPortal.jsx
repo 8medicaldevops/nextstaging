@@ -5,7 +5,6 @@ import { DataTableDemo } from "@/components/Table";
 
  export default function AdminPortal () {
 
-    console.log( import.meta.env_VITE_TAG)
     return(
         <div className="bg-[#F4F6FA] flex flex-col gap-9 py-9 px-12">
             <section className="flex justify-between items-center bg-[#07072D] rounded-xl px-6 py-5">
