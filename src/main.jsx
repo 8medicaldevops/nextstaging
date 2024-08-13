@@ -24,7 +24,7 @@ import ServicesUg from './Pages/ServicesUg.jsx';
 import Impact from './Pages/Impact.jsx';
 import OtherBookings from './Pages/OtherBookings.jsx';
 import BookingError from './Pages/BookingError.jsx';
-//import AdminPortal from './Pages/AdminPortal.jsx';
+import AdminPortal from './Pages/AdminPortal.jsx';
 
 
 const router = createBrowserRouter([
@@ -68,11 +68,11 @@ const router = createBrowserRouter([
     element: <OtherBookings />, 
      
   },
-  // {
-  //   path: "/Admin",
-  //   element: <AdminPortal />, 
-     
-  // },
+
+  {
+    path: "/passwordCannotAccessAdmin",
+    element: <AdminPortal />, 
+   },
  
  
  

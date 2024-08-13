@@ -25,6 +25,3 @@ dist-ssr
 
 
 #Development files
-src/Pages/AdminPortal.jsx
-src/components/Table.jsx
-src/components/AuthDisp.jsx
