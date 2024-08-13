@@ -37,8 +37,8 @@ import CopyToClipboard from "react-copy-to-clipboard";
         <Dialog open={props.isModalOpen}>
             
         
-        <DialogContent className="bg-none w-full bg-white max-md:rounded-[24px] max-md:w-[95%] max-sm:w-[100%] md:rounded-[24px] py-12 ">
-            <DialogHeader className="bg-white  gap-6 " >
+        <DialogContent className="bg-none w-full bg-white max-md:rounded-[24px] max-md:w-[95%] max-sm:w-[100%] md:rounded-[24px] pb-10 ">
+            <DialogHeader className="bg-white  gap-0 " >
                 <div className=" flex px-2 justify-end cursor-pointer">
             <button onClick={props.isModalClosed}><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18 3C9.735 3 3 9.735 3 18C3 26.265 9.735 33 18 33C26.265 33 33 26.265 33 18C33 9.735 26.265 3 18 3ZM23.04 21.45C23.475 21.885 23.475 22.605 23.04 23.04C22.815 23.265 22.53 23.37 22.245 23.37C21.96 23.37 21.675 23.265 21.45 23.04L18 19.59L14.55 23.04C14.325 23.265 14.04 23.37 13.755 23.37C13.47 23.37 13.185 23.265 12.96 23.04C12.525 22.605 12.525 21.885 12.96 21.45L16.41 18L12.96 14.55C12.525 14.115 12.525 13.395 12.96 12.96C13.395 12.525 14.115 12.525 14.55 12.96L18 16.41L21.45 12.96C21.885 12.525 22.605 12.525 23.04 12.96C23.475 13.395 23.475 14.115 23.04 14.55L19.59 18L23.04 21.45Z" fill="#F9091D"/>
@@ -140,8 +140,8 @@ import CopyToClipboard from "react-copy-to-clipboard";
                         <path d="M15.125 7.1875H8.875C7 7.1875 5.75 8.125 5.75 10.3125V14.6875C5.75 16.875 7 17.8125 8.875 17.8125H15.125C17 17.8125 18.25 16.875 18.25 14.6875V10.3125C18.25 8.125 17 7.1875 15.125 7.1875ZM15.4187 10.9938L13.4625 12.5563C13.05 12.8875 12.525 13.05 12 13.05C11.475 13.05 10.9437 12.8875 10.5375 12.5563L8.58125 10.9938C8.38125 10.8313 8.35 10.5312 8.50625 10.3312C8.66875 10.1312 8.9625 10.0938 9.1625 10.2562L11.1188 11.8187C11.5938 12.2 12.4 12.2 12.875 11.8187L14.8313 10.2562C15.0312 10.0938 15.3313 10.125 15.4875 10.3312C15.65 10.5312 15.6187 10.8313 15.4187 10.9938Z" fill="#F4F1FF"/>
                         </svg>
 
-                            <p className="pr-[5px]">Email</p>
-                            <p className="pl-2 border-l-[1px] w-full border-[#E4E3E5] ">hello@8medical.co</p>
+                            <p className="pr-[5px] font-brreg">Email</p>
+                            <p className="pl-2 border-l-[1px] w-full border-[#E4E3E5] font-brreg ">hello@8medical.co</p>
                             </div>
                             </a>
 
@@ -161,8 +161,8 @@ import CopyToClipboard from "react-copy-to-clipboard";
                             </CopyToClipboard>
                             </section>
 
-                        <section className="section">
-                            {emailCopied ? <span style={{color: 'red'}}>Copied.</span> : null}
+                        <section className="section font-brreg">
+                            {emailCopied ? <span style={{color: '#6D09F9'}}>Copied.</span> : null}
                             
                         </section>
 
@@ -181,8 +181,8 @@ import CopyToClipboard from "react-copy-to-clipboard";
                         <path d="M18.7312 16.4562C18.7312 16.6312 18.7 16.8124 18.6375 16.9874C18.6187 17.0374 18.6 17.0874 18.575 17.1374C18.4687 17.3624 18.3313 17.5749 18.15 17.7749C17.8438 18.1124 17.5062 18.3562 17.125 18.5124C17.1187 18.5124 17.1125 18.5187 17.1063 18.5187C16.7375 18.6687 16.3375 18.7499 15.9062 18.7499C15.2688 18.7499 14.5875 18.5999 13.8687 18.2937C13.15 17.9874 12.4312 17.5749 11.7187 17.0562C11.475 16.8749 11.2313 16.6937 11 16.4999L13.0437 14.4562C13.2187 14.5874 13.375 14.6874 13.5062 14.7562C13.5375 14.7687 13.575 14.7874 13.6187 14.8062C13.6687 14.8249 13.7187 14.8312 13.775 14.8312C13.8812 14.8312 13.9625 14.7937 14.0312 14.7249L14.5062 14.2562C14.6625 14.0999 14.8125 13.9812 14.9562 13.9062C15.1 13.8187 15.2437 13.7749 15.4 13.7749C15.5187 13.7749 15.6437 13.7999 15.7812 13.8562C15.9187 13.9124 16.0625 13.9937 16.2188 14.0999L18.2875 15.5687C18.45 15.6812 18.5625 15.8124 18.6312 15.9687C18.6937 16.1249 18.7312 16.2812 18.7312 16.4562Z" fill="#F4F1FF"/>
                         </svg>
 
-                            <p className="">Phone</p>
-                            <p className="pl-2 border-l-[1px] w-full  border-[#E4E3E5]">+2348098888763</p>
+                            <p className="font-brreg">Phone</p>
+                            <p className="pl-2 border-l-[1px] w-full font-brreg border-[#E4E3E5]">+2348098888763</p>
                             </div>
                             </a>
                             <section className="flex items-center">
@@ -199,8 +199,8 @@ import CopyToClipboard from "react-copy-to-clipboard";
                             </CopyToClipboard>
                             </section>
 
-                        <section className="section">
-                            {phoneCopied ? <span style={{color: 'red'}}>Copied.</span> : null}
+                        <section className="section font-brreg">
+                            {phoneCopied ? <span style={{color: '#6D09F9'}}>Copied.</span> : null}
                             
                         </section>
 

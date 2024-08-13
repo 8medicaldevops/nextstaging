@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+#Development files
+src/Pages/AdminPortal.jsx
+src/components/Table.jsx
+src/components/AuthDisp.jsx

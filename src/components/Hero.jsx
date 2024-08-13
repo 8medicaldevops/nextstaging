@@ -25,6 +25,7 @@ import {
   } from "@/components/ui/select"
 import ComingSoon from "./ComingSoon";
 import BookServiceModal from "./BookServiceModal";
+import Autoplay from "embla-carousel-autoplay"
   
 
   
@@ -188,8 +189,8 @@ export default function Hero() {
     const navigate = useNavigate();
     return(
         <div>
-            <section className="flex flex-col justify-center items-center gap-9 bg-[#30056B] bg-[url(./assets/Siren.gif)] bg-no-repeat bg-cover bg-center bg-blend-soft-light  py-20">
-                <p className="font-brbold text-6xl text-white w-[694px] text-center max-lg:text-5xl max-lg:w-[396px] max-sm:w-full ">Get urgent ambulance and medical care services</p>
+            <section className="flex flex-col justify-center items-center gap-6 bg-[#30056B] bg-[url(./assets/Siren.gif)] bg-no-repeat bg-cover bg-center lg:h-[85vh] bg-blend-soft-light  py-20">
+                <p className="font-brbold text-[56px] text-white w-[794px] text-center max-lg:text-5xl max-lg:w-[396px] max-sm:w-full leading-snug ">Get urgent ambulance and medical care services</p>
                 <p className=" font-brreg text-white w-[694px] text-center text-2xl rounded max-lg:text-lg max-lg:w-[396px] max-sm:w-full ">We offer responsive and dependable ambulance and medical care services according to your needs.</p>
                 <div className="flex gap-4 items-center max-lg:flex-col max-lg:w-[396px] max-sm:w-full max-sm:px-1 ">
                     
@@ -259,7 +260,7 @@ export default function Hero() {
                         <span className="text-4xl flex justify-center  font-brbold">
                             {/* <Counter targetNumber={15000} duration={5000} /> */}
                             15000+</span>
-                        <p className=" font-brmedium text-s " >Calls Recieved</p>
+                        <p className=" font-brmedium text-s " >Calls Received</p>
                     </span>
  
                     <span className="text-center">
@@ -292,14 +293,14 @@ export default function Hero() {
                     </span>
                 </div>
             </section>
-            <section className="flex justify-between max-lg:items-center bg-[#F9F9FA] py-32 px-36 gap-32 max-lg:flex-col max-lg:py-12 max-xl:px-8 max-xl:gap-4 max-lg:px-4 max-lg:gap-9 ">
+            <section className="flex justify-between max-lg:items-center bg-[#F9F9FA] py-32 px-36 max-md:px-2 gap-32 max-[1428px]:px-9 max-lg:flex-col max-lg:py-12 max-xl:px-8 max-xl:gap-4 max-lg:px-4 max-lg:gap-9 ">
                 <main>
                     <p className="font-brbold text-4xl max-lg:text-center  text-[#181719]">Unparalleled
                     Healthcare Services</p>
                     <p className="font-brreg text-lg max-lg:text-center text-[#636066]">You are assured of top-notch medical care when you book any of our services.</p>
                 </main>
                 <aside className=" ">
-                    <div className="flex flex-wrap justify-between gap-6 max-lg:gap-12 max-md:flex-nowrap max-md:flex-col max-lg:w-full ">
+                    <div className="flex flex-wrap justify-between 2xl:gap-24 gap-6 max-lg:gap-12 max-md:flex-nowrap max-md:flex-col max-lg:w-full ">
                     {serviceContents.map((service, index) => (
                 <ServiceCard 
                     key={index}
@@ -318,7 +319,7 @@ export default function Hero() {
                 <p className="font-brsemi text-5xl text-[#181719] max-sm:text-3xl">Why Choose EightMedical?</p>
                 <p className="font-brreg text-lg text-[#636066]">We provide healthcare services that suits your needs</p>
                 </div>
-                <div className="flex gap-12 justify-between max-lg:flex-col ">
+                <div className="flex gap-12 justify-between max-lg:flex-col max-lg:gap-20 ">
                     <main className="flex flex-wrap gap-6 w-[696px]  max-lg:flex-col max-lg:w-full">
                     {wceContents.map((cont, index ) => (
                         <WceCard 
@@ -336,8 +337,8 @@ export default function Hero() {
                 </div>
             </section>
             <section className="  flex ">
-                <main className="w-[80%]  max-lg:hidden">
-                    <img src={doctor} alt="" className="h-full " />
+                <main className="w-[80%] bg-center  max-lg:hidden">
+                    <img src={doctor} alt="" className="h-full object-cover object-center" />
                 </main>
                 <aside className="w-[70%] pt-[148px] pr-[180px] pb-[164px] pl-[120px] bg-[#2E0469] flex flex-col gap-8 bg-[url('./assets/images/MembershipSection.png')] max-lg:bg-[url('./assets/images/doctor.jpeg')] max-lg:bg-blend-overlay max-lg:bg-center max-lg:bg-cover max-lg:h-[60vh] max-lg:w-[100%] max-lg:py-32 max-lg:px-9 max-lg:items-center ">
                     <p className="font-brsemi text-5xl text-white max-lg:text-[32px]">Membership</p>
@@ -564,6 +565,7 @@ export function SkeletonCard() {
                     src={ambuBig}
                     alt="Scrolling Image"
                     style={{ transform: `scale(${scale})`, transformOrigin: 'right bottom', transition: 'transform 0.2s' }}
+                    
                 />
             </div>
         </div>
@@ -664,7 +666,7 @@ const testimonies = [
 
 export function Testimonial({ image, name, title, review }) {
     return (
-      <div className="bg-[#F9F9FA] rounded-xl flex flex-col-reverse  gap-3  p-5 w-[330px] h-[231px]">
+      <div className="bg-[#F9F9FA] rounded-xl flex flex-col-reverse justify-end   gap-3  p-5 w-[330px] h-[151px]">
         <div className="flex gap-2 items-center border-[#E4E3E5] pt-2 border-t-[1px]" >
           {/* <img src={image} alt="" className="w-8 h-8 rounded" /> */}
           <span>
@@ -681,7 +683,17 @@ export function Testimonial({ image, name, title, review }) {
   
   export function TestimonialCarousel() {
     return (
-      <Carousel className="w-full mx-auto relative">
+      <Carousel 
+      opts={{
+        align: "start",
+        loop: true,
+      }}
+      plugins={[
+        Autoplay({
+          delay: 2000,
+        }),
+      ]}
+      className="w-full mx-auto relative">
         <CarouselContent className="flex ml-12 gap-9">
           {testimonies.map((testy, index) => (
             <CarouselItem className="flex-[0_0_330px] h-[231px] p-2 " key={index}>
