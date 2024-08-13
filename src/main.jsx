@@ -68,11 +68,11 @@ const router = createBrowserRouter([
     element: <OtherBookings />, 
      
   },
-  {
-    path: "/Admin",
-    element: <AdminPortal />, 
+  // {
+  //   path: "/Admin",
+  //   element: <AdminPortal />, 
      
-  },
+  // },
  
  
  
