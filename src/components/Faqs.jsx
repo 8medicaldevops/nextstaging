@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Accordion,
   AccordionContent,
@@ -13,138 +14,160 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useNavigate } from "react-router-dom";
+ 
 
 
-const faqs = {
-  Individuals: {
-    questions: {
-      q1: 'Are all HMOs accepted?',
-      q2: 'How do I subcribe to emergency services?',
-      q3: 'Do you do interstate transport?',
-      q4: 'Are you active in all states?',
-      q5: 'When is a service booking considered to be confirmed?',
-      q6: 'How do I reach you?',
-    },
-    answers: {
-      a1: 'No, you can find a list of accepted HMOs when booking the service.',
-      a2: 'You can subscribe to our services by clicking the "Subscribe now" button or the link below and selecting a plan that best fits your needs.',
-      a3: 'Yes, we transport patients to all states.',
-      a4: 'No, we are only actively present in Lagos.',
-      a5: 'Payment confirms your booking.',
-      a6: 'You can reach us via phone call on 08098888763 or via mail at hello@8medical.co',
-    },
-  },
-  // Add similar objects for other categories
-  EventPlanners: {
-    questions: {
-      q1: 'What services do you offer?',
-      q2: 'How can I book your services?',
-      q3: 'What is your cancellation policy?',
-      q4: 'Do you offer custom event planning?',
-      q5: 'Can you handle large-scale events?',
-      q6: 'What is the payment schedule?',
-    },
-    answers: {
-      a1: 'We offer full-service event planning, including catering, decor, and entertainment.',
-      a2: 'You can book our services through our website or by contacting us directly.',
-      a3: 'Our cancellation policy varies based on the service. Please contact us for details.',
-      a4: 'Yes, we offer custom event planning tailored to your needs.',
-      a5: 'Yes, we have experience handling events with over 500 attendees.',
-      a6: 'We require a deposit upfront, with the balance due before the event.',
-    },
-  },
-  Hospitals: {
-    questions: {
-      q1: 'Do you pick up from all hospitals?',
-      q2: 'Do you transport patients  to all hospitals?',
-      q3: 'How do we Signup as an Hospital?',
-      q4: 'Do you transport out of Lagos?',
+// const faqs = {
+//   Individuals: {
+//     questions: {
+//       q1: 'Are all HMOs accepted?',
+//       q2: 'How do I subcribe to emergency services?',
+//       q3: 'Do you do interstate transport?',
+//       q4: 'Are you active in all states?',
+//       q5: 'When is a service booking considered to be confirmed?',
+//       q6: 'How do I reach you?',
+//     },
+//     answers: {
+//       a1: 'No, you can find a list of accepted HMOs when booking the service.',
+//       a2: 'You can subscribe to our services by clicking the "Subscribe now" button or the link below and selecting a plan that best fits your needs.',
+//       a3: 'Yes, we transport patients to all states.',
+//       a4: 'No, we are only actively present in Lagos.',
+//       a5: 'Payment confirms your booking.',
+//       a6: 'You can reach us via phone call on 08098888763 or via mail at hello@8medical.co',
+//     },
+//   },
+//   // Add similar objects for other categories
+//   EventPlanners: {
+//     questions: {
+//       q1: 'What services do you offer?',
+//       q2: 'How can I book your services?',
+//       q3: 'What is your cancellation policy?',
+//       q4: 'Do you offer custom event planning?',
+//       q5: 'Can you handle large-scale events?',
+//       q6: 'What is the payment schedule?',
+//     },
+//     answers: {
+//       a1: 'We offer full-service event planning, including catering, decor, and entertainment.',
+//       a2: 'You can book our services through our website or by contacting us directly.',
+//       a3: 'Our cancellation policy varies based on the service. Please contact us for details.',
+//       a4: 'Yes, we offer custom event planning tailored to your needs.',
+//       a5: 'Yes, we have experience handling events with over 500 attendees.',
+//       a6: 'We require a deposit upfront, with the balance due before the event.',
+//     },
+//   },
+//   Hospitals: {
+//     questions: {
+//       q1: 'Do you pick up from all hospitals?',
+//       q2: 'Do you transport patients  to all hospitals?',
+//       q3: 'How do we Signup as an Hospital?',
+//       q4: 'Do you transport out of Lagos?',
       
-    },
-    answers: {
-      a1: 'Yes, we pick up patients from any location.',
-      a2: 'YES, we transport to all hospitals but we use certain hospitals during emergencies.',
-      a3: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
-      a4: 'Yes, we transport (ground and air) patients to all states and even as far as West African countries.',
+//     },
+//     answers: {
+//       a1: 'Yes, we pick up patients from any location.',
+//       a2: 'YES, we transport to all hospitals but we use certain hospitals during emergencies.',
+//       a3: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
+//       a4: 'Yes, we transport (ground and air) patients to all states and even as far as West African countries.',
       
-    },
-  },
-  Estates: {
-    questions: {
-      q1: 'How do we Signup as an Estate?',
-      q2: 'What offer does Eight Medical have for Estates?',
-      
-      
-    },
-    answers: {
-      a1: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
-      a2: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
-    },
-  },
-  Schools: {
-    questions: {
-      q1: 'How do we Signup as a School?',
-      q2: 'How does Eight Medical cater for Schools?',
-      q3: 'Do you accept HMOs',
+//     },
+//   },
+//   Estates: {
+//     questions: {
+//       q1: 'How do we Signup as an Estate?',
+//       q2: 'What offer does Eight Medical have for Estates?',
       
       
-    },
-    answers: {
-      a1: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
-      a2: 'We offer ambulance standby, transport and emergency response services as well as overseeing school clinical services',
-      a3: 'No, we do not accept HMOs',
-    },
-  },
-  ProductionCompanies: {
-    questions: {
-      q1: 'How do we Signup for ambulance services?',
-      q2: 'How long is an ambulance standby?',
-      q3: 'Do you cover productions outside Lagos?',
+//     },
+//     answers: {
+//       a1: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
+//       a2: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
+//     },
+//   },
+//   Schools: {
+//     questions: {
+//       q1: 'How do we Signup as a School?',
+//       q2: 'How does Eight Medical cater for Schools?',
+//       q3: 'Do you accept HMOs',
       
       
-    },
-    answers: {
-      a1: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
-      a2: 'Standby durations are dependent on the production duration with a minimum of 4 hours.',
-      a3: 'Yes, we cover productions outside Lagos',
-    },
-  },
-  HMOs: {
-    questions: {
-      q1: 'Do you accept HMOs?',
-      q2: 'Are all HMOs accepted?',
-      q3: 'How do we Signup as an HMO?',
+//     },
+//     answers: {
+//       a1: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
+//       a2: 'We offer ambulance standby, transport and emergency response services as well as overseeing school clinical services',
+//       a3: 'No, we do not accept HMOs',
+//     },
+//   },
+//   ProductionCompanies: {
+//     questions: {
+//       q1: 'How do we Signup for ambulance services?',
+//       q2: 'How long is an ambulance standby?',
+//       q3: 'Do you cover productions outside Lagos?',
       
       
-    },
-    answers: {
-      a1: 'Yes, all you need is your enrollee ID to allow us validate your claim.',
-      a2: 'No, you can find a list of accepted HMOs when booking the service.',
-      a3: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
-    },
-  },
-  Responders: {
-    questions: {
-      q1: 'Do I have to work with Eight Medical to be a responder?',
-      q2: 'How do I become a responder with Eight medical?',
-      q3: 'What is the minimum requirement to become a responder?',
-      q4: 'Who is a responder in Eight Medical?',
+//     },
+//     answers: {
+//       a1: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
+//       a2: 'Standby durations are dependent on the production duration with a minimum of 4 hours.',
+//       a3: 'Yes, we cover productions outside Lagos',
+//     },
+//   },
+//   HMOs: {
+//     questions: {
+//       q1: 'Do you accept HMOs?',
+//       q2: 'Are all HMOs accepted?',
+//       q3: 'How do we Signup as an HMO?',
       
       
-    },
-    answers: {
-      a1: 'No, you can volunteer or work part-time with us.',
-      a2: 'Apply for the role via the button below or send an email to human@8medical.co or call 08098888763.',
-      a3: 'Background in healthcare, can communicate in English.',
-      a4: 'A responder is anyone who directly or indirectly provide care for individuals or businesses in need (urgent and emergency cases).',
-    },
-  },
-  // Add other categories (Hospitals, Estates, Schools, ProductionCompanies, HMOs) similarly
-};
+//     },
+//     answers: {
+//       a1: 'Yes, all you need is your enrollee ID to allow us validate your claim.',
+//       a2: 'No, you can find a list of accepted HMOs when booking the service.',
+//       a3: 'You can reach out to us at hello@8medical.co and our team will contact you on what to do.',
+//     },
+//   },
+//   Responders: {
+//     questions: {
+//       q1: 'Do I have to work with Eight Medical to be a responder?',
+//       q2: 'How do I become a responder with Eight medical?',
+//       q3: 'What is the minimum requirement to become a responder?',
+//       q4: 'Who is a responder in Eight Medical?',
+      
+      
+//     },
+//     answers: {
+//       a1: 'No, you can volunteer or work part-time with us.',
+//       a2: 'Apply for the role via the button below or send an email to human@8medical.co or call 08098888763.',
+//       a3: 'Background in healthcare, can communicate in English.',
+//       a4: 'A responder is anyone who directly or indirectly provide care for individuals or businesses in need (urgent and emergency cases).',
+//     },
+//   },
+//   // Add other categories (Hospitals, Estates, Schools, ProductionCompanies, HMOs) similarly
+// };
+
+
 
 const AccordionComponent = ({ category }) => {
-  const { questions, answers } = faqs[category] || { questions: {}, answers: {} };
-  
+  const [faq, setFaq] = useState({});
+  const { questions, answers } = faq[category] || { questions: {}, answers: {} };
+ 
+  useEffect(()=>{
+    async function fetchFAQs() {
+      try {
+        const response = await axios.get(import.meta.env.VITE_FAQS_API);
+        
+        // Handle the response data
+        setFaq(response.data.faqs)
+        console.log(response.data.faqs);
+      } catch (error) {
+        // Handle any errors
+        console.error('Error fetching FAQs:', error);
+      }
+      
+    }
+  fetchFAQs()  
+  },[])
+
+ 
   
   return (
     <Accordion type="single" collapsible>
@@ -197,23 +220,23 @@ setActiveElement(value)
                 </SelectTrigger>
                 <SelectContent className="bg-white rounded-mm">
                     <SelectItem value="Individuals">Individuals</SelectItem>
-                    <SelectItem value="EventPlanners">Event Planners</SelectItem>
+                    <SelectItem value="Event Planners">Event Planners</SelectItem>
                     <SelectItem value="Hospitals">Hospitals</SelectItem>
                     <SelectItem value="Estates">Estates</SelectItem>
                     <SelectItem value="Schools">Schools</SelectItem>
-                    <SelectItem value="ProductionCompanies">Production Companies</SelectItem>
-                    <SelectItem value="HMOs">HMOs</SelectItem>
+                    <SelectItem value="Production Companies">Production Companies</SelectItem>
+                    <SelectItem value="HMO's">HMOs</SelectItem>
                 </SelectContent>
                 </Select>
                 </div>
         <main className="flex flex-col gap-1 py-6 w-1/3 cursor-pointer max-lg:hidden ">
           <p onClick={() => toggleElement("Individuals")} className={activeElement === "Individuals" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Individuals</p>
-          <p onClick={() => toggleElement("EventPlanners")} className={activeElement === "EventPlanners" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Event Planners</p>
+          <p onClick={() => toggleElement("Event Planners")} className={activeElement === "Event Planners" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Event Planners</p>
           <p onClick={() => toggleElement("Hospitals")} className={activeElement === "Hospitals" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Hospitals</p>
           <p onClick={() => toggleElement("Estates")} className={activeElement === "Estates" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Estates</p>
           <p onClick={() => toggleElement("Schools")} className={activeElement === "Schools" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Schools</p>
-          <p onClick={() => toggleElement("ProductionCompanies")} className={activeElement === "ProductionCompanies" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Production Companies</p>
-          <p onClick={() => toggleElement("HMOs")} className={activeElement === "HMOs" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >HMOs</p>
+          <p onClick={() => toggleElement("Production Companies")} className={activeElement === "Production Companies" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Production Companies</p>
+          <p onClick={() => toggleElement("HMO's")} className={activeElement === "HMO's" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >HMOs</p>
         </main>
         <aside className="w-full">
           <AccordionComponent category={activeElement} />

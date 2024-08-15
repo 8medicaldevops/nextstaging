@@ -24,9 +24,9 @@ export default function Status (props) {
         })}>
             <SelectValue placeholder={selectedValue} />
         </SelectTrigger>
-        <SelectContent className="bg-white rounded-mm " >
+        <SelectContent className="w-full bg-white flex flex-col gap-0 m-0 p-0 rounded-mm " >
             <SelectItem  value="upcoming" onClick={()=>setSelectdValue('upcoming')}>
-                <div className="bg-[#FEF0E6] w-full justify-between gap-2 flex items-center p-2 rounded">
+                <div className="bg-[#FEF0E6] w-full justify-between gap-2 m-0 flex items-center p-2 rounded">
 
                 
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
