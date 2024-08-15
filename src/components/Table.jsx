@@ -32,6 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Status from "./Status";
+import BookingDetails from "./BookingDetails";
 
 const data = [
   {
@@ -146,7 +147,7 @@ const data = [
   },
 ];
 
-export const columns = [
+export const columns = (setEditBookingDialog) =>[
 //   {
 //     id: "select",
 //     header: ({ table }) => (
@@ -268,8 +269,8 @@ export const columns = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
+    cell: ({ row  }) => {
+      // const payment = row.original;
 
       return (
         <DropdownMenu>
@@ -279,18 +280,14 @@ export const columns = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent className="bg-white" align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            
+            <DropdownMenuItem className="cursor-pointer" onClick={()=>setEditBookingDialog(true)}>View Booking details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        
       );
     },
   },
@@ -301,10 +298,14 @@ export function DataTableDemo() {
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+  const [editBookingDialog, setEditBookingDialog] = useState(false)
+
+  
+  
 
   const table = useReactTable({
     data,
-    columns,
+    columns: columns(setEditBookingDialog),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -318,11 +319,15 @@ export function DataTableDemo() {
       columnFilters,
       columnVisibility,
       rowSelection,
+      editBookingDialog,
     },
   });
 
+ 
+
   return (
     <div className="w-full">
+      <BookingDetails open={editBookingDialog} onClose={()=>setEditBookingDialog(false)} /> 
         <span className=" flex py-5 px-4 justify-between">
                     <div className="flex items-center gap-2">
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -413,7 +418,7 @@ export function DataTableDemo() {
         </DropdownMenu>
       </div> */}
       <div className="rounded-md border">
-        <Table>
+        <Table >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -438,6 +443,7 @@ export function DataTableDemo() {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

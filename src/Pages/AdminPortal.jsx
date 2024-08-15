@@ -1,12 +1,19 @@
+import AuthDisp from "@/components/AuthDisp";
 import { DataTableDemo } from "@/components/Table";
+import { useState } from "react";
 
 
 
 
  export default function AdminPortal () {
+    const [isLoggedIn, setISLoggedIn] = useState(true);
 
     return(
-        <div className="bg-[#F4F6FA] flex flex-col gap-9 py-9 px-12">
+        <div>
+            {isLoggedIn ? (
+                <AuthDisp />
+            ) : (
+                <div className="bg-[#F4F6FA] flex flex-col gap-9 py-9 px-12">
             <section className="flex justify-between items-center bg-[#07072D] rounded-xl px-6 py-5">
                 <div className="flex items-center gap-1">
                 <svg width="186" height="40" viewBox="0 0 186 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -84,6 +91,11 @@ import { DataTableDemo } from "@/components/Table";
                     <DataTableDemo />
                 </span>
             </section>
+        </div>
+            )
+
+            }
+        
         </div>
     )
  }
