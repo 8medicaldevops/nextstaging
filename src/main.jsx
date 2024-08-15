@@ -68,11 +68,11 @@ const router = createBrowserRouter([
     element: <OtherBookings />, 
      
   },
+
   {
     path: "/passwordCannotAccessAdmin",
     element: <AdminPortal />, 
-     
-  },
+   },
  
  
  
