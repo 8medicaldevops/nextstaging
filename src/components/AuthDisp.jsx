@@ -1,16 +1,38 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function AuthDisp () {
+    const navigate = useNavigate();
+    const handleLogin = async (values, { setSubmitting }) => {
+        try {
+          const response = await axios.post(import.meta.env.VITE_ADMIN_LOGIN, {
+            identifier: values.email,
+            password: values.password,
+          });
+      
+          // Handle the response, e.g., save the token, redirect, etc.
+          //console.log('Login successful:', response.data);
+          navigate("/passwordCannotAccessAdmin")
+          localStorage.setItem('admindata', JSON.stringify(response.data.data.admin));
+          localStorage.setItem('token',JSON.stringify(response.data.data.token));
+          
+        } catch (error) {
+          console.error('Login failed:', error);
+          alert('Login failed. Please check your credentials and try again.');
+        } finally {
+          setSubmitting(false); // Stop the form submission spinner
+        }
+      };
     return(
         <div className='bg-ev-500 flex justify-center items-center h-dvh'>
         <div className='bg-white flex flex-col gap-9 w-[560px] px-9 py-12 rounded-[24px]'>
             <span className="flex justify-center">
                 <div className="flex items-center gap-2">
                 <svg width="168" height="37" viewBox="0 0 168 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_2541_9573)">
+                <g clipPath="url(#clip0_2541_9573)">
                 <path d="M35.9499 25.258V21.4716H42.1564V18.4074H35.9499V14.8162H42.7615V11.7129H32.6904V28.3418H42.8786V25.2385H35.9499V25.258Z" fill="#181719"/>
                 <path d="M44.5959 16.6709V28.3423H47.6016V16.6709H44.5959ZM46.0988 11.1279C45.0838 11.1279 44.2251 11.9866 44.2251 13.0016C44.2251 14.0165 45.0838 14.8753 46.0988 14.8753C47.1137 14.8753 47.9725 14.0165 47.9725 13.0016C47.9725 11.9866 47.1137 11.1279 46.0988 11.1279Z" fill="#181719"/>
                 <path d="M59.0391 16.6706V18.5833L58.395 17.7831C57.6143 16.8072 56.4823 16.2998 55.0575 16.2998C51.8371 16.2998 49.3193 18.9151 49.3193 22.2331C49.3193 25.5511 51.8371 28.1664 55.0575 28.1664C56.4823 28.1664 57.6143 27.6784 58.395 26.6831L59.0391 25.8828V28.0298C59.0391 29.9425 57.8876 31.0355 55.8773 31.0355C54.1793 31.0355 53.3985 30.3328 52.9301 29.6107L50.3733 31.0745C51.4468 32.6944 53.34 33.5923 55.7601 33.5923C58.6097 33.5923 61.9472 32.1284 61.9472 28.0298V16.6706H59.0391ZM55.6821 25.4925C53.7108 25.4925 52.3251 24.1653 52.3251 22.2526C52.3251 20.3399 53.7108 19.0127 55.6821 19.0127C57.6533 19.0127 59.0391 20.3399 59.0391 22.2526C59.0391 24.1653 57.6533 25.4925 55.6821 25.4925Z" fill="#181719"/>
@@ -57,12 +79,7 @@ export default function AuthDisp () {
          }
          return errors;
        }}
-       onSubmit={(values, { setSubmitting }) => {
-         setTimeout(() => {
-           alert(JSON.stringify(values, null, 2));
-           setSubmitting(false);
-         }, 400);
-       }}
+       onSubmit={handleLogin}
      >
        {({
          values,
@@ -75,6 +92,7 @@ export default function AuthDisp () {
          /* and other goodies */
        }) => (
          <form className='flex flex-col gap-6' onSubmit={handleSubmit}>
+            <span className='flex flex-col'>
            <input
              type="email"
              name="email"
@@ -82,9 +100,13 @@ export default function AuthDisp () {
              onBlur={handleBlur}
              value={values.email}
              placeholder='Enter email address'
-             className='border-[1px] border-[#E4E3E5] rounded-mm p-4'
+             className='border-[1px] border-[#E4E3E5] outline-none rounded-mm p-4'
            />
+           <small className='text-red-500 font-brreg'>
            {errors.email && touched.email && errors.email}
+           </small>
+           </span>
+           <span className='flex flex-col'>
            <input
              type="password"
              name="password"
@@ -92,9 +114,12 @@ export default function AuthDisp () {
              onBlur={handleBlur}
              value={values.password}
              placeholder='Enter password'
-             className='border-[1px] border-[#E4E3E5] rounded-mm p-4'
+             className='border-[1px] border-[#E4E3E5] outline-none rounded-mm p-4'
            />
+           <small className='text-red-500 font-brreg'>
            {errors.password && touched.password && errors.password}
+           </small>
+           </span>
            <div className='flex justify-end'>
             <p className='font-brmedium text-[#0A0116] underline underline-offset-6'>Forgot password?</p>
            </div>

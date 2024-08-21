@@ -57,8 +57,8 @@ import { Link } from "react-router-dom"
             <Link to='/' >
             <button className=" py-3 px-9 flex items-center gap-1 bg-[#6D09F9] rounded-mm font-brsemi text-white ">Return Home 
                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9.61914 4.83618L13.6658 8.88285L9.61914 12.9295" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2.33398 8.88281H13.554" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9.61914 4.83618L13.6658 8.88285L9.61914 12.9295" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2.33398 8.88281H13.554" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 </button>
             </Link>

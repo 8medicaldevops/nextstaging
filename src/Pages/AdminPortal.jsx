@@ -1,23 +1,54 @@
 import AuthDisp from "@/components/AuthDisp";
 import { DataTableDemo } from "@/components/Table";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import { parseISO, format } from 'date-fns';
+import useFetchAndStoreData from "@/components/hooks/useFetchAndStoreData ";
+import profileImage from "../assets/images/ProfileImage.png"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu"
+  import { Separator } from "@/components/ui/separator"
 
+  
 
 
 
  export default function AdminPortal () {
-    const [isLoggedIn, setISLoggedIn] = useState(true);
+   
 
+      const [adminData, setAdminData] = useState(JSON.parse(localStorage.getItem('admindata')));
+      const accessToken = JSON.parse(localStorage.getItem('token')).accessToken;
+      const {data, statusCount,
+        currentPage,
+        totalPages,
+        goToPage,
+        nextPage,
+        prevPage} = useFetchAndStoreData(
+        import.meta.env.VITE_ORDER_API,
+        'tabledata',
+        accessToken
+      );
+       
+      const clearStorageAndRedirect = () => {
+        localStorage.clear();
+        window.location.href = '/Login'; // Redirect to login page
+      };
+
+
+     
     return(
         <div>
-            {isLoggedIn ? (
-                <AuthDisp />
-            ) : (
                 <div className="bg-[#F4F6FA] flex flex-col gap-9 py-9 px-12">
             <section className="flex justify-between items-center bg-[#07072D] rounded-xl px-6 py-5">
                 <div className="flex items-center gap-1">
                 <svg width="186" height="40" viewBox="0 0 186 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_1832_10934)">
+                <g clipPath="url(#clip0_1832_10934)">
                 <path d="M39.7217 27.5091V23.302H46.6179V19.8973H39.7217V15.9071H47.2901V12.459H36.1001V30.9355H47.4203V27.4874H39.7217V27.5091Z" fill="white"/>
                 <path d="M49.3285 17.9674V30.9357H52.6681V17.9674H49.3285ZM50.9984 11.8086C49.8706 11.8086 48.9165 12.7627 48.9165 13.8905C48.9165 15.0181 49.8706 15.9723 50.9984 15.9723C52.126 15.9723 53.0802 15.0181 53.0802 13.8905C53.0802 12.7627 52.126 11.8086 50.9984 11.8086Z" fill="white"/>
                 <path d="M65.3764 17.9667V20.0919L64.6607 19.2028C63.7933 18.1185 62.5355 17.5547 60.9524 17.5547C57.3742 17.5547 54.5767 20.4606 54.5767 24.1472C54.5767 27.8339 57.3742 30.7398 60.9524 30.7398C62.5355 30.7398 63.7933 30.1976 64.6607 29.0917L65.3764 28.2025V30.588C65.3764 32.7133 64.0969 33.9277 61.8632 33.9277C59.9766 33.9277 59.1091 33.147 58.5887 32.3446L55.7478 33.971C56.9405 35.771 59.044 36.7686 61.7331 36.7686C64.8992 36.7686 68.6076 35.1421 68.6076 30.588V17.9667H65.3764ZM61.6463 27.7688C59.456 27.7688 57.9164 26.2942 57.9164 24.1689C57.9164 22.0437 59.456 20.569 61.6463 20.569C63.8367 20.569 65.3764 22.0437 65.3764 24.1689C65.3764 26.2942 63.8367 27.7688 61.6463 27.7688Z" fill="white"/>
@@ -50,23 +81,48 @@ import { useState } from "react";
                 <div>
                     <span className="flex items-center bg-[#5B5B7E] px-2 py-1 rounded-2xl gap-1">
                         <div>
-                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <rect width="28" height="28" rx="14" fill="url(#pattern0_1832_10956)"/>
-                        <defs>
-                        <pattern id="pattern0_1832_10956" patternContentUnits="objectBoundingBox" width="1" height="1">
-                        <use xlink:href="#image0_1832_10956" transform="scale(0.00512821)"/>
-                        </pattern>
-                        <image id="image0_1832_10956" width="195" height="195" xlink:href="data:image/png;base64,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"/>
-                        </defs>
-                        </svg>
-
-
+                       <img src={profileImage} alt=""/>
                         </div>
                         <p className="text-white">Admin</p>
                         <div>
+                        <DropdownMenu>
+                        <DropdownMenuTrigger className="flex items-center">
                         <svg width="16" height="24" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4.94 9.72699L4 10.667L8 14.667L12 10.667L11.06 9.72699L8 12.7803L4.94 9.72699Z" fill="white"/>
                         </svg>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-white rounded">
+                            
+                            
+                            <DropdownMenuItem>
+                                <div onClick={()=>{alert("This feature is coming soon")}} className="flex gap-1  font-brmedium text-sm text-[#181719]">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.0002 10.0003C12.3013 10.0003 14.1668 8.13485 14.1668 5.83366C14.1668 3.53247 12.3013 1.66699 10.0002 1.66699C7.69898 1.66699 5.8335 3.53247 5.8335 5.83366C5.8335 8.13485 7.69898 10.0003 10.0002 10.0003Z" stroke="#181719" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M2.8418 18.3333C2.8418 15.1083 6.05013 12.5 10.0001 12.5C10.8001 12.5 11.5751 12.6083 12.3001 12.8083" stroke="#181719" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M18.3332 15.0003C18.3332 15.267 18.2998 15.5253 18.2332 15.7753C18.1582 16.1087 18.0248 16.4337 17.8498 16.717C17.2748 17.6837 16.2165 18.3337 14.9998 18.3337C14.1415 18.3337 13.3665 18.0086 12.7832 17.4753C12.5332 17.2586 12.3165 17.0003 12.1498 16.717C11.8415 16.217 11.6665 15.6253 11.6665 15.0003C11.6665 14.1003 12.0248 13.2753 12.6082 12.6753C13.2165 12.0503 14.0665 11.667 14.9998 11.667C15.9832 11.667 16.8748 12.092 17.4748 12.7753C18.0082 13.367 18.3332 14.1503 18.3332 15.0003Z" stroke="#181719" strokeWidth="1.25" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M16.2411 14.9824H13.7578" stroke="#181719" strokeWidth="1.25" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M14.9995 13.7656V16.2573" stroke="#181719" strokeWidth="1.25" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                Invite Member
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <Separator className="w-full border-[1px] bg-[#181719]" />
+                            <DropdownMenuItem>
+                                <div onClick={clearStorageAndRedirect} className=" flex gap-1   font-brmedium text-sm text-[#F9091D]">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14.5332 12.1837L16.6665 10.0503L14.5332 7.91699" stroke="#F9091D" strokeWidth="1.25" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M8.1333 10.0498H16.6083" stroke="#F9091D" strokeWidth="1.25" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M9.79997 16.6663C6.11663 16.6663 3.1333 14.1663 3.1333 9.99967C3.1333 5.83301 6.11663 3.33301 9.79997 3.33301" stroke="#F9091D" strokeWidth="1.25" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                Log Out
+                                </div>
+                            </DropdownMenuItem>
+                            
+                        </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        
                         </div>
                     </span>
                 </div>
@@ -74,28 +130,36 @@ import { useState } from "react";
             <section className="flex gap-5 justify-between  items-center w-full">
                 <span className="py-5 px-6 bg-white rounded-xl w-full">
                     <p className="font-brreg text-[#636066]">Total Bookings</p>
-                    <p className="font-brbold text-[32px] text-[#181719]">626</p>
+                    <p className="font-brbold text-[32px] text-[#181719]">{statusCount && statusCount[0] && statusCount[0].missionStatusCounts 
+          ? statusCount[0].orderStatusCounts.CONFIRMED
+          : 'Loading...'}</p>
                 </span>
                 <span className="py-5 px-6 bg-white rounded-xl w-full">
                     <p className="font-brreg text-[#636066]">Pending Bookings</p>
-                    <p className="font-brbold text-[32px] text-[#181719]">31</p>
+                    <p className="font-brbold text-[32px] text-[#181719]"> {statusCount && statusCount[0] && statusCount[0].missionStatusCounts 
+          ? statusCount[0].missionStatusCounts.PENDING 
+          : 'Loading...'}</p>
                 </span>
                 <span className="py-5 px-6 bg-white rounded-xl w-full">
                     <p className="font-brreg text-[#636066]">Completed Bookings</p>
-                    <p className="font-brbold text-[32px] text-[#181719]">521</p>
+                    <p className="font-brbold text-[32px] text-[#181719]"> {statusCount && statusCount[0] && statusCount[0].missionStatusCounts 
+          ? statusCount[0].missionStatusCounts.COMPLETED
+          : 'Loading...'}</p>
                 </span>
             </section>
             <section className="bg-white px-6 rounded-xl">
                 
                 <span>
-                    <DataTableDemo />
+                    <DataTableDemo 
+                    data={data} 
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    goToPage={goToPage}
+                    nextPage={nextPage}
+                    prevPage={prevPage} />
                 </span>
             </section>
         </div>
-            )
-
-            }
-        
         </div>
     )
  }
