@@ -34,8 +34,8 @@ export default function ServicesUg() {
                         <button onClick={()=>setBookingModal(true)} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
                         Book Now
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
 
                         </button>
@@ -133,8 +133,8 @@ export default function ServicesUg() {
                             <span className="flex items-center gap-2">
                             <p className="text-sm font-brreg text-ev-700">Learn more</p>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                             </span>
                             </Link>
@@ -148,8 +148,8 @@ export default function ServicesUg() {
                             <span className="flex items-center gap-2">
                             <p className="text-sm font-brreg text-ev-700">Learn more</p>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                             </span>
                             </Link>
@@ -163,8 +163,8 @@ export default function ServicesUg() {
                             <span className="flex items-center gap-2">
                             <p className="text-sm font-brreg text-ev-700">Learn more</p>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                             </span>
                             </Link>

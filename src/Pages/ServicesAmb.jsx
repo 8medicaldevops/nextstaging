@@ -23,7 +23,7 @@ export default function ServicesAmb() {
                         <div className="flex flex-col max-lg:flex max-lg:items-center  gap-6">
                         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="64" height="64" rx="10.6667" fill="#F4FEE6"/>
-                        <g clip-path="url(#clip0_1146_11354)">
+                        <g clipPath="url(#clip0_1146_11354)">
                         <path d="M24.3823 44.1901C24.3823 43.3488 24.0846 42.6305 23.4894 42.0353C22.8942 41.4401 22.1759 41.1424 21.3346 41.1424C20.4934 41.1424 19.7751 41.4401 19.1799 42.0353C18.5846 42.6305 18.287 43.3488 18.287 44.1901C18.287 45.0313 18.5846 45.7496 19.1799 46.3448C19.7751 46.9401 20.4934 47.2377 21.3346 47.2377C22.1759 47.2377 22.8942 46.9401 23.4894 46.3448C24.0846 45.7496 24.3823 45.0313 24.3823 44.1901ZM15.2394 31.9996H24.3823V25.9043H20.6203C20.3981 25.9361 20.2235 26.0075 20.0965 26.1186L15.4537 30.7615C15.3426 30.952 15.2711 31.1266 15.2394 31.2853V31.9996ZM45.7156 44.1901C45.7156 43.3488 45.418 42.6305 44.8227 42.0353C44.2275 41.4401 43.5092 41.1424 42.668 41.1424C41.8267 41.1424 41.1084 41.4401 40.5132 42.0353C39.918 42.6305 39.6203 43.3488 39.6203 44.1901C39.6203 45.0313 39.918 45.7496 40.5132 46.3448C41.1084 46.9401 41.8267 47.2377 42.668 47.2377C43.5092 47.2377 44.2275 46.9401 44.8227 46.3448C45.418 45.7496 45.7156 45.0313 45.7156 44.1901ZM48.7632 28.1901V23.6186C48.7632 23.3964 48.6918 23.2139 48.5489 23.071C48.4061 22.9282 48.2235 22.8567 48.0013 22.8567H42.668V17.5234C42.668 17.3012 42.5965 17.1186 42.4537 16.9758C42.3108 16.8329 42.1283 16.7615 41.9061 16.7615H37.3346C37.1124 16.7615 36.9299 16.8329 36.787 16.9758C36.6442 17.1186 36.5727 17.3012 36.5727 17.5234V22.8567H31.2394C31.0172 22.8567 30.8346 22.9282 30.6918 23.071C30.5489 23.2139 30.4775 23.3964 30.4775 23.6186V28.1901C30.4775 28.4123 30.5489 28.5948 30.6918 28.7377C30.8346 28.8805 31.0172 28.952 31.2394 28.952H36.5727V34.2853C36.5727 34.5075 36.6442 34.6901 36.787 34.8329C36.9299 34.9758 37.1124 35.0472 37.3346 35.0472H41.9061C42.1283 35.0472 42.3108 34.9758 42.4537 34.8329C42.5965 34.6901 42.668 34.5075 42.668 34.2853V28.952H48.0013C48.2235 28.952 48.4061 28.8805 48.5489 28.7377C48.6918 28.5948 48.7632 28.4123 48.7632 28.1901ZM54.8584 15.2377V42.6662C54.8584 43.0789 54.7077 43.4361 54.4061 43.7377C54.1045 44.0393 53.7473 44.1901 53.3346 44.1901H48.7632C48.7632 45.8726 48.168 47.3091 46.9775 48.4996C45.787 49.6901 44.3505 50.2853 42.668 50.2853C40.9854 50.2853 39.5489 49.6901 38.3584 48.4996C37.168 47.3091 36.5727 45.8726 36.5727 44.1901H27.4299C27.4299 45.8726 26.8346 47.3091 25.6442 48.4996C24.4537 49.6901 23.0172 50.2853 21.3346 50.2853C19.6521 50.2853 18.2156 49.6901 17.0251 48.4996C15.8346 47.3091 15.2394 45.8726 15.2394 44.1901H12.1918C11.7791 44.1901 11.4219 44.0393 11.1203 43.7377C10.8188 43.4361 10.668 43.0789 10.668 42.6662C10.668 42.2535 10.8188 41.8964 11.1203 41.5948C11.4219 41.2932 11.7791 41.1424 12.1918 41.1424V31.2377C12.1918 30.825 12.295 30.3647 12.5013 29.8567C12.7077 29.3488 12.9616 28.944 13.2632 28.6424L17.9775 23.9282C18.2791 23.6266 18.6838 23.3726 19.1918 23.1662C19.6997 22.9599 20.16 22.8567 20.5727 22.8567H24.3823V15.2377C24.3823 14.825 24.533 14.4678 24.8346 14.1662C25.1362 13.8647 25.4934 13.7139 25.9061 13.7139H53.3346C53.7473 13.7139 54.1045 13.8647 54.4061 14.1662C54.7077 14.4678 54.8584 14.825 54.8584 15.2377Z" fill="#6AB106"/>
                         </g>
                         <defs>
@@ -40,8 +40,8 @@ export default function ServicesAmb() {
                         <button onClick={()=>navigate("/StandBy")} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
                         Book Now
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
 
                         </button>
@@ -50,8 +50,8 @@ export default function ServicesAmb() {
                         <button onClick={()=>navigate("/OtherBookings")} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
                         Book Now
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
 
                         </button>
@@ -154,8 +154,8 @@ export default function ServicesAmb() {
                             <span className="flex items-center gap-2">
                             <p className="text-sm font-brreg text-ev-700">Learn more</p>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                             </span>
                             </Link>
@@ -169,8 +169,8 @@ export default function ServicesAmb() {
                             <span className="flex items-center gap-2">
                             <p className="text-sm font-brreg text-ev-700">Learn more</p>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                             </span>
                             </Link>
@@ -184,8 +184,8 @@ export default function ServicesAmb() {
                             <span className="flex items-center gap-2">
                             <p className="text-sm font-brreg text-ev-700">Learn more</p>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.9336 4.6665L14.3336 7.99984L10.9336 11.3332" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M1.66602 7.99976H12.7993" stroke="#6D09F9" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                             </span>
                             </Link>
