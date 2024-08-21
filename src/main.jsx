@@ -74,7 +74,6 @@ const router = createBrowserRouter([
   {
     path: "/Admin",
     element: <AdminPortal />, 
-<<<<<<< HEAD
      
   },
   {
@@ -88,9 +87,6 @@ const router = createBrowserRouter([
      
   },
  
-=======
-   },
->>>>>>> 38acbd8df0309dcc2a50e03665905762101e2633
  
  
  
