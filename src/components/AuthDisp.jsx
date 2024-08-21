@@ -15,7 +15,7 @@ export default function AuthDisp () {
       
           // Handle the response, e.g., save the token, redirect, etc.
           //console.log('Login successful:', response.data);
-          navigate("/passwordCannotAccessAdmin")
+          navigate("/Admin")
           localStorage.setItem('admindata', JSON.stringify(response.data.data.admin));
           localStorage.setItem('token',JSON.stringify(response.data.data.token));
           

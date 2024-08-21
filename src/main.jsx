@@ -71,7 +71,7 @@ const router = createBrowserRouter([
      
   },
   {
-    path: "/passwordCannotAccessAdmin",
+    path: "/Admin",
     element: <AdminPortal />, 
      
   },
@@ -81,7 +81,7 @@ const router = createBrowserRouter([
      
   },
   {
-    path: "/passwordCannotAccessAdmin/EditBooking",
+    path: "/Admin/EditBooking",
     element: <EditBooking />, 
      
   },
