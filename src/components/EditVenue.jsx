@@ -21,6 +21,7 @@ import {
   import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
   import './../index.css';
   import usePatchData from "./hooks/patchData";
+  import '.././App.css'
 
 export default function (props) {
     
@@ -109,13 +110,13 @@ export default function (props) {
     return(
         <div>
             <Dialog open={props.open}>
-        <DialogContent className="border-none ">
+        <DialogContent className="border-none max-w-[640px] overflow-y-auto no-scrollbar  p-0 max-h-[100%] ">
             <DialogHeader>
             <VisuallyHidden.Root>
           <DialogTitle>Booking details</DialogTitle>
           </VisuallyHidden.Root>
             <DialogDescription>
-        <div className="flex flex-col justify-center items-center  pt-9">
+        <div className="flex flex-col justify-center  pt-9">
                
                <div className="pt-9 max-w-[640px] max-lg:w-full  rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
                      
@@ -260,7 +261,7 @@ export default function (props) {
                        </div>
                        <div className="flex items-center justify-end gap-6">
                         <span className="flex items-center gap-3">
-                        <p onClick={props.close} className="text-[#181719] text-lg font-brsemi">Cancel</p>
+                        <p onClick={props.close} className="text-[#181719] cursor-pointer text-lg font-brsemi">Cancel</p>
                     
                        <button onClick={handlePatch} disabled={response}  className="bg-ev-700 w-full font-brsemi text-lg rounded-mm py-3 px-5 text-white flex justify-center gap-1 items-center max-lg:py-1"   type="submit">
                        {loading && <p>Loading...</p>}

@@ -35,7 +35,7 @@ const { response, error, loading, patchData } = usePatchData('https://api.stagin
                 <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <p className="text-sm font-brmedium text-[#F96D09]">UpComing</p>
+                <p className="text-sm font-brmedium text-[#F96D09]">Upcoming</p>
                 </div>
             );
           case "COMPLETED":
