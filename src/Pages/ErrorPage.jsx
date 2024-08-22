@@ -4,7 +4,7 @@ export default function() {
         <div className="flex flex-col items-center p-24 gap-32 max-lg:p-4 max-lg:gap-9">
             <div className="">
             <svg width="186" height="40" viewBox="0 0 186 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_1811_16966)">
+            <g clipPath="url(#clip0_1811_16966)">
             <path d="M39.7232 27.5088V23.3017H46.6193V19.897H39.7232V15.9068H47.2916V12.4587H36.1016V30.9352H47.4217V27.4871H39.7232V27.5088Z" fill="#181719"/>
             <path d="M49.33 17.9669V30.9352H52.6696V17.9669H49.33ZM50.9998 11.8081C49.8721 11.8081 48.918 12.7622 48.918 13.89C48.918 15.0176 49.8721 15.9718 50.9998 15.9718C52.1275 15.9718 53.0817 15.0176 53.0817 13.89C53.0817 12.7622 52.1275 11.8081 50.9998 11.8081Z" fill="#181719"/>
             <path d="M65.3779 17.9669V20.0922L64.6622 19.203C63.7947 18.1188 62.537 17.5549 60.9539 17.5549C57.3756 17.5549 54.5781 20.4608 54.5781 24.1475C54.5781 27.8341 57.3756 30.74 60.9539 30.74C62.537 30.74 63.7947 30.1979 64.6622 29.0919L65.3779 28.2028V30.5883C65.3779 32.7135 64.0984 33.9279 61.8647 33.9279C59.978 33.9279 59.1106 33.1472 58.5901 32.3448L55.7492 33.9713C56.9419 35.7712 59.0455 36.7688 61.7346 36.7688C64.9007 36.7688 68.6091 35.1423 68.6091 30.5883V17.9669H65.3779ZM61.6478 27.7691C59.4575 27.7691 57.9179 26.2944 57.9179 24.1692C57.9179 22.0439 59.4575 20.5692 61.6478 20.5692C63.8381 20.5692 65.3779 22.0439 65.3779 24.1692C65.3779 26.2944 63.8381 27.7691 61.6478 27.7691Z" fill="#181719"/>
@@ -134,8 +134,8 @@ export default function() {
             <button className="bg-ev-700 text-lg py-3 px-5 rounded-mm font-brsemi text-white flex gap-1 items-center">Return home 
 
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.62109 3.95337L13.6678 8.00004L9.62109 12.0467" stroke="white" stroke-miterlimit="10" strokeLinecap="round" stroke-linejoin="round"/>
-            <path d="M2.33203 8H13.552" stroke="white" stroke-miterlimit="10" strokeLinecap="round" stroke-linejoin="round"/>
+            <path d="M9.62109 3.95337L13.6678 8.00004L9.62109 12.0467" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M2.33203 8H13.552" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
 
             </button>

@@ -157,7 +157,7 @@ const AccordionComponent = ({ category }) => {
         
         // Handle the response data
         setFaq(response.data.faqs)
-        console.log(response.data.faqs);
+        //console.log(response.data.faqs);
       } catch (error) {
         // Handle any errors
         console.error('Error fetching FAQs:', error);
