@@ -217,7 +217,7 @@ export default function (props) {
       const daysDiff = getNumberOfDays()
       //console.log(daysDiff)
       const accessToken = JSON.parse(localStorage.getItem('token')).accessToken;
-    const { response, setResponse, error, loading, patchData } = usePatchData('https://api.staging.8medical.co/order', accessToken);
+    const { response, setResponse, error, loading, patchData } = usePatchData(import.meta.env.VITE_ORDER_API, accessToken);
       
       const handlePatch = () => {
         const id = props.id;
