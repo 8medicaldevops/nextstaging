@@ -14,7 +14,7 @@ export default function Status (props) {
       const [selectedValue, setSelectedValue] = useState(props.row);
 //   console.log(selectedValue)
 const accessToken = JSON.parse(localStorage.getItem('token')).accessToken;
-const { response, error, loading, patchData } = usePatchData('https://api.staging.8medical.co/order', accessToken);
+const { response, error, loading, patchData } = usePatchData(import.meta.env.VITE_ORDER_API, accessToken);
 
   
     const handlePatch = (value) => {
