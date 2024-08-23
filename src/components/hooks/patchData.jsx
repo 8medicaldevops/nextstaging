@@ -11,7 +11,7 @@ const usePatchData = (url, accessToken) => {
     setError(null);
 
     try {
-      const response = await axios.patch(`${url}/${id}`, patchObject, {
+      const response = await axios.patch(`${url}${id}`, patchObject, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
