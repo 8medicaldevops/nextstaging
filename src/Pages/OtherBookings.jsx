@@ -1,8 +1,19 @@
-/// Other countries components 
+// Other countries components 
+import ReactGA from "react-ga4";
+import { useEffect } from "react";
 import NavBar from "../components/NavBar";
 import { Link } from "react-router-dom";
 
 export default function OtherBookings () {
+    
+    useEffect(() => {
+        ReactGA.send({
+            hitType: "pageview",
+            page: "/OtherBookings",
+            title: "Contact Page",
+        })
+    }, [])
+    
     return(
         <div>
             <NavBar />
