@@ -27,4 +27,5 @@ dist-ssr
 #Development files
 .env.production
 .env.staging
+.env
 

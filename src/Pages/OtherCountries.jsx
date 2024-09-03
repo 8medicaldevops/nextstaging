@@ -1,8 +1,19 @@
-/// Other countries components 
+// Other countries components 
 import NavBar from "../components/NavBar";
 import { Link } from "react-router-dom";
+import ReactGA from "react-ga4";
+import { useEffect } from "react";
 
 export default function OtherCountries () {
+
+    useEffect(() => {
+        ReactGA.send({
+            hitType: "pageview",
+            page: "/StandBy/Others",
+            title: "Ambulance Standby Other Countries",
+        })
+    }, [])
+
     return(
         <div>
             <NavBar />

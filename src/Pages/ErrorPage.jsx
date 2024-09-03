@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-export default function() {
+export default function ErrorPage() {
     return(
         <div className="flex flex-col items-center p-24 gap-32 max-lg:p-4 max-lg:gap-9">
             <div className="">
@@ -134,8 +134,8 @@ export default function() {
             <button className="bg-ev-700 text-lg py-3 px-5 rounded-mm font-brsemi text-white flex gap-1 items-center">Return home 
 
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.62109 3.95337L13.6678 8.00004L9.62109 12.0467" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M2.33203 8H13.552" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M9.62109 3.95337L13.6678 8.00004L9.62109 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M2.33203 8H13.552" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
 
             </button>
