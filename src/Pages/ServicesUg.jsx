@@ -2,19 +2,29 @@ import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import urgentCare from "../assets/images/urgentcare.png";
 import emergency from "../assets/images/playersemergency.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import BookServiceModal from "@/components/BookServiceModal";
 import { useState, useEffect } from "react";
+import ReactGA from "react-ga4";
 //import air from "../../public/air.png"
-
-
 
 
 export default function ServicesUg() {
     const [bookingModal, setBookingModal] = useState(false);
+
     useEffect(() => {
         window.scrollTo(0, 0)
     });
+
+    useEffect(() => {
+        ReactGA.send({
+            hitType: "pageview",
+            page: "/ServiceUg",
+            title: "Urgent Care",
+        })
+    }, [])
+
+
     return(
         <div>
             <NavBar />
@@ -34,8 +44,8 @@ export default function ServicesUg() {
                         <button onClick={()=>setBookingModal(true)} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
                         Book Now
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M2.33398 8H13.554" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
 
                         </button>
