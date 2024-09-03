@@ -2,11 +2,25 @@ import { useState } from "react";
 import Suscribed from "./Suscribed";
 import axios from "axios";
 
+import successImage from '../assets/images/sub-success.svg';
+import subscribedImage from '../assets/images/sub-already.svg';
+
+
 export default function NewsLetter() {
-    const [isSuscribed, setIsSubscribed] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState(false);
     const [emailAddress, setEmailAddress] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [emailAddressEntered, setEmailAddressEntered] = useState(true)
+    const [emailAddressEntered, setEmailAddressEntered] = useState(true);
+
+    const successData = {
+        title: "Thank you for Subscribing!",
+        body: "You're now part of our community and will receive the latest updates, exclusive offers, and insider content straight to your inbox."
+    }
+
+    const subscribedData = {
+        title: "You are already subscribed!",
+        body: "Thank you for being a part of our community. Keep enjoying our regular updates and stay tuned for more."
+    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -75,10 +89,10 @@ export default function NewsLetter() {
             {!emailAddressEntered && (
                 <small className="text-red-500">Invalid email address.</small>
             )}
-            {isSuscribed && (
-                <small className="text-green-500">You are already subscribed to our newsletter.</small>
+            {isSubscribed && (
+                <Suscribed isModalOpen={isSubscribed} isModalClosed={() => setIsSubscribed(false)} img = {subscribedImage} title={subscribedData.title} body={subscribedData.body} />
             )}
-            <Suscribed isModalOpen={isModalOpen} isModalClosed={() => setIsModalOpen(false)} />
+            <Suscribed isModalOpen={isModalOpen} isModalClosed={() => setIsModalOpen(false)} img = {successImage} title={successData.title} body={successData.body} />
         </div>
     );
 }
