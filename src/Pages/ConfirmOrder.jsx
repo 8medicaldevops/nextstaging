@@ -4,9 +4,11 @@ import React from 'react';
 import { PaystackButton } from 'react-paystack';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useState, CSSProperties } from "react";
+import { useState,  } from "react";
 //import ClipLoader from "react-spinners/ClipLoader";
 import { BeatLoader } from "react-spinners";
+import LinkPopup from "@/components/LinkPopup";
+
 
 
 
@@ -14,6 +16,7 @@ import { BeatLoader } from "react-spinners";
 export default function ConfirmOrder () {
     let [loading, setLoading] = useState(false);
     let [color, setColor] = useState("#6D09F9");
+    const [isOpen, setIsOpen] = useState(false);
 
     const storedCallerData = JSON.parse(sessionStorage.getItem('callerData'));
     //console.log(storedCallerData);
@@ -125,7 +128,10 @@ export default function ConfirmOrder () {
            sessionStorage.clear(),
            navigate("/")
       }
-
+      
+      const generateInvoice = () => {
+        setIsOpen(true);
+      }
     return(
         <div className={loading ? "overflow-y-hidden h-screen" : ""}>
              <NavBar />
@@ -496,12 +502,14 @@ export default function ConfirmOrder () {
            </section>
         
             </div>
-            <div className="flex justify-end py-6 px-20 max-lg:px-4">
+            <div className="flex justify-between py-6 px-20 max-lg:px-4">
+                <button onClick={()=>generateInvoice()} className="border border-ev-700 rounded-mm px-5 py-3 font-brbold text-lg text-ev-700">Generate Invoice</button>
                 <span className="flex items-center gap-9">
                     <button className="font-brsemi text-[#181719] text-lg" onClick={toggleCancel}>Cancel</button>
                     <PaystackButton {...componentProps} />    
                 </span>
             </div>
+            <LinkPopup open={isOpen} close={()=>setIsOpen(false)} />
         </div>
     )
 }

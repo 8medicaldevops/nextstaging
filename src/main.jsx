@@ -27,6 +27,7 @@ import BookingError from './Pages/BookingError.jsx';
 import AdminPortal from './Pages/AdminPortal.jsx';
 import EditBooking from './Pages/EditBooking.jsx';
 import AdminLogin from './Pages/AdminLogin.jsx';
+import OrderHistory from './Pages/OrderHistory.jsx';
 
 
 const router = createBrowserRouter([
@@ -68,6 +69,11 @@ const router = createBrowserRouter([
   {
     path: "/OtherBookings",
     element: <OtherBookings />, 
+     
+  },
+  {
+    path: "/OrderHistory",
+    element: <OrderHistory />, 
      
   },
 

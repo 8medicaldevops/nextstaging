@@ -34,7 +34,9 @@ const calculateTotalCost = (smallAmbulanceCount, largeAmbulanceCount, medicsCoun
   // Calculate medics cost
   const medicCostPer12HourSet = Math.ceil(hours / 12) * MEDIC_COST_PER_12_HOURS;
   const medicsTotal = medicsCount * medicCostPer12HourSet;
-
+  sessionStorage.setItem('smallAmbulanceTotal', smallAmbulanceTotal.toString());
+  sessionStorage.setItem('largeAmbulanceTotal', largeAmbulanceTotal.toString());
+  sessionStorage.setItem('medicsTotal', medicsTotal.toString());
   return smallAmbulanceTotal + largeAmbulanceTotal + medicsTotal;
 };
 
