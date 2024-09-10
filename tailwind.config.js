@@ -17,16 +17,16 @@ module.exports = {
       colors: {
         'ev': {
           50: '#f4f1ff',
-        100: '#ece5ff',
-        200: '#d9cfff',
-        300: '#bea8ff',
-        400: '#a177ff',
-        500: '#8540ff',
-        600: '#7a1aff',
-        700: '#6d09f9',
-        800: '#5a06d1',
-        900: '#4b07ab',
-        950: '#2c0174',
+          100: '#ece5ff',
+          200: '#d9cfff',
+          300: '#bea8ff',
+          400: '#a177ff',
+          500: '#8540ff',
+          600: '#7a1aff',
+          700: '#6d09f9',
+          800: '#5a06d1',
+          900: '#4b07ab',
+          950: '#2c0174',
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -61,8 +61,8 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        
-        
+
+
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -91,8 +91,8 @@ module.exports = {
             opacity: '0.2',
           },
         },
-      
-      
+
+
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -101,7 +101,7 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        
+
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -110,18 +110,18 @@ module.exports = {
         radiate: 'radiate 3s infinite',
       },
       fontFamily: {
-        'brlight' : 'firmalight',
-        'brreg' : 'firmaregular',
-        'brmedium' : 'firmamedium',
-        'brsemi' : 'firmasemibold',
-        'brbold' : 'firmabold',
+        'brlight': 'firmalight',
+        'brreg': 'firmaregular',
+        'brmedium': 'firmamedium',
+        'brsemi': 'firmasemibold',
+        'brbold': 'firmabold',
       },
       screens: {
         'sm': '376px',
         'mm': '415px',
         // => @media (min-width: 992px) { ... }
       },
-     
+
     },
   },
   plugins: [require("tailwindcss-animate")],

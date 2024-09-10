@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import { clarity } from "react-microsoft-clarity";
+import ReactGA from "react-ga4";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -8,7 +9,7 @@ import {
 import './index.css'
 import HomePage from './Pages/HomePage.jsx';
 import StandBy from './Pages/StandBy.jsx';
-import OtherCountries  from './Pages/OtherCountries.jsx';
+import OtherCountries from './Pages/OtherCountries.jsx';
 import AboutCaller from './Pages/AboutCaller.jsx';
 import AboutEvent from './Pages/AboutEvent.jsx';
 import Schedule from './Pages/Schedule.jsx';
@@ -28,43 +29,55 @@ import AdminPortal from './Pages/AdminPortal.jsx';
 import EditBooking from './Pages/EditBooking.jsx';
 import AdminLogin from './Pages/AdminLogin.jsx';
 import OrderHistory from './Pages/OrderHistory.jsx';
+import SignIn from './Pages/userOnboarding/SignIn';
+import CreateAccount from './Pages/userOnboarding/CreateAccount';
+import ForgotPassword from './Pages/userOnboarding/ForgotPassword';
+import ChangePassword from './Pages/userOnboarding/ChangePassword';
+import { ToastProvider } from 'react-toast-notifications';
+
+
+// eslint-disable-next-line no-undef
+if (process.env.NODE_ENV === 'production') clarity.init("nvd25h7exz");
+
+// eslint-disable-next-line no-undef
+if (process.env.NODE_ENV === 'production') ReactGA.initialize("G-23C8DJ5T38");
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />, 
-    errorElement:<ErrorPage/>, 
+    element: <HomePage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/AboutUs",
-    element: <AboutUs />, 
-     
+    element: <AboutUs />,
+
   },
   {
     path: "/ServiceEr",
-    element: <ServicesEr />, 
-     
+    element: <ServicesEr />,
+
   },
   {
     path: "/ServiceAgt",
-    element: <ServicesAgt />, 
-     
+    element: <ServicesAgt />,
+
   },
   {
     path: "/ServiceAmb",
-    element: <ServicesAmb />, 
-     
+    element: <ServicesAmb />,
+
   },
   {
     path: "/ServiceUg",
-    element: <ServicesUg />, 
-     
+    element: <ServicesUg />,
+
   },
   {
     path: "/Impact",
-    element: <Impact />, 
-     
+    element: <Impact />,
+
   },
   {
     path: "/OtherBookings",
@@ -79,71 +92,91 @@ const router = createBrowserRouter([
 
   {
     path: "/Admin",
-    element: <AdminPortal />, 
-     
+    element: <AdminPortal />,
+
   },
   {
     path: "/Login",
-    element: <AdminLogin />, 
-     
+    element: <AdminLogin />,
+
+  },
+  {
+    path: "/SignIn",
+    element: <SignIn />,
+
+  },
+  {
+    path: "/CreateAccount",
+    element: <CreateAccount />,
+
+  },
+  {
+    path: "/ForgotPassword",
+    element: <ForgotPassword />,
+
+  },
+  {
+    path: "/ChangePassword",
+    element: <ChangePassword />,
+
   },
   {
     path: "/Admin/EditBooking",
-    element: <EditBooking />, 
-     
+    element: <EditBooking />,
+
   },
- 
- 
- 
- 
+
 
   // Ambulance Booking paths
   {
     path: "/StandBy",
-    element: <StandBy />, 
-  }, 
+    element: <StandBy />,
+  },
   {
     path: "/StandBy/Others",
-    element: <OtherCountries />,  
+    element: <OtherCountries />,
   },
   {
     path: "/StandBy/Nigeria",
-    element: <AboutCaller />,  
+    element: <AboutCaller />,
   },
   {
     path: "/StandBy/Nigeria/Event",
-    element: <AboutEvent />,  
+    element: <AboutEvent />,
   },
   {
     path: "/StandBy/Nigeria/Event/Schedule",
-    element: <Schedule />,  
+    element: <Schedule />,
   },
   {
     path: "/StandBy/Nigeria/Event/Schedule/Ambulance Size",
-    element: <AmbulanceSize />,  
+    element: <AmbulanceSize />,
   },
   {
     path: "/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order",
-    element: <ConfirmOrder />,  
+    element: <ConfirmOrder />,
   },
-    
+
   {
     path: "/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful",
-    element: <BookingSuccessful />,  
+    element: <BookingSuccessful />,
   },
   {
     path: "/BookingError",
-    element: <BookingError />, 
-     
+    element: <BookingError />,
+
   },
- 
-    
-  
-  
 ]);
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
- <RouterProvider router={router} />
-  </React.StrictMode>,
+    <ToastProvider
+      autoDismiss
+      autoDismissTimeout={6000}
+      placement="bottom-center"
+    >
+      <RouterProvider router={router} />
+    </ToastProvider>
+  </React.StrictMode>
 )

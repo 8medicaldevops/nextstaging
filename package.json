@@ -38,13 +38,19 @@
     "react-copy-to-clipboard": "^5.1.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
+    "react-ga4": "^2.1.0",
     "react-google-places-autocomplete": "^4.0.1",
+    "react-microsoft-clarity": "^1.2.0",
     "react-paystack": "^5.0.0",
     "react-phone-input-2": "^2.15.1",
     "react-router-dom": "^6.24.1",
     "react-spinners": "^0.14.1",
+    "react-toast-notifications": "^2.5.1",
+    "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwind-toastify": "^1.0.8",
+    "tailwindcss-animate": "^1.0.7",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
