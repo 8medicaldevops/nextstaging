@@ -9,7 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
     //DialogTrigger,
-    //DialogClose,
+    //DialogClose, 
 } from "@/components/ui/dialog";
 import ReactGA from "react-ga4";
 
@@ -31,7 +31,7 @@ export default function AboutCaller() {
 
     useEffect(() => {
         // Load data from session storage on mount
-        const storedFormData = JSON.parse(sessionStorage.getItem('callerData'));
+        const storedFormData = JSON.parse(localStorage.getItem('callerData'));
         if (storedFormData) {
             setCallerData(storedFormData);
         }
@@ -88,14 +88,13 @@ export default function AboutCaller() {
 
         if (isValid) {
             const updatedCallerData = { ...callerData, phoneNumber };
-            sessionStorage.setItem('callerData', JSON.stringify(updatedCallerData));
+            localStorage.setItem('callerData', JSON.stringify(updatedCallerData));
             //console.log(updatedCallerData);
             // navigate("/StandBy/Nigeria/Event");
             setIsDialogOpen(true)
         } else {
             console.log("Invalid phone number. It should be 10 digits long.");
         }
-
     };
 
     return (
@@ -125,7 +124,7 @@ export default function AboutCaller() {
                         <p className="font-brsemi text-3xl max-sm:text-2xl max-[410px]:text-2xl text-[#181719] ">Ambulance Standby</p>
 
                     </div>
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center justify-center">
                         <div className="max-md:hidden">
                             <svg width="568" height="51" viewBox="0 0 568 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="45.1998" y="0.4" width="23.2" height="23.2" rx="11.6" fill="#6D09F9" />
@@ -483,7 +482,6 @@ export default function AboutCaller() {
                                                         <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                                                     </svg>
                                                 </button>
-
 
                                                 <button onClick={() => { setIsDialogOpen(false) }} className="bg-white w-full font-brsemi text-lg rounded-mm py-3 text-[#181719] flex justify-center gap-1 items-center max-lg:py-1">Go back and edit</button>
 
