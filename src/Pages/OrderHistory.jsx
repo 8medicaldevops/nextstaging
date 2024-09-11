@@ -22,7 +22,7 @@ export default function OrderHistory () {
     const [pendingOrders, setPendingOrders] = useState([]);
     const [upcomingOrders, setUpcomingOrders] = useState([]);
     const [completedOrders, setCompletedOrders] = useState([]);
-    const signInData = JSON.parse(sessionStorage.getItem('signInData'));
+    const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
     const token = signInData?.data?.tokens?.accessToken || '';
     const decodedToken = token? jwtDecode(token) : '';
     const iaFlag = decodedToken?.userType ;
@@ -65,9 +65,9 @@ export default function OrderHistory () {
                 };
 
                 // Call the function to fetch orders
-                if (token) {
+                
                     fetchOrders();
-                }
+               
         },[token])
             
 

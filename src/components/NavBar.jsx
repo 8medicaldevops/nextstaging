@@ -25,7 +25,7 @@ import {
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isActive = (path) => location.pathname === path;
-  const signInData = JSON.parse(sessionStorage.getItem('signInData'));
+  const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
   const token = signInData?.data?.tokens?.accessToken || "N/A";
   const userName = signInData?.data?.firstName || "N/A";
   // console.log(userName)

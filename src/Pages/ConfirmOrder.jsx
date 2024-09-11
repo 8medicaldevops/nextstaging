@@ -19,6 +19,8 @@ export default function ConfirmOrder() {
     const [isOpen, setIsOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [checkoutLink, setCheckoutLink] = useState('');
+    const [iaFlag, setIaFlag] = useState('')
+    const [token, setToken] = useState('')
 
     const storedCallerData = JSON.parse(localStorage.getItem('callerData'));
     //console.log(storedCallerData);
@@ -28,11 +30,29 @@ export default function ConfirmOrder() {
     //console.log(storedScheduleData);
     const storedAmbulanceData = JSON.parse(localStorage.getItem('ambulanceData'));
     //console.log(storedAmbulanceData);
-    const signInData = JSON.parse(sessionStorage.getItem('signInData'));
-    const token = signInData.data.tokens.accessToken || '';
-    const decodedToken = jwtDecode(token);
-    const iaFlag = decodedToken?.userType ;
-    console.log(decodedToken)
+    useEffect(() => {
+        const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
+    
+        if (signInData && signInData.data && signInData.data.tokens) {
+            const token = signInData.data.tokens.accessToken || '';
+            setToken(signInData.data.tokens.accessToken)
+            // Check if token exists before decoding
+            if (token) {
+                try {
+                    const decodedToken = jwtDecode(token);
+                    setIaFlag(decodedToken?.userType || ''); // Set iaFlag only once on mount
+                } catch (error) {
+                    console.error('Invalid token:', error);
+                }
+            } else {
+                console.error('No access token found.');
+            }
+        } else {
+            console.error('No sign-in data found.');
+        }
+    }, []); // Empty array ensures this runs only once
+    
+    
     const navigate = useNavigate();
     // format fee
     const formattedFee = new Intl.NumberFormat().format(storedAmbulanceData.estimatedFee);
@@ -171,7 +191,6 @@ export default function ConfirmOrder() {
             country: "NG",
 
         };
-        { }
         try {
             const response = await axios.post(
                 iaFlag !== "ADMIN" ? 
@@ -238,7 +257,7 @@ export default function ConfirmOrder() {
             //navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
         } catch (error) {
             //console.error("Error:", error);
-            navigate("/BookingError");
+            //navigate("/BookingError");
         } finally {
             setLoading(false);
         }
