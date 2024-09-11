@@ -1,6 +1,8 @@
 import NavBar from "@/components/NavBar";
 import OrderBox from "@/components/OrderBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 import {
     Select,
     SelectContent,
@@ -8,6 +10,7 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+import NoBooking from "@/components/NoBooking";
   
 
 
@@ -15,6 +18,16 @@ import {
 export default function OrderHistory () {
     const [searchTerm, setSearchTerm] = useState("");
     const [activeCategory, setActiveCategory] = useState("All");
+    const [boxData, setBoxData] = useState([]);
+    const [pendingOrders, setPendingOrders] = useState([]);
+    const [upcomingOrders, setUpcomingOrders] = useState([]);
+    const [completedOrders, setCompletedOrders] = useState([]);
+    const signInData = JSON.parse(sessionStorage.getItem('signInData'));
+    const token = signInData?.data?.tokens?.accessToken || '';
+    const decodedToken = token? jwtDecode(token) : '';
+    const iaFlag = decodedToken?.userType ;
+    const totalOrders = pendingOrders.length + upcomingOrders.length + completedOrders.length;
+     console.log(boxData)
 
     const handleCategoryClick = (category) => {
       setActiveCategory(category);
@@ -23,6 +36,41 @@ export default function OrderHistory () {
     const handleInputChange = (event) => {
         setSearchTerm(event.target.value);
       };
+
+        useEffect(()=>{
+            const fetchOrders = async () => {
+                try {
+                    const response = await axios.get(
+                        iaFlag == "ADMIN"? 
+                        import.meta.env.VITE_ORDER_API 
+                        : 
+                        import.meta.env.VITE_USER_ORDER_HISTORY, 
+                        {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Add Authorization header
+                    },
+                    });
+                    
+                    // Handle the response
+                    console.log('Orders fetched successfully:', response.data);
+                    setBoxData(response.data || []);
+                    setPendingOrders(response.data.data.PENDING.orders);
+                    setUpcomingOrders(response.data.data.UP_COMING.orders);
+                    setCompletedOrders(response.data.data.COMPLETED.orders);
+                    return response.data; // Return the order data
+                } catch (error) {
+                    console.error('Error fetching orders:', error);
+                    // Handle the error (e.g., display a message to the user)
+                }
+                };
+
+                // Call the function to fetch orders
+                if (token) {
+                    fetchOrders();
+                }
+        },[token])
+            
+
     return(
         <div>
             <NavBar />
@@ -60,11 +108,11 @@ export default function OrderHistory () {
                         onChange={handleInputChange}
                         className="outline-none bg-[#F5F4F6] text-sm placeholder:text-[#868388] font-brreg" 
                         />
-
                         </div>
                         </div>
                     </span>
-                    {!searchTerm &&
+               
+                    {iaFlag !== 'ADMIN' && !searchTerm &&
                     <span className="flex justify-between gap-2 max-md:flex-col">
                         <div className="w-full bg-ev-50 rounded-xl border border-[#ECE5FF] py-4 px-5">
                             <span className="flex justify-between items-center">
@@ -80,7 +128,7 @@ export default function OrderHistory () {
                                 </g>
                                 </svg>
                             </span>
-                            <p className="font-brbold text-[40px] text-[#181719]">13</p>
+                            <p className="font-brbold text-[40px] text-[#181719]">{totalOrders}</p>
                         </div>
                             <div className="w-full bg-[#FDF2F8] rounded-xl border border-[#FDE6F3] py-4 px-5">
                             <span className="flex justify-between items-center">
@@ -95,7 +143,7 @@ export default function OrderHistory () {
                                 </g>
                                 </svg>
                             </span>
-                            <p className="font-brbold text-[40px] text-[#181719]">1</p>
+                            <p className="font-brbold text-[40px] text-[#181719]">{pendingOrders.length}</p>
                         </div>
                         <div className="w-full bg-[#FEF0E6] rounded-xl border border-[#FDD2B3] py-4 px-5">
                             <span className="flex justify-between items-center">
@@ -110,7 +158,7 @@ export default function OrderHistory () {
                                 </g>
                                 </svg>
                             </span>
-                            <p className="font-brbold text-[40px] text-[#181719]">3</p>
+                            <p className="font-brbold text-[40px] text-[#181719]">{upcomingOrders.length}</p>
                         </div>
                         <div className="w-full bg-[#ECFBF2] rounded-xl border border-[#C3F3D8] py-4 px-5">
                             <span className="flex justify-between items-center">
@@ -125,13 +173,13 @@ export default function OrderHistory () {
                                 </g>
                                 </svg>
                             </span>
-                            <p className="font-brbold text-[40px] text-[#181719]">13</p>
+                            <p className="font-brbold text-[40px] text-[#181719]">{completedOrders.length}</p>
                         </div>
-
                     </span>
                     }
                 </section>
-                {!searchTerm && 
+              
+                {iaFlag !== 'ADMIN' && !searchTerm && totalOrders > 0 &&
                 <section className="py-3">
                     <ul className="flex gap-3 font-brlight text-[#636066] max-md:hidden">
                     {["All", "Pending Bookings", "Upcoming Bookings", "Completed Bookings"].map((category) => (
@@ -157,71 +205,161 @@ export default function OrderHistory () {
                     </SelectContent>
                     </Select>
                     </div>
-                    
                 </section>}
-                {!searchTerm && activeCategory === "All" && (
+                {!searchTerm && activeCategory === "All" && totalOrders > 0 && (
                 <>
+                {pendingOrders.length > 0 &&
                 <section className="flex flex-col gap-2">
                     <p className="font-brbold text-[28px] text-[#0A0116]">Pending Bookings</p>
                     <div className="flex gap-6 flex-wrap max-[1024px]:justify-between">
-                    <OrderBox />
+                        {pendingOrders.map(order =>(
+                            <OrderBox 
+                            key={order._id}
+                            eventLocationName={order.ambulances.eventLocationName}
+                            startDate={order.ambulances.startDate}
+                            startTime={order.ambulances.startTime}
+                            price={order.price}
+                            endDate={order.ambulances.endDate}
+                            endTime={order.ambulances.endTime}
+                            largeAmbulance={order.ambulances.largeAmbulance}
+                            noOfMedic={order.ambulances.noOfMedic}
+                            smallAmbulanceCost={order.smallAmbulanceCost}
+                            largeAmbulanceCost={order.largeAmbulanceCost}
+                            medicCost={order.medicCost}
+                            smallAmbulanceCount={order.ambulances.smallAmbulance}
+                            largeAmbulanceCount={order.ambulances.largeAmbulance}
+                            estimatedFee={order.price}
+                            venueAddress={order.ambulances.eventAddress}
+                            guests={order.ambulances.estimatedNumberOfGuests}
+                            eventType={order.ambulances.eventType}
+                            description={order.ambulances.description}
+                            fullName={order.callerDetails.fullName}
+                            emailAddress={order.callerDetails.email}
+                            phoneNumber={order.callerDetails.phone}
+                            companyName={order.callerDetails.company}
+                            iaFlag={iaFlag}
+                            />
+                        ))}
+                    
                     </div>
                 </section>
-
+                }
+                {iaFlag !== 'ADMIN' && upcomingOrders.length > 0 &&
                 <section className="flex flex-col gap-2">
                     <p className="font-brbold text-[28px] text-[#0A0116]">Upcoming Bookings</p>
                     <div className="flex gap-6 flex-wrap max-[1024px]:justify-between">
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
+                    {upcomingOrders.map(order =>(
+                            <OrderBox 
+                            key={order._id}
+                            eventLocationName={order.ambulances.eventLocationName}
+                            startDate={order.ambulances.startDate}
+                            startTime={order.ambulances.startTime}
+                            price={order.price}
+                            endDate={order.ambulances.endDate}
+                            endTime={order.ambulances.endTime}
+                            largeAmbulance={order.ambulances.largeAmbulance}
+                            noOfMedic={order.ambulances.noOfMedic}
+                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            medicCost={order.medicCost}
+                            />
+                        ))}
                     </div>
                 </section>
-
+                 }
+                 {iaFlag !== 'ADMIN' && completedOrders.length > 0 &&
                 <section className="flex flex-col gap-2">
                     <p className="font-brbold text-[28px] text-[#0A0116]">Completed Bookings</p>
                     <div className="flex gap-6 flex-wrap max-[1024px]:justify-between">
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
+                    {completedOrders.map(order =>(
+                            <OrderBox 
+                            key={order._id}
+                            eventLocationName={order.ambulances.eventLocationName}
+                            startDate={order.ambulances.startDate}
+                            startTime={order.ambulances.startTime}
+                            price={order.price}
+                            endDate={order.ambulances.endDate}
+                            endTime={order.ambulances.endTime}
+                            largeAmbulance={order.ambulances.largeAmbulance}
+                            noOfMedic={order.ambulances.noOfMedic}
+                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            medicCost={order.medicCost}
+                            />
+                        ))}
                     </div>
                 </section>
+                }
                 </>
             )}
 
             {/* Render sections based on the active category */}
-            {!searchTerm && activeCategory === "Pending Bookings" && (
+            {iaFlag !== 'ADMIN' && !searchTerm && activeCategory === "Pending Bookings" && (
                 <section className="flex flex-col gap-2">
                 <p className="font-brbold text-[28px] text-[#0A0116]">Pending Bookings</p>
                 <div className="flex gap-6 flex-wrap max-[1024px]:justify-between">
-                    <OrderBox />
+                {pendingOrders.map(order =>(
+                            <OrderBox 
+                            key={order._id}
+                            eventLocationName={order.ambulances.eventLocationName}
+                            startDate={order.ambulances.startDate}
+                            startTime={order.ambulances.startTime}
+                            price={order.price}
+                            endDate={order.ambulances.endDate}
+                            endTime={order.ambulances.endTime}
+                            largeAmbulance={order.ambulances.largeAmbulance}
+                            noOfMedic={order.ambulances.noOfMedic}
+                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            medicCost={order.medicCost}
+                            iaFlag={iaFlag}
+                            />
+                        ))}
                 </div>
                 </section>
             )}
 
-            {!searchTerm && activeCategory === "Upcoming Bookings" && (
+            { iaFlag !== 'ADMIN' && !searchTerm && activeCategory === "Upcoming Bookings" && (
                 <section className="flex flex-col gap-2">
                 <p className="font-brbold text-[28px] text-[#0A0116]">Upcoming Bookings</p>
                 <div className="flex gap-6 flex-wrap max-[1024px]:justify-between">
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
+                {upcomingOrders.map(order =>(
+                            <OrderBox 
+                            key={order._id}
+                            eventLocationName={order.ambulances.eventLocationName}
+                            startDate={order.ambulances.startDate}
+                            startTime={order.ambulances.startTime}
+                            price={order.price}
+                            endDate={order.ambulances.endDate}
+                            endTime={order.ambulances.endTime}
+                            largeAmbulance={order.ambulances.largeAmbulance}
+                            noOfMedic={order.ambulances.noOfMedic}
+                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            medicCost={order.medicCost}
+                            iaFlag={iaFlag}
+                            />
+                        ))}
                 </div>
                 </section>
             )}
 
-            {!searchTerm && activeCategory === "Completed Bookings" && (
+            {iaFlag !== 'ADMIN' && !searchTerm && activeCategory === "Completed Bookings" && (
                 <section className="flex flex-col gap-2">
                 <p className="font-brbold text-[28px] text-[#0A0116]">Completed Bookings</p>
                 <div className="flex gap-6 flex-wrap max-[1024px]:justify-between">
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
-                    <OrderBox />
+                {completedOrders.map(order =>(
+                            <OrderBox 
+                            key={order._id}
+                            eventLocationName={order.ambulances.eventLocationName}
+                            startDate={order.ambulances.startDate}
+                            startTime={order.ambulances.startTime}
+                            price={order.price}
+                            endDate={order.ambulances.endDate}
+                            endTime={order.ambulances.endTime}
+                            largeAmbulance={order.ambulances.largeAmbulance}
+                            noOfMedic={order.ambulances.noOfMedic}
+                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            medicCost={order.medicCost}
+                            iaFlag={iaFlag}
+                            />
+                        ))}
                 </div>
                 </section>
             )}
@@ -229,9 +367,13 @@ export default function OrderHistory () {
             {searchTerm && 
             <div>
             searching
-            <OrderBox />
+           
             </div>}
-            
+            {totalOrders == 0 &&
+            <section>
+               <NoBooking />
+            </section>
+            }
             </div>
         </div>
     )

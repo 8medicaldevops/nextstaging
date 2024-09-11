@@ -26,10 +26,10 @@ export default function LinkPopup(props) {
 
   useEffect(() => {
     // Retrieve and set session storage data
-    const storedCallerData = JSON.parse(sessionStorage.getItem('callerData'));
-    const storedEventData = JSON.parse(sessionStorage.getItem('eventData'));
-    const storedScheduleData = JSON.parse(sessionStorage.getItem('schedule'));
-    const storedAmbulanceData = JSON.parse(sessionStorage.getItem('ambulanceData'));
+    const storedCallerData = JSON.parse(localStorage.getItem('callerData'));
+    const storedEventData = JSON.parse(localStorage.getItem('eventData'));
+    const storedScheduleData = JSON.parse(localStorage.getItem('schedule'));
+    const storedAmbulanceData = JSON.parse(localStorage.getItem('ambulanceData'));
 
     setCallerData(storedCallerData);
     setEventData(storedEventData);
@@ -37,9 +37,9 @@ export default function LinkPopup(props) {
     setAmbulanceData(storedAmbulanceData);
 
     // Format fees
-    const smallAmbulance = JSON.parse(sessionStorage.getItem('smallAmbulanceTotal')) || 0;
-    const largeAmbulance = JSON.parse(sessionStorage.getItem('largeAmbulanceTotal')) || 0;
-    const medics = JSON.parse(sessionStorage.getItem('medicsTotal')) || 0;
+    const smallAmbulance = JSON.parse(localStorage.getItem('smallAmbulanceTotal')) || 0;
+    const largeAmbulance = JSON.parse(localStorage.getItem('largeAmbulanceTotal')) || 0;
+    const medics = JSON.parse(localStorage.getItem('medicsTotal')) || 0;
 
     setSmallAmbulanceTotal(new Intl.NumberFormat().format(smallAmbulance));
     setLargeAmbulanceTotal(new Intl.NumberFormat().format(largeAmbulance));

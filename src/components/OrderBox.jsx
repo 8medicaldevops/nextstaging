@@ -1,11 +1,100 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+export default function OrderBox({
+    eventLocationName,
+    startDate,
+    startTime,
+    price,
+    endDate,
+    endTime,
+    largeAmbulance,
+    noOfMedic,
+    smallAmbulanceCount,
+    largeAmbulanceCount,
+    estimatedFee,
+    venueAddress,
+    guests,
+    eventType,
+    description,
+    fullName,
+    emailAddress,
+    phoneNumber,
+    companyName,
+    smallAmbulanceCost,
+    largeAmbulanceCost,
+    medicCost,
+    iaFlag
+}) {
+        
+    const [callerData, setCallerData] = useState({
+        fullName: fullName,
+        emailAddress: emailAddress,
+        phoneNumber: phoneNumber,
+        companyName: companyName
 
-export default function OrderBox() {
+    });
+    const [eventData, setEventData] = useState({
+        venueName: eventLocationName,
+        venueAddress: venueAddress,
+        guests: guests,
+        eventType: eventType,
+        description: description,
+    })
+    const [schedule, setSchedule] = useState({
+        startDate: startDate,
+        endDate: endDate,
+        eventEndsSameDay: true,
+        startTime: startTime,
+        endTime: endTime,
+      });
+      const [ambulanceData, setAmbulanceData] = useState({
+        smallAmbulanceCount :smallAmbulanceCount,
+        largeAmbulanceCount:largeAmbulanceCount,
+        medicsCount:noOfMedic,
+        estimatedFee:estimatedFee
+      })
+        const [loading, setLoading] = useState(false); // Loading state
+        const navigate = useNavigate();
+        // Format date and time if needed (example format)
+        const formatDate = (dateStr) => {
+            if (!dateStr) return 'N/A'; // Return a default value if dateStr is undefined or null
+            return new Date(dateStr).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            });
+        };
+        const formatTime = (timeStr) => {
+            if (!timeStr) return 'N/A'; // Return a default value if timeStr is undefined or null
+        
+            const [hour, minute] = timeStr.split(':');
+            let hours = parseInt(hour, 10);
+            const suffix = hours >= 12 ? 'PM' : 'AM'; // Determine AM/PM
+        
+            hours = hours % 12 || 12; // Convert 24-hour format to 12-hour format
+            const formattedTime = `${hours}:${minute} ${suffix}`;
+        
+            return formattedTime;
+        };
+        
+        //console.log(callerData,eventData,schedule,smallAmbulanceCount,largeAmbulanceCount,noOfMedic,estimatedFee)
+        const handleSubmit = () => {
+        // Save the current state to local storage
+        localStorage.setItem('callerData', JSON.stringify(callerData));
+        localStorage.setItem('eventData', JSON.stringify(eventData));
+        localStorage.setItem('schedule', JSON.stringify(schedule));
+        localStorage.setItem('ambulanceData', JSON.stringify(ambulanceData));
+        localStorage.setItem('smallAmbulanceTotal', smallAmbulanceCost.toString());
+        localStorage.setItem('largeAmbulanceTotal', largeAmbulanceCost.toString());
+        localStorage.setItem('medicsTotal', medicCost.toString());
+        navigate("/StandBy/Nigeria/Event/Schedule/Ambulance%20Size/Confirm%20order")
+        }
     return(
         <div className="rounded-3xl bg-white p-6 w-[378px] drop-shadow">
             <div className="flex flex-col gap-3">
-                <p className="font-brsemi text-[24px] text-[#181719]">Zapphire Event Center</p>
-                <p className="font-brmedium text-[#181719]">15th Oct 2024, 7:54 AM</p>
+                <p className="font-brsemi text-[24px] text-[#181719]">{eventLocationName}</p>
+                <p className="font-brmedium text-[#181719]">{formatDate(startDate)}, {formatTime(startTime)}</p>
                 <span className="flex gap-1 items-center">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_2890_31127)">
@@ -20,27 +109,47 @@ export default function OrderBox() {
                 </clipPath>
                 </defs>
                 </svg>
-                <p className="font-brsemi text-xl">₦ 146,000</p>
+                <p className="font-brsemi text-xl">₦ {price.toLocaleString()}</p>
                 </span>
             </div>
             <div className="bg-[#F4F6FA] p-4 flex flex-col gap-2 rounded-mm">
                 <span className="flex justify-between">
                     <p className="text-sm font-brreg text-[#636066]">Standby Date</p>
-                    <p className="text-sm font-brreg text-[#181719]">15, Oct 2024</p>
+                    <p className="text-sm font-brreg text-[#181719]">{formatDate(endDate)}</p>
                 </span>
                 <span className="flex justify-between">
                     <p className="text-sm font-brreg text-[#636066]">Standby Time</p>
-                    <p className="text-sm font-brreg text-[#181719]">9:00am - 5:00pm</p>
+                    <p className="text-sm font-brreg text-[#181719]">{formatTime(startTime)} - {formatTime(endTime)}</p>
                 </span>
                 <span className="flex justify-between">
                     <p className="text-sm font-brreg text-[#636066]">Large Ambulance</p>
-                    <p className="text-sm font-brreg text-[#181719]">0</p>
+                    <p className="text-sm font-brreg text-[#181719]">{largeAmbulance}</p>
                 </span>
                 <span className="flex justify-between">
                     <p className="text-sm font-brreg text-[#636066]">No. of Medics</p>
-                    <p className="text-sm font-brreg text-[#181719]">4</p>
+                    <p className="text-sm font-brreg text-[#181719]">{noOfMedic}</p>
                 </span>
             </div>
+            <span className="flex justify-end font-brmedium text-ev-700 cursor-pointer mt-1">
+                {iaFlag == 'ADMIN' ?
+                (
+                    <div className="flex items-center">
+                    <p>Generate payment Link</p>
+                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.94043 13.78L10.2871 9.43337C10.8004 8.92003 10.8004 8.08003 10.2871 7.5667L5.94043 3.22003" stroke="#6D09F9" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    </div>)
+                :
+                (
+                    <div onClick={handleSubmit} className="flex items-center">
+                    <p>Complete Booking</p>
+                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.94043 13.78L10.2871 9.43337C10.8004 8.92003 10.8004 8.08003 10.2871 7.5667L5.94043 3.22003" stroke="#6D09F9" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    </div>
+                )
+                }
+            </span>
         </div>
     )
 }

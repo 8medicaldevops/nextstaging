@@ -34,9 +34,9 @@ const calculateTotalCost = (smallAmbulanceCount, largeAmbulanceCount, medicsCoun
   // Calculate medics cost
   const medicCostPer12HourSet = Math.ceil(hours / 12) * MEDIC_COST_PER_12_HOURS;
   const medicsTotal = medicsCount * medicCostPer12HourSet;
-  sessionStorage.setItem('smallAmbulanceTotal', smallAmbulanceTotal.toString());
-  sessionStorage.setItem('largeAmbulanceTotal', largeAmbulanceTotal.toString());
-  sessionStorage.setItem('medicsTotal', medicsTotal.toString());
+  localStorage.setItem('smallAmbulanceTotal', smallAmbulanceTotal.toString());
+  localStorage.setItem('largeAmbulanceTotal', largeAmbulanceTotal.toString());
+  localStorage.setItem('medicsTotal', medicsTotal.toString());
   return smallAmbulanceTotal + largeAmbulanceTotal + medicsTotal;
 };
 
@@ -64,7 +64,7 @@ export default function AmbulanceSize() {
   const [medicsCount, setMedicsCount] = useState(1); // Start with 1 to ensure medics cannot be less than 1
   const [estimatedFee, setEstimatedFee] = useState(0)
   const formattedFee = new Intl.NumberFormat().format(estimatedFee);
-  const storedScheduleData = JSON.parse(sessionStorage.getItem('schedule'));
+  const storedScheduleData = JSON.parse(localStorage.getItem('schedule'));
 
   const [ambulanceData, setAmbulanceData] = useState({
     smallAmbulanceCount,
@@ -76,7 +76,7 @@ export default function AmbulanceSize() {
 
   useEffect(() => {
     // Load data from session storage on mount
-    const storedFormData = JSON.parse(sessionStorage.getItem('ambulanceData'));
+    const storedFormData = JSON.parse(localStorage.getItem('ambulanceData'));
     if (storedFormData) {
       setAmbulanceData(storedFormData);
       setSmallAmbulanceCount(storedFormData.smallAmbulanceCount);
@@ -144,7 +144,7 @@ export default function AmbulanceSize() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    sessionStorage.setItem('ambulanceData', JSON.stringify(ambulanceData));
+    localStorage.setItem('ambulanceData', JSON.stringify(ambulanceData));
     //   console.log({
     //     smallAmbulanceCount,
     //     largeAmbulanceCount,

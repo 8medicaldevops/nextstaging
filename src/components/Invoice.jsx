@@ -24,35 +24,17 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
-  header: {
-    width: '100%',
-    height: '211.04px',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    marginBottom: 3,
-  },
-  headerTop: {
-    width: '100%',
-    paddingHorizontal: 16,
-    paddingVertical: 11.02,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerAddress: {
-    color: '#4C4A4E',
-    fontSize: 14,
-    fontFamily: 'firmaBold',
-    lineHeight: 28.8,
-  },
+
+ 
   invoiceTitleContainer: {
     width: '100%',
     paddingLeft: 20,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 35,
+    marginTop: 25,
+ 
   },
   invoiceTitle: {
     color: '#171718',
@@ -60,6 +42,7 @@ const styles = StyleSheet.create({
     fontFamily: 'firmaBold',
     // Manually transform text to uppercase if needed:
     textTransform: 'uppercase',
+   
   },
   invoiceDivider: {
     flexGrow: 1,
@@ -74,12 +57,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    marginBottom: 16,
+    marginBottom: 5,
+   
   },
   receiptFor: {
     color: '#6D09F9',
     fontSize: 20,
     fontFamily: 'firmaBold',
+    
   },
   customerName: {
     color: '#171718',
@@ -99,6 +84,7 @@ const styles = StyleSheet.create({
   orderInfoContainer: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
+
   },
   orderInfoLabel: {
     color: '#171718',
@@ -118,6 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 16,
+
   },
   bookingInfoLabel: {
     color: '#6D09F9',
@@ -223,20 +210,10 @@ const InvoicePDF =
         <View>
             <Image src={headerImg} />
         </View>
-      {/* Header Section */}
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <View style={{ width: '334.40px', height: '32px' }} />
-          <View style={{ width: '250px' }}>
-            <Text style={styles.headerAddress}>13, Odiyan Street, Ikate, Lagos, Nigeria</Text>
-            <Text style={styles.headerAddress}>08098888763</Text>
-          </View>
-        </View>
         <View style={styles.invoiceTitleContainer}>
           <Text style={styles.invoiceTitle}>Invoice</Text>
           <View style={styles.invoiceDivider} />
         </View>
-      </View>
 
       {/* Details Section */}
       <View style={styles.detailsContainer}>
@@ -311,9 +288,7 @@ const InvoicePDF =
         </View>
         </View>
       {/* Footer Section */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>8Medicalng</Text>
-      </View>
+      
     </Page>
   </Document>
 );

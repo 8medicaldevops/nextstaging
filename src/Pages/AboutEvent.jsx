@@ -27,7 +27,7 @@ export default function AboutEvent() {
 
     useEffect(() => {
         // Load data from session storage on mount
-        const storedFormData = JSON.parse(sessionStorage.getItem('eventData'));
+        const storedFormData = JSON.parse(localStorage.getItem('eventData'));
         if (storedFormData) {
             setEventData(storedFormData);
         }
@@ -68,7 +68,7 @@ export default function AboutEvent() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        sessionStorage.setItem('eventData', JSON.stringify(eventData));
+        localStorage.setItem('eventData', JSON.stringify(eventData));
         //console.log(eventData);
         navigate("/StandBy/Nigeria/Event/Schedule")
 

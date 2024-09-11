@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function BookingSuccessful() {
 
-    sessionStorage.clear();
+    localStorage.clear();
 
     useEffect(() => {
         ReactGA.send({

@@ -8,6 +8,8 @@ import { useState, useEffect,  } from "react";
 import { BeatLoader } from "react-spinners";
 import ReactGA from "react-ga4";
 import LinkPopup from "@/components/LinkPopup";
+import { jwtDecode } from "jwt-decode";
+import PaymentLinkModal from "@/components/PaymentLinkModal";
 
 
 
@@ -15,15 +17,22 @@ export default function ConfirmOrder() {
     let [loading, setLoading] = useState(false);
     let [color, setColor] = useState("#6D09F9");
     const [isOpen, setIsOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [checkoutLink, setCheckoutLink] = useState('');
 
-    const storedCallerData = JSON.parse(sessionStorage.getItem('callerData'));
+    const storedCallerData = JSON.parse(localStorage.getItem('callerData'));
     //console.log(storedCallerData);
-    const storedEventData = JSON.parse(sessionStorage.getItem('eventData'));
+    const storedEventData = JSON.parse(localStorage.getItem('eventData'));
     //console.log(storedEventData);
-    const storedScheduleData = JSON.parse(sessionStorage.getItem('schedule'));
+    const storedScheduleData = JSON.parse(localStorage.getItem('schedule'));
     //console.log(storedScheduleData);
-    const storedAmbulanceData = JSON.parse(sessionStorage.getItem('ambulanceData'));
+    const storedAmbulanceData = JSON.parse(localStorage.getItem('ambulanceData'));
     //console.log(storedAmbulanceData);
+    const signInData = JSON.parse(sessionStorage.getItem('signInData'));
+    const token = signInData.data.tokens.accessToken || '';
+    const decodedToken = jwtDecode(token);
+    const iaFlag = decodedToken?.userType ;
+    console.log(decodedToken)
     const navigate = useNavigate();
     // format fee
     const formattedFee = new Intl.NumberFormat().format(storedAmbulanceData.estimatedFee);
@@ -123,7 +132,7 @@ export default function ConfirmOrder() {
     }
 
     const toggleCancel = () => {
-        sessionStorage.clear(),
+        localStorage.clear(),
             navigate("/")
     }
       
@@ -135,8 +144,104 @@ export default function ConfirmOrder() {
         })
     }, [])
 
-      const generateInvoice = () => {
+      const generateInvoice = async() => {
+        setLoading(!loading)
+        const data = {
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                eventLocationName: storedEventData.venueName,
+                eventAddress: storedEventData.venueAddress,
+                estimatedNumberOfGuests: storedEventData.guests,
+                eventType: storedEventData.eventType,
+                description: storedEventData.description,
+                eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
+                startDate: formattedBackendStartDate,
+                endDate: formattedBackendEndDate,
+                startTime: storedScheduleData.startTime,
+                endTime: storedScheduleData.endTime,
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+            country: "NG",
+
+        };
+        { }
+        try {
+            const response = await axios.post(
+                iaFlag !== "ADMIN" ? 
+                import.meta.env.VITE_GENERATE_INVOICE 
+                : 
+                import.meta.env.VITE_GENERATE_PAYMENT_LINK, 
+                data,
+                {
+                    headers: {
+                      Authorization: `Bearer ${token}`, 
+                    },
+                  }
+            );
+            console.log("Response:", response.data);
+            
+        } catch (error) {
+            console.error("You are not logged in:", error);
+            //navigate("/BookingError");
+        } finally {
+            setLoading(false);
+        }
         setIsOpen(true);
+      }
+
+      const generatePaymentLink = async() => {
+        setLoading(!loading)
+        const data = {
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                eventLocationName: storedEventData.venueName,
+                eventAddress: storedEventData.venueAddress,
+                estimatedNumberOfGuests: storedEventData.guests,
+                eventType: storedEventData.eventType,
+                description: storedEventData.description,
+                eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
+                startDate: formattedBackendStartDate,
+                endDate: formattedBackendEndDate,
+                startTime: storedScheduleData.startTime,
+                endTime: storedScheduleData.endTime,
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+            country: "NG",
+            
+        };
+
+        try {
+            const response = await axios.post(import.meta.env.VITE_GENERATE_PAYMENT_LINK, data,
+                {
+                    headers: {
+                      Authorization: `Bearer ${token}`, 
+                    },
+                  }
+            );
+            console.log("Response:", response.data);
+            setCheckoutLink(response.data.data.paymentLink);
+            setModalOpen(true);
+            //navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
+        } catch (error) {
+            //console.error("Error:", error);
+            navigate("/BookingError");
+        } finally {
+            setLoading(false);
+        }
       }
     return (
         <div className={loading ? "overflow-y-hidden h-screen" : ""}>
@@ -468,6 +573,9 @@ export default function ConfirmOrder() {
                         </div>
                     </section>
                 </div>
+                {iaFlag == "ADMIN" ?
+                ' '
+                :
                 <section className="bg-white max-w-[640px] flex flex-col gap-3 p-6 w-full">
                     <p className="font-brsemi text-2xl text-[#181719]">Booking Policies</p>
                     <div className="flex flex-wrap gap-3 justify-between">
@@ -506,16 +614,23 @@ export default function ConfirmOrder() {
                         </div>
                     </div>
                 </section>
-
+                }
             </div>
-            <div className="flex justify-between py-6 px-20 max-lg:px-4">
+            <div className="flex justify-between fixed bottom-0 bg-white w-full py-6 px-20 max-lg:px-4 max-md:flex-col max-md:gap-3">
                 <button onClick={()=>generateInvoice()} className="border border-ev-700 rounded-mm px-5 py-3 font-brbold text-lg text-ev-700">Generate Invoice</button>
-                <span className="flex items-center gap-9">
+                <span className="flex items-center gap-9 max-md:flex-col-reverse">
                     <button className="font-brsemi text-[#181719] text-lg" onClick={toggleCancel}>Cancel</button>
+                    {iaFlag == "ADMIN" ?
+                    <button onClick={()=>generatePaymentLink()} className="w-full border border-ev-700 rounded-mm px-5 py-3 font-brbold text-lg text-ev-700">Generate Payment Link</button>
+                    :
                     <PaystackButton {...componentProps} />
+
+                    }
+                   
                 </span>
             </div>
             <LinkPopup open={isOpen} close={()=>setIsOpen(false)} />
+            <PaymentLinkModal open={modalOpen} close={()=>setModalOpen(false)} checkoutLink={checkoutLink} /> 
         </div>
     )
 }
