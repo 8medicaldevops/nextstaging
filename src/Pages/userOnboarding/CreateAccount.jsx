@@ -63,7 +63,7 @@ export default function CreateAccount() {
                 console.log(data);
                 if (data.success == true) {
                     setIsPending(false);
-                    addToast(`Hello ${data.data.firstName}, your sign in was successful. You will be redirected to the homepage in a few seconds.`, {
+                    addToast(`Hello ${data.data.firstName}, your registration was successful. You will be redirected to the login page in a few seconds.`, {
                         appearance: 'success',
                         autoDismiss: true,
                     });
