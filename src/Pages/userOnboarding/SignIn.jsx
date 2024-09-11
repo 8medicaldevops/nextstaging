@@ -48,7 +48,7 @@ export default function SignIn() {
             fetchUserData(values, import.meta.env.VITE_USER_LOGIN, "/", "signInData",); //USEEFFECT
 
             if (isSuccess && myData.statusCode == 200) {
-                addToast(`Hello, ${myData.data.firstName}, your account creation was successful. You will be redirected to the homepage in a few seconds.`, {
+                addToast(`Hello ${myData.data.firstName}, your sign in was successful. You will be redirected to the homepage in a few seconds.`, {
                     appearance: 'success',
                     autoDismiss: true,
                 })

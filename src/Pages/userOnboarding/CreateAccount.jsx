@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
-import { showAlert } from 'tailwind-toastify';
-//import { ToastContainer, toast } from "react-toastify";
-//import "react-toastify/dist/ReactToastify.css";
+import { useToasts } from 'react-toast-notifications';
+import { BeatLoader } from "react-spinners";
+
 
 import { createAccountValidation } from "./FormValidation";
 import { useFetch } from "@/components/hooks/useFetch";
@@ -30,6 +30,8 @@ export default function CreateAccount() {
 
     let { fetchUserData, myData, isSuccess, isPending, isError } = useFetch();
 
+    const { addToast } = useToasts()
+
 
     useEffect(() => {
         ReactGA.send({
@@ -49,15 +51,19 @@ export default function CreateAccount() {
         validationSchema: createAccountValidation,
         onSubmit: (values) => {
 
-            fetchUserData(values, import.meta.env.VITE_USER_REGISTER); //USEEFFECT
+            fetchUserData(values, import.meta.env.VITE_USER_REGISTER, "/SignIn", "signUpData"); //USEEFFECT
 
-            if (isSuccess) {
-                showAlert('success', "Success", 'Message')
-            } else if (isError) {
-                showAlert('error', "Error", 'Message')
-            } else if (isPending) {
-                showAlert('info', "Info", 'Message')
-            }
+            if (isSuccess && myData.statusCode == 201) {
+                addToast(`Hello ${myData.data.firstName}, your account creation was successful. You will be redirected to the login page in a few seconds.`, {
+                    appearance: 'success',
+                    autoDismiss: true,
+                })
+            } else if (isError || myData.statusCode == 409) {
+                addToast(`Hello, There was an error. This email might have been used already. Please try again. If it persists, contact support"`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                })
+            } 
 
             console.log(values);
 
@@ -256,17 +262,18 @@ export default function CreateAccount() {
                             >
                                 {/*onClick={() => { navigate("/dashboard-home") }} */}
                                 Sign Up
-                                <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.1201 3.95337L14.1668 8.00004L10.1201 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
+                                {
+                                    isPending ?
+                                        <BeatLoader size={4} color="#ffffff" /> :
+                                        <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M10.1201 3.95337L14.1668 8.00004L10.1201 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                }
+
                             </button>
                         </div>
                     </form>
-
-                    {/*{isError && <p>Error</p>}
-                    {isPending && <p>pending</p>}
-                    {isSuccess && <p>SUCCESS</p>}*/}
                 </div>
             </div>
             {/*<ToastContainer />*/}
