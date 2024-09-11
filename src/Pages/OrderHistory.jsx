@@ -22,12 +22,13 @@ export default function OrderHistory () {
     const [pendingOrders, setPendingOrders] = useState([]);
     const [upcomingOrders, setUpcomingOrders] = useState([]);
     const [completedOrders, setCompletedOrders] = useState([]);
+    const [adminPendningOrders, setAdminPendingOrders] = useState([]);
     const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
     const token = signInData?.data?.tokens?.accessToken || '';
     const decodedToken = token? jwtDecode(token) : '';
     const iaFlag = decodedToken?.userType ;
     const totalOrders = pendingOrders.length + upcomingOrders.length + completedOrders.length;
-     console.log(boxData)
+     console.log(adminPendningOrders)
 
     const handleCategoryClick = (category) => {
       setActiveCategory(category);
@@ -54,9 +55,37 @@ export default function OrderHistory () {
                     // Handle the response
                     console.log('Orders fetched successfully:', response.data);
                     setBoxData(response.data || []);
-                    setPendingOrders(response.data.data.PENDING.orders);
-                    setUpcomingOrders(response.data.data.UP_COMING.orders);
-                    setCompletedOrders(response.data.data.COMPLETED.orders);
+                    // setPendingOrders(response.data.data.PENDING.orders || []);
+                    // setUpcomingOrders(response.data.data.UP_COMING.orders || []);
+                    // setCompletedOrders(response.data.data.COMPLETED.orders || []);
+                    // setAdminPendingOrders(response.data);
+                    const { PENDING, UP_COMING, COMPLETED } = response.data.data;
+
+                    if (PENDING && PENDING.orders) {
+                        setPendingOrders(PENDING.orders);
+                    } else {
+                        setPendingOrders([]); // Set to empty array if PENDING orders don't exist
+                    }
+
+                    if (UP_COMING && UP_COMING.orders) {
+                        setUpcomingOrders(UP_COMING.orders);
+                    } else {
+                        setUpcomingOrders([]); // Set to empty array if UP_COMING orders don't exist
+                    }
+
+                    if (COMPLETED && COMPLETED.orders) {
+                        setCompletedOrders(COMPLETED.orders);
+                    } else {
+                        setCompletedOrders([]); // Set to empty array if COMPLETED orders don't exist
+                    }
+
+                    // Check if response.data is valid before setting admin pending orders
+                    if (response.data) {
+                        setAdminPendingOrders(response.data.data.orders.docs);
+                    } else {
+                        setAdminPendingOrders([]); // Set to an empty array if response.data doesn't exist
+                    }
+
                     return response.data; // Return the order data
                 } catch (error) {
                     console.error('Error fetching orders:', error);
@@ -237,11 +266,13 @@ export default function OrderHistory () {
                             emailAddress={order.callerDetails.email}
                             phoneNumber={order.callerDetails.phone}
                             companyName={order.callerDetails.company}
+                            eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
                             iaFlag={iaFlag}
                             />
                         ))}
                     
                     </div>
+                
                 </section>
                 }
                 {iaFlag !== 'ADMIN' && upcomingOrders.length > 0 &&
@@ -369,12 +400,46 @@ export default function OrderHistory () {
             searching
            
             </div>}
-            {totalOrders == 0 &&
+            {totalOrders == 0 && adminPendningOrders.lenght == 0 &&
             <section>
                <NoBooking />
             </section>
             }
+            {iaFlag === "ADMIN" &&
+            <div className="flex gap-6 flex-wrap max-[1024px]:justify-between">
+                        {adminPendningOrders.map(order =>(
+                            <OrderBox 
+                            key={order._id}
+                            eventLocationName={order.ambulances.eventLocationName}
+                            startDate={order.ambulances.startDate}
+                            startTime={order.ambulances.startTime}
+                            price={order.price}
+                            endDate={order.ambulances.endDate}
+                            endTime={order.ambulances.endTime}
+                            largeAmbulance={order.ambulances.largeAmbulance}
+                            noOfMedic={order.ambulances.noOfMedic}
+                            smallAmbulanceCost={order.smallAmbulanceCost}
+                            largeAmbulanceCost={order.largeAmbulanceCost}
+                            medicCost={order.medicCost}
+                            smallAmbulanceCount={order.ambulances.smallAmbulance}
+                            largeAmbulanceCount={order.ambulances.largeAmbulance}
+                            estimatedFee={order.price}
+                            venueAddress={order.ambulances.eventAddress}
+                            guests={order.ambulances.estimatedNumberOfGuests}
+                            eventType={order.ambulances.eventType}
+                            description={order.ambulances.description}
+                            fullName={order.callerDetails.fullName}
+                            emailAddress={order.callerDetails.email}
+                            phoneNumber={order.callerDetails.phone}
+                            companyName={order.callerDetails.company}
+                            token={token}
+                            iaFlag={iaFlag}
+                            />
+                        ))}
+                    </div>
+                    }
             </div>
+            
         </div>
     )
 }

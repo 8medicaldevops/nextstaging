@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { parseISO, parse, format } from "date-fns";
+import axios from "axios";
+import PaymentLinkModal from "./PaymentLinkModal";
 
 export default function OrderBox({
     eventLocationName,
@@ -24,6 +27,8 @@ export default function OrderBox({
     smallAmbulanceCost,
     largeAmbulanceCost,
     medicCost,
+    eventEndsSameDay,
+    token,
     iaFlag
 }) {
         
@@ -44,7 +49,7 @@ export default function OrderBox({
     const [schedule, setSchedule] = useState({
         startDate: startDate,
         endDate: endDate,
-        eventEndsSameDay: true,
+        eventEndsSameDay: eventEndsSameDay,
         startTime: startTime,
         endTime: endTime,
       });
@@ -56,6 +61,8 @@ export default function OrderBox({
       })
         const [loading, setLoading] = useState(false); // Loading state
         const navigate = useNavigate();
+        const [checkoutLink, setCheckoutLink] = useState('');
+        const [modalOpen, setModalOpen] = useState(false);
         // Format date and time if needed (example format)
         const formatDate = (dateStr) => {
             if (!dateStr) return 'N/A'; // Return a default value if dateStr is undefined or null
@@ -77,6 +84,10 @@ export default function OrderBox({
         
             return formattedTime;
         };
+        const ogstartDate = parseISO(startDate);
+        const ogendDate = parseISO(endDate);
+        const formattedBackendStartDate = format(ogstartDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
+        const formattedBackendEndDate = format(ogendDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
         
         //console.log(callerData,eventData,schedule,smallAmbulanceCount,largeAmbulanceCount,noOfMedic,estimatedFee)
         const handleSubmit = () => {
@@ -89,6 +100,55 @@ export default function OrderBox({
         localStorage.setItem('largeAmbulanceTotal', largeAmbulanceCost.toString());
         localStorage.setItem('medicsTotal', medicCost.toString());
         navigate("/StandBy/Nigeria/Event/Schedule/Ambulance%20Size/Confirm%20order")
+        }
+
+        const handlePaymentLink = async() => {
+                setLoading(!loading)
+                const data = {
+                    callerDetails: {
+                        fullName: fullName,
+                        email: emailAddress,
+                        phone: phoneNumber,
+                        company: companyName,
+                    },
+                    ambulances: {
+                        eventLocationName: eventLocationName,
+                        eventAddress: venueAddress,
+                        estimatedNumberOfGuests: guests,
+                        eventType: eventType,
+                        description: description,
+                        eventEndOnTheSameDay: eventEndsSameDay,
+                        startDate: formattedBackendStartDate,
+                        endDate: formattedBackendEndDate,
+                        startTime: startTime,
+                        endTime: endTime,
+                        smallAmbulance: smallAmbulanceCount,
+                        largeAmbulance: largeAmbulanceCount,
+                        noOfMedic: noOfMedic,
+                    },
+                    country: "NG",
+                    
+                };
+        
+                try {
+                    const response = await axios.post(import.meta.env.VITE_GENERATE_PAYMENT_LINK, data,
+                        {
+                            headers: {
+                              Authorization: `Bearer ${token}`, 
+                            },
+                          }
+                    );
+                    console.log("Response:", response.data);
+                    setCheckoutLink(response.data.data.paymentLink);
+                    setModalOpen(true);
+                    //navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
+                } catch (error) {
+                    console.error("Error:", error);
+                    //navigate("/BookingError");
+                } finally {
+                    setLoading(false);
+                }
+              
         }
     return(
         <div className="rounded-3xl bg-white p-6 w-[378px] drop-shadow">
@@ -133,7 +193,7 @@ export default function OrderBox({
             <span className="flex justify-end font-brmedium text-ev-700 cursor-pointer mt-1">
                 {iaFlag == 'ADMIN' ?
                 (
-                    <div className="flex items-center">
+                    <div onClick={handlePaymentLink} className="flex items-center">
                     <p>Generate payment Link</p>
                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.94043 13.78L10.2871 9.43337C10.8004 8.92003 10.8004 8.08003 10.2871 7.5667L5.94043 3.22003" stroke="#6D09F9" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -150,6 +210,7 @@ export default function OrderBox({
                 )
                 }
             </span>
+            <PaymentLinkModal open={modalOpen} close={()=>setModalOpen(false)} checkoutLink={checkoutLink} />
         </div>
     )
 }
