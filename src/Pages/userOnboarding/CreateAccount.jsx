@@ -1,5 +1,5 @@
 import NavBar from "../../components/NavBar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
@@ -8,15 +8,16 @@ import { BeatLoader } from "react-spinners";
 
 
 import { createAccountValidation } from "./FormValidation";
-import { useFetch } from "@/components/hooks/useFetch";
 
 import google from "../../assets/images/google.svg";
 import signup from "../../assets/images/signup.svg";
 
 
 export default function CreateAccount() {
+    let navigate = useNavigate();
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isPending, setIsPending] = useState(false);
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
@@ -26,9 +27,6 @@ export default function CreateAccount() {
         password: '',
         //termsAndConditions: false,
     });
-
-
-    let { fetchUserData, myData, isSuccess, isPending, isError } = useFetch();
 
     const { addToast } = useToasts()
 
@@ -46,14 +44,58 @@ export default function CreateAccount() {
         setIsPasswordVisible(!isPasswordVisible);
     }
 
+    const createUserAccount = async () => {
+        setIsPending(true);
+        await fetch(import.meta.env.VITE_USER_REGISTER, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                if (data.success == true) {
+                    setIsPending(false);
+                    addToast(`Hello ${data.data.firstName}, your sign in was successful. You will be redirected to the homepage in a few seconds.`, {
+                        appearance: 'success',
+                        autoDismiss: true,
+                    });
+                    setTimeout(() => { navigate("/SignIn") }, 4000);
+                    sessionStorage.setItem('SignIn', JSON.stringify(data));
+                    
+                } else if (data.success == false && data.statusCode == 409) {
+                    setIsPending(false);
+                    addToast(`Hello, There was an error. This email might have been used already. Please try again. If it persists, contact support"`, {
+                        appearance: 'error',
+                        autoDismiss: true,
+                    })
+                }
+            })
+            .catch(error => {
+                setIsPending(false);
+                console.error('There has been a problem with your fetch operation:', error);
+                addToast("Hello, There was an error. Please try again. ", {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            });
+    };
+
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: createAccountValidation,
         onSubmit: (values) => {
 
-            fetchUserData(values, import.meta.env.VITE_USER_REGISTER, "/SignIn", "signUpData"); //USEEFFECT
+            //fetchUserDataAndRoute(values, import.meta.env.VITE_USER_REGISTER, "/SignIn", "signUpData"); //USEEFFECT
 
-            if (isSuccess && myData.statusCode == 201) {
+            /*if (isSuccess && myData.statusCode == 201) {
                 addToast(`Hello ${myData.data.firstName}, your account creation was successful. You will be redirected to the login page in a few seconds.`, {
                     appearance: 'success',
                     autoDismiss: true,
@@ -63,23 +105,11 @@ export default function CreateAccount() {
                     appearance: 'error',
                     autoDismiss: true,
                 })
-            } 
+            } */
 
+            createUserAccount();
             console.log(values);
 
-            console.log(myData);
-
-            /*const myPromise = new Promise((resolve) =>
-                fetch("import.meta.env.VITE_USER_REGISTER")
-                .then((response) => response.json())
-                .then((json) => setTimeout(() => resolve(json), 3000))
-            )
-    
-            toast.promise(myPromise), {
-                pending: "Loading",
-                success: "Your account has been created! You will be redirected to the login page in a few seconds",
-                error: "Error",
-            }*/
         }
     })
 

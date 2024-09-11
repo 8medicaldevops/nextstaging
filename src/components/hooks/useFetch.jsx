@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { useNavigate } from "react-router-dom";
 
-export function useFetch() {
+export function useFetchAndRoute() {
 
     const [myData, setMyData] = useState(null);
     const [isError, setIsError] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isPending, setIsPending] = useState(false);
-    let navigate = useNavigate();
 
-    const fetchUserData = (formData, url, path, dataKey) => {
+    const fetchUserData = (formData, url, dataKey) => {
+
         setIsPending(true);
 
         fetch(url, {
@@ -22,10 +21,9 @@ export function useFetch() {
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
-
                 }
                 return response.json();
-            }) 
+            })
             .then(data => {
                 console.log(data);
                 setMyData(data);
@@ -35,7 +33,6 @@ export function useFetch() {
                     setIsError(false);
                     setIsPending(false);
                     sessionStorage.setItem(`${dataKey}`, JSON.stringify(data));
-                    setTimeout(() => { navigate(`${path}`) }, 5000);
                 } else {
                     setIsError(true);
                     setIsSuccess(false);

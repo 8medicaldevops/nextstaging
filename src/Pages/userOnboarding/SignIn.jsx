@@ -4,9 +4,9 @@ import ReactGA from "react-ga4";
 import { useFormik } from "formik";
 import { useToasts } from 'react-toast-notifications';
 import { BeatLoader } from "react-spinners";
+import { useNavigate } from "react-router-dom";
 
 import NavBar from "../../components/NavBar";
-import { useFetch } from "@/components/hooks/useFetch";
 
 import google from "../../assets/images/google.svg";
 import signin from "../../assets/images/signin.svg";
@@ -14,10 +14,10 @@ import { signInValidation } from "./FormValidation";
 
 export default function SignIn() {
 
-    const { addToast } = useToasts()
+    const { addToast } = useToasts();
+    let navigate = useNavigate();
 
-    let { fetchUserData, myData, isSuccess, isPending, isError } = useFetch();
-
+    const [isPending, setIsPending] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     // eslint-disable-next-line no-unused-vars
@@ -35,37 +35,58 @@ export default function SignIn() {
         })
     }, [])
 
-
     const handlPasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     }
+
+    const signUserIn = async () => {
+        setIsPending(true);
+        await fetch(import.meta.env.VITE_USER_LOGIN, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                if (data.success == true) {
+                    setIsPending(false);
+                    addToast(`Hello ${data.data.firstName}, your sign in was successful. You will be redirected to the homepage in a few seconds.`, {
+                        appearance: 'success',
+                        autoDismiss: true,
+                    });
+                    setTimeout(() => { navigate("/") }, 4000);
+                    sessionStorage.setItem('SignIn', JSON.stringify(data));
+                    
+                } else if (data.success == false) {
+                    setIsPending(false);
+                }
+            })
+            .catch(error => {
+                setIsPending(false);
+                console.error('There has been a problem with your fetch operation:', error);
+                addToast("Hello, Please try again. If you can't remember your password, create a new one by clicking Forgot password", {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            });
+    };
 
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: signInValidation,
         onSubmit: (values) => {
-
-            fetchUserData(values, import.meta.env.VITE_USER_LOGIN, "/", "signInData",); //USEEFFECT
-
-            if (isSuccess && myData.statusCode == 200) {
-                addToast(`Hello ${myData.data.firstName}, your sign in was successful. You will be redirected to the homepage in a few seconds.`, {
-                    appearance: 'success',
-                    autoDismiss: true,
-                })
-            } else if (isError || myData.statusCode == 400) {
-                addToast(`Hello, Please try again. If you can't remember your password, create a new one by clicking Forgot password"`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                })
-            } 
-
+            signUserIn();
             console.log(values);
-
-            console.log(myData);
-
         }
     })
-
 
     return (
         <div>
@@ -112,7 +133,7 @@ export default function SignIn() {
                         </div>
 
                         <div className="pb-[1rem]">
-                            <label htmlFor="password" className="font-brsemi text-sm text-[#636066] mb-[10px]">Create Password</label>
+                            <label htmlFor="password" className="font-brsemi text-sm text-[#636066] mb-[10px]">Enter Password</label>
                             <input
                                 type={(isPasswordVisible === true) ? "text" : "password"}
                                 id="password"
@@ -176,21 +197,6 @@ export default function SignIn() {
                                 </p>
                             }
                         </div>
-                        {/*<div className="my-3">
-                            {/*<PasswordChecklist
-                                rules={["minLength", "specialChar", "number", "capital"]}
-                                minLength={5}
-                                value={userData.password}
-                                messages={{
-                                    minLength: "Password has more than 8 characters",
-                                    specialChar: "Password has a special character.",
-                                    number: "Password has a number",
-                                    capital: "Password matches",
-                                }}
-                                className="mb-6"
-                            />
-                        </div>*/}
-
                         <div className="pb-[0.5rem]">
                             <button className="bg-ev-700 w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]" type="submit">
                                 Sign In
