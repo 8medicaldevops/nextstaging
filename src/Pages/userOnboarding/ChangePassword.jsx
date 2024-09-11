@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 
 import NavBar from "../../components/NavBar";
 import Subscribed from "@/components/Suscribed";
-import { useFetch } from "@/components/hooks/useFetch";
+import { useFetchAndRoute } from "@/components/hooks/useFetchAndRoute";
 
 import forgot from "../../assets/images/password-ambulance.png";
 import lock from "../../assets/images/passwordd.svg";
@@ -17,7 +17,7 @@ export default function ChangePassword() {
 
     const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
-    let { fetchUserData, myData, isSuccess, isPending, isError } = useFetch();
+    let { fetchUserDataAndRoute, myData, isSuccess, isPending, isError } = useFetchAndRoute();
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
@@ -45,7 +45,7 @@ export default function ChangePassword() {
         validationSchema: changePasswordValidation,
         onSubmit: (values) => {
 
-            fetchUserData(values, import.meta.env.VITE_USER_RESET_PASSWORD); //USEEFFECT
+            fetchUserDataAndRoute(values, import.meta.env.VITE_USER_RESET_PASSWORD); //USEEFFECT
 
             console.log(values);
 
