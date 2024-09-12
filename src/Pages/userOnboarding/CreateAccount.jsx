@@ -132,7 +132,11 @@ export default function CreateAccount() {
                             Continue with Google
                         </button>
                     </div>
-                    <p className="text-center">Or</p>
+
+                    <div className="divider-text my-3">
+                        <span>OR</span>
+                    </div>
+
                     <form action="" className="flex flex-col" noValidate onSubmit={handleSubmit}>
                         <div className="py-[0.5rem] flex justify-between w-[100%] gap-3">
                             <div className=" flex flex-col gap-[3px] w-1/2">
@@ -269,7 +273,7 @@ export default function CreateAccount() {
                                     type="checkbox"
                                     id="termsAndConditions"
                                     name="termsAndConditions"
-                                    value={values.passwordConfirm}
+                                    value={values.passwordConfirm} termsAndConditions
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     required

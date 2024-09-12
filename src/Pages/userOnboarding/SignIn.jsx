@@ -64,7 +64,7 @@ export default function SignIn() {
                     });
                     setTimeout(() => { navigate("/") }, 4000);
                     sessionStorage.setItem('SignIn', JSON.stringify(data));
-                    
+
                 } else if (data.success == false) {
                     setIsPending(false);
                 }
@@ -107,7 +107,9 @@ export default function SignIn() {
                         </button>
                     </div>
 
-                    <p className="text-center">Or</p>
+                    <div className="divider-text my-3">
+                        <span>OR</span>
+                    </div>
 
                     <form action="" className="flex flex-col" onSubmit={handleSubmit}>
                         <div className="py-[1rem] flex flex-col">
@@ -197,6 +199,9 @@ export default function SignIn() {
                                 </p>
                             }
                         </div>
+
+                        <Link className="underline underline-offset-4 text-right my-3" to="/ForgotPassword">Forgot Password</Link>
+
                         <div className="pb-[0.5rem]">
                             <button className="bg-ev-700 w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]" type="submit">
                                 Sign In
@@ -210,7 +215,7 @@ export default function SignIn() {
                                 }
                             </button>
                         </div>
-                        <Link className="underline underline-offset-4 mx-auto self-center" to="/ForgotPassword">Forgot Password</Link>
+
                     </form>
                 </div>
             </div>
