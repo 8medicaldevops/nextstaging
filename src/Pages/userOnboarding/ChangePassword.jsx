@@ -89,18 +89,19 @@ export default function ChangePassword() {
         }
     })
 
-
     return (
         <div>
             <NavBar />
             <div className="md:h-full md:mt-1/2 flex gap-6 md:gap-12 flex-col md:flex-row md:justify-center md:items-center md:w-[100%]  md:-px-auto p-[2rem]">
                 <div className="md:h-full md:w-[40%] md:self-center">
-                    <img src={forgot} alt="" className="object-fill hidden md:flex       mx-auto" />
+                    <img src={forgot} alt="" className="object-fill hidden md:flex mx-auto" />
                 </div>
-                <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem]            border-[#F4F2F5] md:w-[40%]  md:self-center">
+                <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[40%]  md:self-center">
                     <div className="flex flex-col items-center justify-center my-[0.5rem]">
-                        <img src={lock} alt="" className="self-center" />
-                        <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center">Change Password</h3>
+                        <div className="p-4 bg-[#F4F1FF] rounded-[50%]">
+                            <img src={lock} alt="lock icon" className="self-center  size-[30px]" />
+                        </div>
+                        <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center my-3">Change Password</h3>
                         <p className="font-brreg text-lg text-[#636066] my-[0.5rem] text-center">
                             Create a new password for your account.
                         </p>
