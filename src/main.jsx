@@ -28,6 +28,7 @@ import BookingError from './Pages/BookingError.jsx';
 import AdminPortal from './Pages/AdminPortal.jsx';
 import EditBooking from './Pages/EditBooking.jsx';
 import AdminLogin from './Pages/AdminLogin.jsx';
+import OrderHistory from './Pages/OrderHistory.jsx';
 import SignIn from './Pages/userOnboarding/SignIn';
 import CreateAccount from './Pages/userOnboarding/CreateAccount';
 import ForgotPassword from './Pages/userOnboarding/ForgotPassword';
@@ -80,8 +81,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/OtherBookings",
-    element: <OtherBookings />,
-
+    element: <OtherBookings />, 
+     
+  },
+  {
+    path: "/OrderHistory",
+    element: <OrderHistory />, 
+     
   },
 
   {

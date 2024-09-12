@@ -22,7 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+
 import {
   Table,
   TableBody,
@@ -33,8 +33,6 @@ import {
 } from "@/components/ui/table";
 import Status from "./Status";
 import BookingDetails from "./BookingDetails";
-import { useNavigate , Link } from "react-router-dom";
-import EditContact from "./EditContact";
 
 
  
@@ -79,64 +77,6 @@ export const columns = (setViewBooking,setBookingId)=> [
       </span>,
   },
 
-//   {
-//     accessorKey: "standbyDate",
-//     header: ({ column }) => (
-//               <Button
-//                   variant="ghost"
-//                   onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-//               >
-//                   Standby Date
-//                   <ArrowUpDown className="ml-2 h-4 w-4" />
-//               </Button>
-//           ),
-//           cell: ({ row }) => (
-//               <span className="flex px-4 flex-col">
-//                   <div className="lowercase font-brsemi text-sm text-[#4A464E]">
-//                       {row.getValue("standbyDate")}
-//                   </div>
-//               </span>
-//           ),
-// },
-// {
-//     accessorKey: "startTime",
-//     header: ({ column }) => (
-//               <Button
-//                   variant="ghost"
-//                   onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-//               >
-//                   Start Time
-//                   <ArrowUpDown className="ml-2 h-4 w-4" />
-//               </Button>
-//           ),
-//           cell: ({ row }) => (
-//               <span className="flex px-4 flex-col">
-//                   <div className="lowercase font-brsemi text-sm text-[#4A464E]">
-//                       {row.getValue("startTime")}
-//                   </div>
-//               </span>
-//           ),
-// },
-// {
-//     accessorKey: "EndTime",
-//     header: ({ column }) => (
-//               <Button
-//                   variant="ghost"
-//                   onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-//               >
-//                   End Time
-//                   <ArrowUpDown className="ml-2 h-4 w-4" />
-//               </Button>
-//           ),
-//           cell: ({ row }) => (
-//               <span className="flex px-4 flex-col">
-//                   <div className="lowercase font-brsemi text-sm text-[#4A464E]">
-//                       {row.getValue("EndTime")}
-//                   </div>
-                 
-//               </span>
-//           ),
-// },
  {
     accessorKey: "standbyDateAndTime", // This combines standbyDate and time for display
     header: ({ column }) => (

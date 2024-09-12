@@ -28,7 +28,7 @@ export default function Schedule() {
   //console.log(selectedDate)
 
   useEffect(() => {
-    const storedFormData = JSON.parse(sessionStorage.getItem('schedule'));
+    const storedFormData = JSON.parse(localStorage.getItem('schedule'));
     if (storedFormData) {
       setSchedule(storedFormData);
       if (storedFormData.startDate) {
@@ -210,7 +210,7 @@ export default function Schedule() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    sessionStorage.setItem('schedule', JSON.stringify({ ...schedule, hours }));
+    localStorage.setItem('schedule', JSON.stringify({ ...schedule, hours }));
     //console.log(schedule);
     navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size")
   };

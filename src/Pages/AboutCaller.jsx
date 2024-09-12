@@ -31,7 +31,7 @@ export default function AboutCaller() {
 
     useEffect(() => {
         // Load data from session storage on mount
-        const storedFormData = JSON.parse(sessionStorage.getItem('callerData'));
+        const storedFormData = JSON.parse(localStorage.getItem('callerData'));
         if (storedFormData) {
             setCallerData(storedFormData);
         }
@@ -88,7 +88,7 @@ export default function AboutCaller() {
 
         if (isValid) {
             const updatedCallerData = { ...callerData, phoneNumber };
-            sessionStorage.setItem('callerData', JSON.stringify(updatedCallerData));
+            localStorage.setItem('callerData', JSON.stringify(updatedCallerData));
             //console.log(updatedCallerData);
             // navigate("/StandBy/Nigeria/Event");
             setIsDialogOpen(true)
