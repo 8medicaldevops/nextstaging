@@ -143,8 +143,9 @@ export default function OrderBox({
                     setModalOpen(true);
                     //navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
                 } catch (error) {
-                    console.error("Error:", error);
+                    //console.error("Error:", error);
                     //navigate("/BookingError");
+                    alert('Outdated standby date or time cannot generate link')
                 } finally {
                     setLoading(false);
                 }

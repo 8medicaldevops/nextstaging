@@ -1,11 +1,12 @@
-
+import { useNavigate } from "react-router-dom"
 
 
 
 export default function NoBooking() {
+    const navigate = useNavigate();
     return(
         <div className="flex flex-col items-center text-center">
-            <div className="flex flex-col items-center gap-8">
+            <div className="flex flex-col items-center gap-6">
             <svg width="224" height="156" viewBox="0 0 224 156" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M47.8986 149.019C11.7166 150.355 2.19727 152.824 2.19727 155.496H223.303C223.303 152.824 201.015 150.355 164.833 149.019C128.651 147.683 84.0779 147.686 47.8986 149.019Z" fill="#E5E8F4"/>
             <path d="M175.857 8.99264C175.857 8.99264 149.954 -13.186 123.688 19.3219C97.4226 51.8299 91.7704 76.4869 61.9294 69.666C32.0884 62.8451 18.7387 77.7607 19.6167 95.733C20.4948 113.705 46.4555 142.827 120.284 134.801C194.112 126.776 222.533 44.151 175.857 8.99264Z" fill="#F7FAFF"/>
@@ -101,8 +102,8 @@ export default function NoBooking() {
             <path d="M176.161 25.7539L175.922 24.0188C175.922 24.0188 176.853 24.2769 177.421 25.4265C177.988 26.5761 176.106 29.7451 174.321 31.7407C172.536 33.7363 168.779 31.8267 168.453 31.2914C168.127 30.7561 170.396 29.1405 172.823 28.1271C175.249 27.1138 176.161 25.7539 176.161 25.7539Z" fill="#6AB106"/>
             </svg>
             <p className="font-brbold text-[40px] text-[#000000]">No Booking Yet!</p>
-            <p className="font-brreg text-lg text-[#636066]">You have not made any booking yet. Book any of our ambulance services via the button below to get started.</p>
-            <button className="bg-ev-700 rounded-mm px-5 py-3 border-none text-white font-brsemi text-lg flex items-center gap-1">Book Now<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <p className="font-brreg text-lg text-[#636066] max-w-[472px]">You have not made any booking yet. Book any of our ambulance services via the button below to get started.</p>
+            <button onClick={()=>navigate("/StandBy")} className="bg-ev-700 rounded-mm px-5 py-3 border-none text-white font-brsemi text-lg flex items-center gap-1">Book Now<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.61914 3.95334L13.6658 8.00001L9.61914 12.0467" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
