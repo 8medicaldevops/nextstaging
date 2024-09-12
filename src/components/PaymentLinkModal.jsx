@@ -291,14 +291,14 @@ export default function PaymentLinkModal(props) {
             <DialogTitle>
             <p className="font-brsemi text-[28px]">Payment Link Generated</p>
             </DialogTitle>
-            <p className="text-center font-brmedium text-[#636066]">The link has been successfully sent to the client's email. You can simply copy the link below to proceed with the payment.</p>
+            <p className="text-center w-full px-1 font-brmedium text-[#636066]">The link has been successfully sent to the client's email. You can simply copy the link below to proceed with the payment.</p>
             <span className="flex">
             <section className="flex items-center">
                 <CopyToClipboard
                     onCopy={linkCopied}
                     options={{message: 'checkout link'}}
                     text={props.checkoutLink}>
-                    <button className="flex items-center gap-2 bg-[#F9F9FA] border border-[#F4F2F5] rounded-mm py-3 px-2" onClick={onLinkCopy}>
+                    <button className="flex items-center gap-1 bg-[#F9F9FA] border border-[#F4F2F5] rounded-mm py-3 px-1" onClick={onLinkCopy}>
                     <p className="font-brreg text-[#181719] text-lg">{props.checkoutLink}</p>
                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10.6666 9.10004V11.9C10.6666 14.2334 9.73331 15.1667 7.39998 15.1667H4.59998C2.26665 15.1667 1.33331 14.2334 1.33331 11.9V9.10004C1.33331 6.76671 2.26665 5.83337 4.59998 5.83337H7.39998C9.73331 5.83337 10.6666 6.76671 10.6666 9.10004Z" stroke="#6D09F9" strokeLinecap="round" strokeLinejoin="round"/>
@@ -306,7 +306,7 @@ export default function PaymentLinkModal(props) {
                     </svg>
                     </button>
                     </CopyToClipboard>
-                    </section> 
+            </section> 
             </span>
             <section className="section font-brreg">
                     {linkCopied ? <span style={{color: '#6D09F9'}}>Copied.</span> : null}
