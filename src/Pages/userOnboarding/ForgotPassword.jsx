@@ -58,6 +58,7 @@ export default function ForgotPassword() {
                     });
                     setIsOtpSent(true);
                     sessionStorage.setItem('ForgotPassword', JSON.stringify(data));
+                    sessionStorage.setItem('email', JSON.stringify(values.email));
 
                 } else if (data.success == false) {
                     setIsPending(false);

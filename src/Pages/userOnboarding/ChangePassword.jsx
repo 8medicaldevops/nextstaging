@@ -1,35 +1,36 @@
 import { useState } from "react";
 import { useFormik } from "formik";
+import { BeatLoader } from "react-spinners";
+import { useNavigate } from "react-router-dom";
+import { useToasts } from 'react-toast-notifications';
 
 import NavBar from "../../components/NavBar";
-import Subscribed from "@/components/Suscribed";
-import { useFetchAndRoute } from "@/components/hooks/useFetchAndRoute";
 
 import forgot from "../../assets/images/password-ambulance.png";
 import lock from "../../assets/images/passwordd.svg";
-import goodPin from "../../assets/images/good-pincode.svg";
+//import goodPin from "../../assets/images/good-pincode.svg";
 import { changePasswordValidation } from "./FormValidation";
 
 export default function ChangePassword() {
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { addToast } = useToasts();
+    let navigate = useNavigate();
+
+    const [isPending, setIsPending] = useState(false);
+
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
-    let { fetchUserDataAndRoute, myData, isSuccess, isPending, isError } = useFetchAndRoute();
+    // eslint-disable-next-line no-unused-vars
+    const userToken = JSON.parse(sessionStorage.getItem('longToken'));
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
-        //longToken(from verification)
-        newPassword: '',
-        confirmNewPassword: '',
+        "longToken": userToken,
+        "newPassword": '',
+        "confirmNewPassword": '',
     });
-
-    const successData = {
-        title: "Password Updated Successfully",
-        body: "Your password has been updated. You can now proceed to log into your account."
-    }
 
     const handlePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -39,18 +40,52 @@ export default function ChangePassword() {
         setIsConfirmationVisible(!isConfirmationVisible);
     }
 
-
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: changePasswordValidation,
         onSubmit: (values) => {
+            setIsPending(true);
 
-            fetchUserDataAndRoute(values, import.meta.env.VITE_USER_RESET_PASSWORD); //USEEFFECT
+            //UpdatePassword()
 
+            console.log(values)
+            fetch(import.meta.env.VITE_USER_RESET_PASSWORD, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    if (data.success == true) {
+                        setIsPending(false);
+                        addToast(`${data?.message}`, {
+                            appearance: 'success',
+                            autoDismiss: true,
+                        });
+                        setTimeout(() => { navigate("/SignIn") }, 4000);
+                        sessionStorage.setItem('UpdatePW', JSON.stringify(data));
+
+                    } else if (data.success == false) {
+                        setIsPending(false);
+                    }
+                })
+                .catch(error => {
+                    setIsPending(false);
+                    console.error('There has been a problem with your fetch operation:', error);
+                    addToast("ERROR", {
+                        appearance: 'error',
+                        autoDismiss: true,
+                    });
+                });
             console.log(values);
-
-            console.log(myData);
-
         }
     })
 
@@ -206,20 +241,22 @@ export default function ChangePassword() {
                         <div className="pb-[0.5rem]">
                             <button className="bg-ev-700 w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]" type="submit">
                                 Reset Password
-                                <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.1201 3.95337L14.1668 8.00004L10.1201 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
+                                {isPending ? <BeatLoader size={4} color="#ffffff" /> :
+                                    <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10.1201 3.95337L14.1668 8.00004L10.1201 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                }
                             </button>
                         </div>
                     </form>
 
-                    {isError && <p>Error</p>}
+                    {/*{isError && <p>Error</p>}
                     {isPending && <p>pending</p>}
                     {
                         isSuccess && 
                             <Subscribed title={successData.title} body={successData.body} img={goodPin} isModalOpen={isModalOpen} isModalClosed={() => setIsModalOpen(false)}/>
-                    }
+                    }*/}
                 </div>
             </div>
         </div>
