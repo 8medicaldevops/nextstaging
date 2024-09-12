@@ -1,35 +1,36 @@
 import { useState } from "react";
 import { useFormik } from "formik";
+import { BeatLoader } from "react-spinners";
+import { useNavigate } from "react-router-dom";
+import { useToasts } from 'react-toast-notifications';
 
 import NavBar from "../../components/NavBar";
-import Subscribed from "@/components/Suscribed";
-import { useFetchAndRoute } from "@/components/hooks/useFetchAndRoute";
 
 import forgot from "../../assets/images/password-ambulance.png";
 import lock from "../../assets/images/passwordd.svg";
-import goodPin from "../../assets/images/good-pincode.svg";
+//import goodPin from "../../assets/images/good-pincode.svg";
 import { changePasswordValidation } from "./FormValidation";
 
 export default function ChangePassword() {
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { addToast } = useToasts();
+    let navigate = useNavigate();
+
+    const [isPending, setIsPending] = useState(false);
+
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
-    let { fetchUserDataAndRoute, myData, isSuccess, isPending, isError } = useFetchAndRoute();
+    // eslint-disable-next-line no-unused-vars
+    const userToken = JSON.parse(sessionStorage.getItem('longToken'));
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
-        //longToken(from verification)
-        newPassword: '',
-        confirmNewPassword: '',
+        "longToken": userToken,
+        "newPassword": '',
+        "confirmNewPassword": '',
     });
-
-    const successData = {
-        title: "Password Updated Successfully",
-        body: "Your password has been updated. You can now proceed to log into your account."
-    }
 
     const handlePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -39,33 +40,68 @@ export default function ChangePassword() {
         setIsConfirmationVisible(!isConfirmationVisible);
     }
 
-
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: changePasswordValidation,
         onSubmit: (values) => {
+            setIsPending(true);
 
-            fetchUserDataAndRoute(values, import.meta.env.VITE_USER_RESET_PASSWORD); //USEEFFECT
+            //UpdatePassword()
 
+            console.log(values)
+            fetch(import.meta.env.VITE_USER_RESET_PASSWORD, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    if (data.success == true) {
+                        setIsPending(false);
+                        addToast(`${data?.message}`, {
+                            appearance: 'success',
+                            autoDismiss: true,
+                        });
+                        setTimeout(() => { navigate("/SignIn") }, 4000);
+                        sessionStorage.setItem('UpdatePW', JSON.stringify(data));
+
+                    } else if (data.success == false) {
+                        setIsPending(false);
+                    }
+                })
+                .catch(error => {
+                    setIsPending(false);
+                    console.error('There has been a problem with your fetch operation:', error);
+                    addToast("ERROR", {
+                        appearance: 'error',
+                        autoDismiss: true,
+                    });
+                });
             console.log(values);
-
-            console.log(myData);
-
         }
     })
-
 
     return (
         <div>
             <NavBar />
             <div className="md:h-full md:mt-1/2 flex gap-6 md:gap-12 flex-col md:flex-row md:justify-center md:items-center md:w-[100%]  md:-px-auto p-[2rem]">
                 <div className="md:h-full md:w-[40%] md:self-center">
-                    <img src={forgot} alt="" className="object-fill hidden md:flex       mx-auto" />
+                    <img src={forgot} alt="" className="object-fill hidden md:flex mx-auto" />
                 </div>
-                <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem]            border-[#F4F2F5] md:w-[40%]  md:self-center">
+                <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[40%]  md:self-center">
                     <div className="flex flex-col items-center justify-center my-[0.5rem]">
-                        <img src={lock} alt="" className="self-center" />
-                        <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center">Change Password</h3>
+                        <div className="p-4 bg-[#F4F1FF] rounded-[50%]">
+                            <img src={lock} alt="lock icon" className="self-center  size-[30px]" />
+                        </div>
+                        <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center my-3">Change Password</h3>
                         <p className="font-brreg text-lg text-[#636066] my-[0.5rem] text-center">
                             Create a new password for your account.
                         </p>
@@ -206,20 +242,22 @@ export default function ChangePassword() {
                         <div className="pb-[0.5rem]">
                             <button className="bg-ev-700 w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]" type="submit">
                                 Reset Password
-                                <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.1201 3.95337L14.1668 8.00004L10.1201 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
+                                {isPending ? <BeatLoader size={4} color="#ffffff" /> :
+                                    <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10.1201 3.95337L14.1668 8.00004L10.1201 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                }
                             </button>
                         </div>
                     </form>
 
-                    {isError && <p>Error</p>}
+                    {/*{isError && <p>Error</p>}
                     {isPending && <p>pending</p>}
                     {
                         isSuccess && 
                             <Subscribed title={successData.title} body={successData.body} img={goodPin} isModalOpen={isModalOpen} isModalClosed={() => setIsModalOpen(false)}/>
-                    }
+                    }*/}
                 </div>
             </div>
         </div>
