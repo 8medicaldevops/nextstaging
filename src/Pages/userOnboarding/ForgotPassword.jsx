@@ -10,7 +10,7 @@ import OtpVerification from "./OtpVerification";
 
 import forgot from "../../assets/images/password-ambulance.png";
 import lock from "../../assets/images/lock.svg";
-//import reEnterPin from "../../assets/images/re-enter-pincode.svg";
+import reEnterPin from "../../assets/images/re-enter-pincode.svg";
 
 
 export default function ForgotPassword() {
@@ -97,11 +97,13 @@ export default function ForgotPassword() {
                 </div>
                 <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem]            border-[#F4F2F5] md:w-[40%]  md:self-center">
                     <div className="flex flex-col items-center justify-center my-[0.5rem]">
-                        <img src={lock} alt="" className="self-center" />
-                        <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center">Forgot Password</h3>
+                        <div className="p-4 bg-[#F4F1FF] rounded-[50%]">
+                            <img src={isOtpSent ? reEnterPin : lock} alt="lock icon" className="self-center size-[30px]" />
+                        </div>
+                        <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center my-3">Forgot Password</h3>
                         <p className="font-brreg text-lg text-[#636066] my-[0.5rem] text-center">
-                            { isOtpSent ? 
-                                "Enter the 6-digit code sent to your email address" : 
+                            {isOtpSent ?
+                                "Enter the 6-digit code sent to your email address" :
                                 "Input your email address below to reset your password."}
                         </p>
                     </div>
@@ -142,7 +144,7 @@ export default function ForgotPassword() {
                                         }
                                     </button>
                                 </div>
-                                <Link className="underline underline-offset-4 mx-auto self-center" to="/SignIn">Go back</Link>
+                                <Link className="mx-auto self-center text-ev-700" to="/SignIn">Go back</Link>
                             </form>
                     }
                 </div>

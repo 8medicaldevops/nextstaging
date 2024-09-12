@@ -2,7 +2,7 @@ import OtpInput from "react-otp-input";
 import { useState, useEffect } from "react";
 import { useToasts } from 'react-toast-notifications';
 import { BeatLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const OtpVerification = () => {
     const { addToast } = useToasts();
@@ -25,6 +25,10 @@ const OtpVerification = () => {
             shortToken: otp,
         }))
     }, [otp])
+
+    /*const handleResendOTP = () => {
+        console.log("HELLO");
+    }*/
 
     const verifyOtp = async () => {
         console.log(otp);
@@ -70,21 +74,31 @@ const OtpVerification = () => {
     }
 
     return (
-        <form>
-            <div className='size-14 flex flex-row items-center justify-center mx-auto w-full max-w-xs gap-1'>
-                <OtpInput
-                    value={otp}
-                    onChange={setOtp}
-                    numInputs={6}
-                    renderSeparator={<span>-</span>}
-                    renderInput={(props) => <input {...props} />}
-                //inputStyle="w-full h-full px-8 py-4 mx-2 outline-none rounded-md border border-gray-200 text-lg bg-white shadow-xl focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                />
+        <>
+            <form>
+                <div className='size-14 flex flex-row items-center justify-center mx-auto w-full max-w-xs gap-1'>
+                    <OtpInput
+                        value={otp}
+                        onChange={setOtp}
+                        numInputs={6}
+                        renderSeparator={<span>-</span>}
+                        renderInput={(props) => <input {...props} />}
+                    //inputStyle="w-full h-full px-8 py-4 mx-2 outline-none rounded-md border border-gray-200 text-lg bg-white shadow-xl focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                    />
+                </div>
+
+                {/*<p className="text-center mb-6 text-[#636066]">
+                    Didn&apos;t recieve OTP? <button className="text-ev-700" onClick={handleResendOTP}>Resend Code</button>
+                </p>*/}
+
+                <button type='button' onClick={verifyOtp} className="bg-ev-700 w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]">
+                    Proceed {isPending && <BeatLoader size={4} color="#ffffff" />}
+                </button>
+            </form>
+            <div className="text-center">
+                <Link className="text-ev-700" to="/SignIn">Go back</Link>
             </div>
-            <button type='button' onClick={verifyOtp} className="bg-ev-700 w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]">
-                Verify OTP {isPending && <BeatLoader size={4} color="#ffffff" />}
-            </button>
-        </form>
+        </>
     )
 }
 
