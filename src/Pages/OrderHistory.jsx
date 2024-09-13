@@ -27,7 +27,7 @@ export default function OrderHistory () {
     const [totalPages, setTotalPages] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPrevPage, setHasPrevPage] = useState(false);
-    const [itemsPerPage] = useState(10); // Fixed number of items per page
+    //const [itemsPerPage] = useState(10); // Fixed number of items per page
     const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
     const token = signInData?.data?.tokens?.accessToken || '';
     const decodedToken = token? jwtDecode(token) : '';

@@ -11,6 +11,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
   const [statusCount,setStatusCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalDocs, setTotalDocs] = useState('');
 
   const getStoredToken = () => {
     const storedTokenData = localStorage.getItem('token');
@@ -44,6 +45,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
       });
       setStatusCount(response.data.data.statuses);
       setTotalPages(response.data.data.orders.totalPages);
+      setTotalDocs(response.data.data.orders.totalDocs);
       const mappedData = response.data.data.orders.docs.map((doc) => {
         let dateObject = null;
         let dateBookedObj = null;
@@ -146,6 +148,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     statusCount,  
     currentPage,
     totalPages,
+    totalDocs,
     goToPage,
     nextPage,
     prevPage,};
