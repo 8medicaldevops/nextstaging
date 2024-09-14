@@ -20,7 +20,7 @@ export default function PaymentLinkModal(props) {
     }, [])
     return(
         <Dialog open={props.open}>
-        <DialogContent className="bg-white bg-none w-full rounded-[44px] max-md:rounded-[84px] max-mm:rounded-[24px] max-mm:px-0 max-md:w-[95%] md:rounded-[24px] py-12 ">
+        <DialogContent className="bg-white bg-none w-full rounded-[44px] max-md:rounded-[84px] max-mm:rounded-[24px] max-mm:px-0 max-md:w-[95%] sm:rounded-[24px] py-12 ">
           <DialogHeader>
           <div className=" flex px-2 justify-end cursor-pointer">
             <button onClick={props.close}>
@@ -292,14 +292,14 @@ export default function PaymentLinkModal(props) {
             <p className="font-brsemi text-[28px]">Payment Link Generated</p>
             </DialogTitle>
             <p className="text-center w-full px-1 font-brmedium text-[#636066]">The link has been successfully sent to the client's email. You can simply copy the link below to proceed with the payment.</p>
-            <span className="flex">
-            <section className="flex items-center">
+            <span >
+            <section className="flex items-center w-full">
                 <CopyToClipboard
                     onCopy={linkCopied}
                     options={{message: 'checkout link'}}
                     text={props.checkoutLink}>
-                    <button className="flex items-center gap-1 bg-[#F9F9FA] border border-[#F4F2F5] rounded-mm py-3 px-1" onClick={onLinkCopy}>
-                    <p className="font-brreg text-[#181719] text-lg">{props.checkoutLink}</p>
+                    <button className="flex items-center gap-1 bg-[#F9F9FA] border border-[#F4F2F5] rounded-mm py-3 px-1 w-full" onClick={onLinkCopy}>
+                    <p className="font-brreg text-[#181719] text-lg truncate">{props.checkoutLink.length > 32 ? `${props.checkoutLink.substring(0, 32)}...` : props.checkoutLink}</p>
                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10.6666 9.10004V11.9C10.6666 14.2334 9.73331 15.1667 7.39998 15.1667H4.59998C2.26665 15.1667 1.33331 14.2334 1.33331 11.9V9.10004C1.33331 6.76671 2.26665 5.83337 4.59998 5.83337H7.39998C9.73331 5.83337 10.6666 6.76671 10.6666 9.10004Z" stroke="#6D09F9" strokeLinecap="round" strokeLinejoin="round"/>
                     <path d="M14.6666 5.10004V7.90004C14.6666 10.2334 13.7333 11.1667 11.4 11.1667H10.6666V9.10004C10.6666 6.76671 9.73331 5.83337 7.39998 5.83337H5.33331V5.10004C5.33331 2.76671 6.26665 1.83337 8.59998 1.83337H11.4C13.7333 1.83337 14.6666 2.76671 14.6666 5.10004Z" stroke="#6D09F9" strokeLinecap="round" strokeLinejoin="round"/>

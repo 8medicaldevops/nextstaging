@@ -276,7 +276,7 @@ export default function ConfirmOrder() {
                     </div>
                 </div>
             }
-            <div className="flex flex-col  justify-center items-center bg-[#F9F9FA] pt-9 pb-9" >
+            <div className="flex flex-col  justify-center items-center bg-[#F9F9FA] pt-9 max-md:pb-64 pb-32" >
 
                 <div className="pt-9 max-w-[640px] max-lg:w-full   rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
                     <div className="flex items-center gap-3">
