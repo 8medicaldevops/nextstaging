@@ -94,7 +94,7 @@ const invoiceProps = {
 
     return(
         <Dialog open={props.open}>
-        <DialogContent className="bg-white bg-none w-full rounded-[44px] max-md:rounded-[84px] max-mm:rounded-[24px] max-mm:px-0 max-md:w-[95%] md:rounded-[24px] py-12 ">
+        <DialogContent className="bg-white bg-none w-full rounded-[44px] max-md:rounded-[84px] max-mm:rounded-[24px] max-mm:px-0 max-md:w-[95%] sm:rounded-[24px] py-12 ">
           <DialogHeader>
           <div className=" flex px-2 justify-end cursor-pointer">
             <button onClick={props.close}><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
