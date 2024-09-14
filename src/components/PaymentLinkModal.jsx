@@ -289,7 +289,7 @@ export default function PaymentLinkModal(props) {
             </defs>
             </svg>
             <DialogTitle>
-            <p className="font-brsemi text-[28px]">Payment Link Generated</p>
+            <p className="font-brsemi text-[28px] max-md:text-2xl text-center">Payment Link Generated</p>
             </DialogTitle>
             <p className="text-center w-full px-1 font-brmedium text-[#636066]">The link has been successfully sent to the client's email. You can simply copy the link below to proceed with the payment.</p>
             <span >
