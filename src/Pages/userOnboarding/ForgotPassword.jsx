@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useFormik } from "formik";
-import { useToasts } from 'react-toast-notifications';
+import { useFetch } from "@/components/hooks/useFetch";
 import { BeatLoader } from "react-spinners";
 
 import NavBar from "../../components/NavBar";
@@ -12,81 +12,30 @@ import forgot from "../../assets/images/password-ambulance.png";
 import lock from "../../assets/images/lock.svg";
 import reEnterPin from "../../assets/images/re-enter-pincode.svg";
 
-
 export default function ForgotPassword() {
-    const { addToast } = useToasts();
-    //let navigate = useNavigate();
 
     const [isOtpSent, setIsOtpSent] = useState(false);
-    const [isPending, setIsPending] = useState(false);
+
+    const { isSuccess, isPending, data, fetchUserData } = useFetch(import.meta.env.VITE_USER_FORGOT_PASSWORD);
+
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
         email: '',
     });
 
-    const successMessage = {
-        body: "An email containing a token to complete this process has been sent to you. Enter it above to continue."
-    }
-
-    const errorMessage = {
-        body: "The email address provided might not be registered. If it is, please reach out for help."
-    }
-
-    const sendUserOTP = async () => {
-        setIsPending(true);
-        await fetch(import.meta.env.VITE_USER_FORGOT_PASSWORD, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                if (data.success == true) {
-                    setIsPending(false);
-                    addToast(`Hello, ${successMessage.body}`, {
-                        appearance: 'success',
-                        autoDismiss: true,
-                    });
-                    setIsOtpSent(true);
-                    sessionStorage.setItem('ForgotPassword', JSON.stringify(data));
-                    sessionStorage.setItem('email', JSON.stringify(values.email));
-
-                } else if (data.success == false) {
-                    setIsPending(false);
-
-
-                }
-            })
-            .catch(error => {
-                setIsPending(false);
-
-                console.error('There has been a problem with your fetch operation:', error);
-                addToast(`${errorMessage.body}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
-
-            });
-    };
-
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: forgotPasswordValidation,
-        onSubmit: (values) => {
-            sendUserOTP();
-            console.log(values);
+        onSubmit: () => {
+            fetchUserData(values);
+            if(isSuccess && data?.statusCode == 200){
+                setIsOtpSent(true);
+                sessionStorage.setItem('ForgotPassword', JSON.stringify(data));
+                sessionStorage.setItem('email', JSON.stringify(values.email));
+            }
         }
     })
-
 
     return (
         <div>

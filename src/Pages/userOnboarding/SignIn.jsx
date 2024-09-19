@@ -1,23 +1,21 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
-import { useToasts } from 'react-toast-notifications';
 import { BeatLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
-
+import { useGoogleLogin } from '@react-oauth/google'; //GoogleLogin, 
+import { useFetch } from "@/components/hooks/useFetch";
 import NavBar from "../../components/NavBar";
 
 import google from "../../assets/images/google.svg";
 import signin from "../../assets/images/signin.svg";
 import { signInValidation } from "./FormValidation";
 
+
 export default function SignIn() {
 
-    const { addToast } = useToasts();
     let navigate = useNavigate();
 
-    const [isPending, setIsPending] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     // eslint-disable-next-line no-unused-vars
@@ -39,54 +37,27 @@ export default function SignIn() {
         setIsPasswordVisible(!isPasswordVisible);
     }
 
-    const signUserIn = async () => {
-        setIsPending(true);
-        await fetch(import.meta.env.VITE_USER_LOGIN, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                if (data.success == true) {
-                    setIsPending(false);
-                    addToast(`Hello ${data.data.firstName}, your sign in was successful. You will be redirected to the homepage in a few seconds.`, {
-                        appearance: 'success',
-                        autoDismiss: true,
-                    });
-                    setTimeout(() => { navigate("/") }, 4000);
-                    sessionStorage.setItem('SignIn', JSON.stringify(data));
 
-                } else if (data.success == false) {
-                    setIsPending(false);
-                }
-            })
-            .catch(error => {
-                setIsPending(false);
-                console.error('There has been a problem with your fetch operation:', error);
-                addToast("Hello, Please try again. If you can't remember your password, create a new one by clicking Forgot password", {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
-            });
-    };
+    const googleLogin = useGoogleLogin({
+        onSuccess: (codeResponse) => console.log(codeResponse),
+        onError: (error) => console.log('Login Failed:', error)
+    });
+
+    const { isSuccess, isPending, data, fetchUserData } = useFetch(import.meta.env.VITE_USER_LOGIN);
+
 
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: signInValidation,
-        onSubmit: (values) => {
-            signUserIn();
-            console.log(values);
+        onSubmit: () => {
+            fetchUserData(values);
+            if(isSuccess && data?.statusCode == 200){
+                sessionStorage.setItem("SignIn", JSON.stringify(data));
+                navigate("/")
+            }
         }
     })
+
 
     return (
         <div>
@@ -101,10 +72,25 @@ export default function SignIn() {
                         <p className="font-brreg text-lg text-[#636066] my-[0.5rem] text-center">
                             Don&apos;t have an account? <Link className="text-ev-700 my-[0.5rem]" to="/CreateAccount">Sign Up</Link>
                         </p>
-                        <button className="flex gap-3 bg-[#F9F9FA] py-[16px] px-[12px] border-[#F4F2F5] w-full rounded-mm  justify-center my-[0.5rem]">
-                            <img src={google} alt="" className="self-center" />
+                        <button className="flex gap-3 bg-[#F9F9FA] py-[16px] px-[12px] border-[#F4F2F5] w-full rounded-mm  justify-center my-[0.5rem]" onClick={googleLogin}>
+                            <img src={google}
+                                alt=""
+                                className="self-center"
+                            />
                             Continue with Google
                         </button>
+
+                        {/*<GoogleLogin
+                            onSuccess={(response) => {
+                                // Handle the successful response here
+                                console.log('Custom Google login successful', response);
+                            }}
+                            onError={() => {
+                                // Handle errors here
+                                console.error('Custom Google login failed');
+                            }}
+                            size="large"
+                        />*/}
                     </div>
 
                     <div className="divider-text my-3">

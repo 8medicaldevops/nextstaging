@@ -6,7 +6,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import './index.css'
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import './index.css';
 import HomePage from './Pages/HomePage.jsx';
 import StandBy from './Pages/StandBy.jsx';
 import OtherCountries from './Pages/OtherCountries.jsx';
@@ -170,13 +171,15 @@ const router = createBrowserRouter([
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ToastProvider
-      autoDismiss
-      autoDismissTimeout={6000}
-      placement="bottom-center"
-    >
-      <RouterProvider router={router} />
-    </ToastProvider>
-  </React.StrictMode>
+  <GoogleOAuthProvider clientId='29064234798-89ki79v2rroat8nr0i7800u8fvnsa30m.apps.googleusercontent.com'>
+    <React.StrictMode>
+      <ToastProvider
+        autoDismiss
+        autoDismissTimeout={6000}
+        placement="bottom-center"
+      >
+        <RouterProvider router={router} />
+      </ToastProvider>
+    </React.StrictMode>
+  </GoogleOAuthProvider>
 )

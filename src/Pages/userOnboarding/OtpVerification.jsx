@@ -1,15 +1,16 @@
 import OtpInput from "react-otp-input";
 import { useState, useEffect } from "react";
-import { useToasts } from 'react-toast-notifications';
+import { useFetch } from "@/components/hooks/useFetch";
 import { BeatLoader } from "react-spinners";
 import { useNavigate, Link } from "react-router-dom";
 
 const OtpVerification = () => {
-    const { addToast } = useToasts();
     let navigate = useNavigate();
 
+    const { isSuccess, isPending, data, fetchUserData } = useFetch(import.meta.env.VITE_USER_VERIFY_TOKEN);
+
     const [otp, setOtp] = useState('');
-    const [isPending, setIsPending] = useState('');
+    //const [isPending, setIsPending] = useState('');
 
     // eslint-disable-next-line no-unused-vars
     const [userEmail, setUserEmail] = useState(JSON.parse(sessionStorage.getItem('email')));
@@ -26,15 +27,16 @@ const OtpVerification = () => {
         }))
     }, [otp])
 
-    /*const handleResendOTP = () => {
-        console.log("HELLO");
-    }*/
-
     const verifyOtp = async () => {
-        console.log(otp);
-        console.log(formData);
 
-        setIsPending(true);
+        fetchUserData(formData);
+            if(isSuccess && data?.statusCode == 200){
+                sessionStorage.setItem("SignIn", JSON.stringify(data));
+                sessionStorage.setItem('longToken', JSON.stringify(data.data.longToken));
+                navigate("/ChangePassword");
+            }
+
+        /*setIsPending(true);
         await fetch(import.meta.env.VITE_USER_VERIFY_TOKEN, {
             method: "POST",
             headers: {
@@ -59,7 +61,7 @@ const OtpVerification = () => {
                     setTimeout(() => { navigate("/ChangePassword") }, 4000);
                     sessionStorage.setItem('longToken', JSON.stringify(data.data.longToken));
 
-                } else if (data.success == false) {
+                } else if (data.statusCode == 400) {
                     setIsPending(false);
                 }
             })
@@ -70,7 +72,7 @@ const OtpVerification = () => {
                     appearance: 'error',
                     autoDismiss: true,
                 });
-            });
+            });*/
     }
 
     return (
