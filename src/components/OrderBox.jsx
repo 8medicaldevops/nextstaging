@@ -5,6 +5,7 @@ import axios from "axios";
 import PaymentLinkModal from "./PaymentLinkModal";
 
 export default function OrderBox({
+    id,
     eventLocationName,
     startDate,
     startTime,
@@ -99,60 +100,61 @@ export default function OrderBox({
         localStorage.setItem('smallAmbulanceTotal', smallAmbulanceCost.toString());
         localStorage.setItem('largeAmbulanceTotal', largeAmbulanceCost.toString());
         localStorage.setItem('medicsTotal', medicCost.toString());
+        localStorage.setItem('bookingid',JSON.stringify(id));
         navigate("/StandBy/Nigeria/Event/Schedule/Ambulance%20Size/Confirm%20order")
         }
 
-        const handlePaymentLink = async() => {
-                setLoading(!loading)
-                const data = {
-                    callerDetails: {
-                        fullName: fullName,
-                        email: emailAddress,
-                        phone: phoneNumber,
-                        company: companyName,
-                    },
-                    ambulances: {
-                        eventLocationName: eventLocationName,
-                        eventAddress: venueAddress,
-                        estimatedNumberOfGuests: guests,
-                        eventType: eventType,
-                        description: description,
-                        eventEndOnTheSameDay: eventEndsSameDay,
-                        startDate: formattedBackendStartDate,
-                        endDate: formattedBackendEndDate,
-                        startTime: startTime,
-                        endTime: endTime,
-                        smallAmbulance: smallAmbulanceCount,
-                        largeAmbulance: largeAmbulanceCount,
-                        noOfMedic: noOfMedic,
-                    },
-                    country: "NG",
+        // const handlePaymentLink = async() => {
+        //         setLoading(!loading)
+        //         const data = {
+        //             callerDetails: {
+        //                 fullName: fullName,
+        //                 email: emailAddress,
+        //                 phone: phoneNumber,
+        //                 company: companyName,
+        //             },
+        //             ambulances: {
+        //                 eventLocationName: eventLocationName,
+        //                 eventAddress: venueAddress,
+        //                 estimatedNumberOfGuests: guests,
+        //                 eventType: eventType,
+        //                 description: description,
+        //                 eventEndOnTheSameDay: eventEndsSameDay,
+        //                 startDate: formattedBackendStartDate,
+        //                 endDate: formattedBackendEndDate,
+        //                 startTime: startTime,
+        //                 endTime: endTime,
+        //                 smallAmbulance: smallAmbulanceCount,
+        //                 largeAmbulance: largeAmbulanceCount,
+        //                 noOfMedic: noOfMedic,
+        //             },
+        //             country: "NG",
                     
-                };
+        //         };
         
-                try {
-                    const response = await axios.post(import.meta.env.VITE_GENERATE_PAYMENT_LINK, data,
-                        {
-                            headers: {
-                              Authorization: `Bearer ${token}`, 
-                            },
-                          }
-                    );
-                    console.log("Response:", response.data);
-                    setCheckoutLink(response.data.data.paymentLink);
-                    setModalOpen(true);
-                    //navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
-                } catch (error) {
-                    //console.error("Error:", error);
-                    //navigate("/BookingError");
-                    alert('Outdated standby date or time cannot generate link')
-                } finally {
-                    setLoading(false);
-                }
+        //         try {
+        //             const response = await axios.post(import.meta.env.VITE_GENERATE_PAYMENT_LINK, data,
+        //                 {
+        //                     headers: {
+        //                       Authorization: `Bearer ${token}`, 
+        //                     },
+        //                   }
+        //             );
+        //             console.log("Response:", response.data);
+        //             setCheckoutLink(response.data.data.paymentLink);
+        //             setModalOpen(true);
+        //             //navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
+        //         } catch (error) {
+        //             //console.error("Error:", error);
+        //             //navigate("/BookingError");
+        //             alert('Outdated standby date or time cannot generate link')
+        //         } finally {
+        //             setLoading(false);
+        //         }
               
-        }
+        // }
     return(
-        <div className="rounded-3xl bg-white p-6 w-[378px] drop-shadow">
+        <div onClick={()=>handleSubmit()} className="rounded-3xl cursor-pointer bg-white p-6 w-[378px] drop-shadow">
             <div className="flex flex-col gap-3">
                 <p className="font-brsemi text-[24px] text-[#181719]">{eventLocationName}</p>
                 <p className="font-brmedium text-[#181719]">{formatDate(startDate)}, {formatTime(startTime)}</p>
@@ -192,7 +194,13 @@ export default function OrderBox({
                 </span>
             </div>
             <span className="flex justify-end font-brmedium text-ev-700 cursor-pointer mt-1">
-                {iaFlag == 'ADMIN' ?
+                    <div onClick={handleSubmit} className="flex items-center">
+                    <p>Complete Booking</p>
+                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.94043 13.78L10.2871 9.43337C10.8004 8.92003 10.8004 8.08003 10.2871 7.5667L5.94043 3.22003" stroke="#6D09F9" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    </div>
+                {/* {iaFlag == 'ADMIN' ?
                 (
                     <div onClick={handlePaymentLink} className="flex items-center">
                     <p>Generate payment Link</p>
@@ -209,7 +217,7 @@ export default function OrderBox({
                     </svg>
                     </div>
                 )
-                }
+                } */}
             </span>
             <PaymentLinkModal open={modalOpen} close={()=>setModalOpen(false)} checkoutLink={checkoutLink} />
         </div>

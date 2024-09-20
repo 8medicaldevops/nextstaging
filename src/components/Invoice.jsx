@@ -2,14 +2,24 @@ import { Page, Text, View, Image, Document, StyleSheet } from '@react-pdf/render
 import {Font} from '@react-pdf/renderer';
 import headerImg from '../assets/images/recieptheader.png';
 import firmaBold from '../assets/fonts/br-firma-cufonfonts/BR Firma Bold.otf';
-// import firmaSemi from '../assets/fonts/br-firma-cufonfonts/BR Firma SemiBold.otf';
-// import firmaReg from '../assets/fonts/br-firma-cufonfonts/BR Firma Regular.otf';
+import firmaSemi from '../assets/fonts/br-firma-cufonfonts/BR Firma SemiBold.otf';
+import firmaReg from '../assets/fonts/br-firma-cufonfonts/BR Firma Regular.otf';
 
 
 Font.register({
-    family: 'firmaBold',
-    src: firmaBold,
-  })
+  family: 'firmaBold',
+  src: firmaBold,
+});
+
+Font.register({
+  family: 'firmaSemi',
+  src: firmaSemi,
+});
+
+Font.register({
+  family: 'firmaReg',
+  src: firmaReg,
+});
 
 // Create styles similar to Tailwind using React-PDF's StyleSheet
 const styles = StyleSheet.create({
@@ -38,9 +48,8 @@ const styles = StyleSheet.create({
   },
   invoiceTitle: {
     color: '#171718',
-    fontSize: 38,
+    fontSize: 30,
     fontFamily: 'firmaBold',
-    // Manually transform text to uppercase if needed:
     textTransform: 'uppercase',
    
   },
@@ -54,6 +63,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: 20,
     paddingRight: 20,
+    paddingVertical:20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
@@ -68,18 +78,19 @@ const styles = StyleSheet.create({
   },
   customerName: {
     color: '#171718',
-    fontSize: 32,
-    fontFamily: 'firmaBold',
+    fontSize: 20,
+    fontFamily: 'firmaSemi',
+    textTransform: 'capitalize'
   },
   customerCompany: {
     color: '#171718',
-    fontSize: 20,
-    fontFamily: 'firmaBold',
+    fontSize: 16,
+    fontFamily: 'firmaSemi',
   },
   contactInfo: {
     color: '#636065',
-    fontSize: 18,
-    fontFamily: 'firmaBold',
+    fontSize: 14,
+    fontFamily: 'firmaSemi',
   },
   orderInfoContainer: {
     flexDirection: 'column',
@@ -88,13 +99,13 @@ const styles = StyleSheet.create({
   },
   orderInfoLabel: {
     color: '#171718',
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'firmaBold',
   },
   orderInfoValue: {
     color: '#636065',
-    fontSize: 18,
-    fontFamily: 'firmaBold',
+    fontSize: 14,
+    fontFamily: 'firmaSemi',
   },
   bookingInfoContainer: {
     width: '100%',
@@ -102,14 +113,20 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'items-center',
     marginBottom: 16,
-
+  },
+  bookingInfoSub: {
+    width: '100%',
+    paddingVertical:20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   bookingInfoLabel: {
     color: '#6D09F9',
     fontSize: 20,
-    fontFamily: 'firmaBold',
+    fontFamily: 'firmaSemi',
   },
   bookingDetails: {
     flexDirection: 'column',
@@ -118,6 +135,8 @@ const styles = StyleSheet.create({
   },
   bookingDetail: {
     flexDirection: 'column',
+    flexWrap:'wrap',
+    width: '225px',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     marginBottom: 5,
@@ -135,25 +154,56 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     marginBottom: 12,
   },
-  headerText: {
+  headerTextOne: {
     fontSize: 16,
     fontFamily: 'firmaBold',
     color: '#171718',
     width: '30%', // Adjust as needed
     textAlign: 'left', // Adjust alignment as needed
   },
+  headerTextTwo: {
+    fontSize: 16,
+    fontFamily: 'firmaBold',
+    color: '#171718',
+    width: '30%', // Adjust as needed
+    textAlign: 'center', // Adjust alignment as needed
+  },
+  headerTextThree: {
+    fontSize: 16,
+    fontFamily: 'firmaBold',
+    color: '#171718',
+    width: '30%', // Adjust as needed
+    textAlign: 'right', // Adjust alignment as needed
+  },
   listItemRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 8,
+    textAlign:'right',
+    width:'100%'
   },
-  itemText: {
-    fontSize: 16,
-    fontFamily: 'firmaBold',
+  itemTextOne: {
+    fontSize: 12,
+    fontFamily: 'firmaReg',
     color: '#636065',
-    width: '30%', // Adjust as needed
+    width: '100%', // Adjust as needed
     textAlign: 'left', // Adjust alignment as needed
   },
+  itemTextTwo: {
+    fontSize: 12,
+    fontFamily: 'firmaReg',
+    color: '#636065',
+    width: '100%', // Adjust as needed
+    textAlign: 'center', // Adjust alignment as needed
+  },
+  itemTextThree: {
+    fontSize: 12,
+    fontFamily: 'firmaReg',
+    color: '#636065',
+    width: '100%', // Adjust as needed
+    textAlign: 'right', // Adjust alignment as needed
+  },
+  
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -222,9 +272,9 @@ const InvoicePDF =
           <View>
             <Text style={styles.customerName}>{callerData?.fullName ?? ''}</Text>
             <Text style={styles.customerCompany}>{eventData?.venueName ?? ''}</Text>
-            <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: '5px' }}>
               <Text style={styles.contactInfo}>{callerData?.emailAddress ?? ''}</Text>
-              {/* <Text style={styles.contactInfo}>• </Text> */}
+              <Text style={styles.contactInfo}>•</Text>
               <Text style={styles.contactInfo}>{callerData?.phoneNumber ?? ''}</Text>
             </View>
           </View>
@@ -233,8 +283,9 @@ const InvoicePDF =
 
       {/* Booking Info Section */}
       <View style={styles.bookingInfoContainer}>
+      <Text style={styles.bookingInfoLabel}>Booking Information:</Text>
+      <View style={styles.bookingInfoSub}>
         <View>
-          <Text style={styles.bookingInfoLabel}>Booking Information:</Text>
             <View style={styles.bookingDetail}>
               <Text style={styles.orderInfoLabel}>Date:</Text>
               <Text style={styles.orderInfoValue}>{formattedDateRange ?? ''}</Text>
@@ -249,36 +300,37 @@ const InvoicePDF =
           <Text style={styles.orderInfoLabel}>Standby Location:</Text>
           <Text style={styles.orderInfoValue}>{eventData?.venueAddress ?? ''}</Text>
         </View>
+        </View>
       </View>
 
         {/* List Section */}
         <View style={styles.listContainer}>
         {/* Header Row */}
         <View style={styles.listHeaderRow}>
-            <Text style={styles.headerText}>Description</Text>
-            <Text style={styles.headerText}>Qty</Text>
-            <Text style={styles.headerText}>Amount</Text>
+            <Text style={styles.headerTextOne}>Description</Text>
+            <Text style={styles.headerTextTwo}>Qty</Text>
+            <Text style={styles.headerTextThree}>Amount</Text>
         </View>
 
         {/* List item */}
         <View style={styles.listItemRow}>
-            <Text style={styles.itemText}>Small Ambulance</Text>
-            <Text style={styles.itemText}>x{ambulanceData?.smallAmbulanceCount ?? ''}</Text>
-            <Text style={styles.itemText}>N{smallAmbulanceTotal ?? ''}</Text>
+            <Text style={styles.itemTextOne}>Small Ambulance</Text>
+            <Text style={styles.itemTextTwo}>x{ambulanceData?.smallAmbulanceCount ?? ''}</Text>
+            <Text style={styles.itemTextThree}>N{smallAmbulanceTotal ?? ''}</Text>
         </View>
 
         {/* List item */}
         <View style={styles.listItemRow}>
-            <Text style={styles.itemText}>Large Ambulance</Text>
-            <Text style={styles.itemText}>x{ambulanceData?.largeAmbulanceCount ?? ''}</Text>
-            <Text style={styles.itemText}>N{largeAmbulanceTotal ?? ''}</Text>
+            <Text style={styles.itemTextOne}>Large Ambulance</Text>
+            <Text style={styles.itemTextTwo}>x{ambulanceData?.largeAmbulanceCount ?? ''}</Text>
+            <Text style={styles.itemTextThree}>N{largeAmbulanceTotal ?? ''}</Text>
         </View>
 
         {/* Another list item */}
         <View style={styles.listItemRow}>
-            <Text style={styles.itemText}>Medic Standby</Text>
-            <Text style={styles.itemText}>x{ambulanceData?.medicsCount ?? ''}</Text>
-            <Text style={styles.itemText}>N{medicsTotal ?? ''}</Text>
+            <Text style={styles.itemTextOne}>Medic Standby</Text>
+            <Text style={styles.itemTextTwo}>x{ambulanceData?.medicsCount ?? ''}</Text>
+            <Text style={styles.itemTextThree}>N{medicsTotal ?? ''}</Text>
         </View>
 
         {/* Total Row */}

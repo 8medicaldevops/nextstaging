@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 
 
 
-export default function NoBooking() {
+export default function NoBooking(props) {
     const navigate = useNavigate();
     return(
         <div className="flex flex-col items-center text-center">
@@ -101,8 +101,8 @@ export default function NoBooking() {
             <path d="M176.943 25.1827C176.81 25.1863 176.684 25.2334 176.587 25.3152C176.49 25.397 176.429 25.5081 176.415 25.6277C176.401 25.7474 176.436 25.8675 176.512 25.9658C176.588 26.0642 176.701 26.1341 176.83 26.1626C177.779 26.3309 178.632 26.798 179.24 27.4818C179.753 28.1127 179.968 28.9158 179.703 29.953C179.673 30.0194 179.66 30.0909 179.663 30.1625C179.667 30.2341 179.687 30.3042 179.723 30.3679C179.759 30.4317 179.81 30.4876 179.872 30.5318C179.935 30.576 180.006 30.6074 180.083 30.624C180.16 30.6405 180.24 30.6418 180.317 30.6277C180.394 30.6136 180.467 30.5845 180.531 30.5423C180.595 30.5002 180.648 30.446 180.686 30.3834C180.725 30.3209 180.748 30.2515 180.755 30.18C180.919 29.622 180.947 29.0378 180.835 28.469C180.723 27.9001 180.475 27.3607 180.108 26.8891C179.347 26.0165 178.272 25.4164 177.071 25.1946C177.026 25.1845 176.979 25.1805 176.932 25.1827H176.943Z" fill="#121745"/>
             <path d="M176.161 25.7539L175.922 24.0188C175.922 24.0188 176.853 24.2769 177.421 25.4265C177.988 26.5761 176.106 29.7451 174.321 31.7407C172.536 33.7363 168.779 31.8267 168.453 31.2914C168.127 30.7561 170.396 29.1405 172.823 28.1271C175.249 27.1138 176.161 25.7539 176.161 25.7539Z" fill="#6AB106"/>
             </svg>
-            <p className="font-brbold text-[40px] text-[#000000]">No Booking Yet!</p>
-            <p className="font-brreg text-lg text-[#636066] max-w-[472px]">You have not made any booking yet. Book any of our ambulance services via the button below to get started.</p>
+            <p className="font-brbold text-[40px] text-[#000000]">{props.header}</p>
+            <p className="font-brreg text-lg text-[#636066] max-w-[472px]">{props.text}</p>
             <button onClick={()=>navigate("/StandBy")} className="bg-ev-700 rounded-mm px-5 py-3 border-none text-white font-brsemi text-lg flex items-center gap-1">Book Now<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.61914 3.95334L13.6658 8.00001L9.61914 12.0467" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M2.33398 8H13.554" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>

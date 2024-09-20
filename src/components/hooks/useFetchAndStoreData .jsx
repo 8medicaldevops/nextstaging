@@ -12,7 +12,8 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalDocs, setTotalDocs] = useState('');
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [itemsPerPage] = useState(30)
   const getStoredToken = () => {
     const storedTokenData = localStorage.getItem('token');
     return storedTokenData ? JSON.parse(storedTokenData) : null;
@@ -30,15 +31,16 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
   };
 
   const fetchData = async (page = currentPage) => {
+    
     const validPage = page || currentPage;
     const tokenData = getStoredToken();
     if (!tokenData || !tokenData || isTokenExpired(tokenData)) {
       clearStorageAndRedirect();
       return;
     }
-
+    setIsLoading(true);
     try {
-      const response = await axios.get(`${url}?page=${validPage}`, {
+      const response = await axios.get(`${url}?page=${validPage}&limit=${itemsPerPage}`, {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },
@@ -107,6 +109,8 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
       if (error.response && error.response.status === 401) {
         clearStorageAndRedirect(); // Token might be invalid or expired, clear storage and redirect
       }
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -145,6 +149,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
 
   return {
     data, 
+    isLoading,
     statusCount,  
     currentPage,
     totalPages,
