@@ -1,5 +1,5 @@
 import NavBar from "../components/NavBar";
-import { parseISO, parse, format } from "date-fns";
+import { parseISO, parse, format, isBefore } from "date-fns";
 import { PaystackButton } from 'react-paystack';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -10,6 +10,8 @@ import ReactGA from "react-ga4";
 import LinkPopup from "@/components/LinkPopup";
 import { jwtDecode } from "jwt-decode";
 import PaymentLinkModal from "@/components/PaymentLinkModal";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 
 
@@ -83,6 +85,30 @@ export default function ConfirmOrder() {
     const formattedEndTime = format(endTime, 'h:mm a');
 
     const formattedTimeRange = `${formattedStartTime} - ${formattedEndTime}`;
+    // Check for Invalid date or Time
+    const currentDate = new Date();
+    const [showPopup, setShowPopup] = useState(false);
+
+    useEffect(() => {
+        // Combine startDate and startTime for full comparison
+        const combinedStartDateTime = new Date(startDate);
+        combinedStartDateTime.setHours(startTime.getHours());
+        combinedStartDateTime.setMinutes(startTime.getMinutes());
+
+        // Check if the combined start date and time or end date is before the current date
+        if (
+            isBefore(combinedStartDateTime, currentDate) ||
+            isBefore(endDate, currentDate)
+        ) {
+            setShowPopup(true); // Show popup if the start or end date/time is earlier than the current date/time
+        }
+    }, [startDate, endDate, startTime, currentDate]);
+
+    const handleEditDate = () => {
+        // Logic for editing the date
+        console.log('Edit the date');
+        setShowPopup(false); // Close the popup after editing
+    };
 
     const config = {
         reference: (new Date()).getTime().toString(),
@@ -276,9 +302,20 @@ export default function ConfirmOrder() {
                     </div>
                 </div>
             }
+             
             <div className="flex flex-col  justify-center items-center bg-[#F9F9FA] pt-9 max-md:pb-64 pb-32" >
 
                 <div className="pt-9 max-w-[640px] max-lg:w-full   rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
+                {showPopup && (
+                 <Alert variant="destructive " className="border-2 border-red-400 rounded-mm">
+                 <AlertCircle className="h-4 w-4 " />
+                 {/* <AlertTitle className="font-brsemi text-red-400 ">Error</AlertTitle> */}
+                 <AlertDescription className="text-red-300 font-brmedium text-lg">
+                 The selected date or time is earlier than the current date
+                 or time. Please edit the date and time.
+                 </AlertDescription>
+               </Alert>
+                )}
                     <div className="flex items-center gap-3">
                         <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                             <rect width="52" height="52" rx="8.66667" fill="#F8F4FE" />
@@ -636,14 +673,29 @@ export default function ConfirmOrder() {
                 }
             </div>
             <div className="flex justify-between fixed bottom-0 bg-white w-full py-6 px-20 max-lg:px-4 max-md:flex-col max-md:gap-3">
-                <button onClick={()=>generateInvoice()} className="border border-ev-700 rounded-mm px-5 py-3 font-brbold text-lg text-ev-700">Generate Invoice</button>
+            <button
+            onClick={() => generateInvoice()}
+            className={`border border-ev-700 rounded-mm px-5 py-3 font-brbold text-lg text-ev-700 ${showPopup ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={showPopup} // Disable the button when showPopup is true
+            >Generate Invoice</button>
                 <span className="flex items-center gap-9 max-md:flex-col-reverse">
                     <button className="font-brsemi text-[#181719] text-lg" onClick={toggleCancel}>Cancel</button>
                     {iaFlag == "ADMIN" ?
-                    <button onClick={()=>generatePaymentLink()} className="w-full border border-ev-700 rounded-mm px-5 py-3 font-brbold text-lg text-ev-700">Generate Payment Link</button>
+                    <div>
+                        <button
+                        onClick={() => generatePaymentLink()}
+                        className={`w-full border border-ev-700 rounded-mm px-5 py-3 font-brbold text-lg text-ev-700 ${showPopup ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={showPopup} // Disable the button when showPopup is true
+                        >Generate Payment Link</button>
+                    </div>
+                    :
+                    <div>
+                    {showPopup ?
+                    <button disabled={showPopup} className="w-full border bg-ev-700 rounded-mm px-5 py-3 font-brsemi text-lg text-white cursor-not-allowed opacity-50">Proceed to Payment</button>
                     :
                     <PaystackButton {...componentProps} />
-
+                    }
+                    </div>
                     }
                    
                 </span>

@@ -37,7 +37,9 @@ export default function AdminPortal() {
         })
     }, [])
 
-    const { data, statusCount,
+    const { data,
+        isLoading,
+        statusCount,
         currentPage,
         totalPages,
         totalDocs,
@@ -277,6 +279,7 @@ export default function AdminPortal() {
                             <span>
                                 <DataTableDemo
                                     data={data}
+                                    isLoading={isLoading}
                                     currentPage={currentPage}
                                     totalPages={totalPages}
                                     goToPage={goToPage}
