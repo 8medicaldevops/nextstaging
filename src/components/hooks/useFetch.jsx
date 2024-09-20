@@ -1,52 +1,81 @@
+import axios from 'axios';
 import { useState } from 'react';
+import { useToasts } from 'react-toast-notifications';
 
-export function useFetchAndRoute() {
 
-    const [myData, setMyData] = useState(null);
+export const useFetch = (url) => {
+
+    const headers = {
+        'Content-Type': 'application/json',
+    }
+
+    const [data, setData] = useState(null);
     const [isError, setIsError] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isPending, setIsPending] = useState(false);
 
-    const fetchUserData = (formData, url, dataKey) => {
+    const { addToast } = useToasts();
+
+    const fetchUserData = async (values) => {
 
         setIsPending(true);
 
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData)
+        const instance = axios.create({
+            baseUrl: url,
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                setMyData(data);
-                console.log(myData);
-                if (data.success == true) {
-                    setIsSuccess(true);
-                    setIsError(false);
-                    setIsPending(false);
-                    sessionStorage.setItem(`${dataKey}`, JSON.stringify(data));
-                } else {
-                    setIsError(true);
-                    setIsSuccess(false);
-                    setIsPending(false);
-                }
-                
-            })
-            .catch(error => {
-                setIsError(true);
-                setIsPending(false);
-                console.error('There has been a problem with your fetch operation:', error);
+
+        try {
+            const response = await instance.post(
+                url,
+                { ...values }, {
+                headers: headers
             });
 
-    }
+            setIsSuccess(true);
+            setData(response.data);
+            setIsSuccess(true);
+            console.log(response)
 
-    return { fetchUserData, isError, isSuccess, isPending, myData };
-}
+            if (data?.message[0] && typeof data?.message[0] === 'string') {
+                addToast(response?.data.message, {
+                    appearance: 'success',
+                });
+
+            } else if (data?.status && typeof data?.status === 'string') {
+                addToast(data.message, {
+                    appearance: 'success',
+                });
+            }
+            return data.data;
+
+        } catch (error) {
+            setIsError(true);
+            const errorData = error?.response?.data;
+            console.log(error)
+
+            if (errorData?.message && Array.isArray(errorData?.message)) {
+                addToast(errorData.message[0], {
+                    appearance: 'error',
+                });
+            } else if (errorData?.message  && typeof errorData?.statusCode === "number") {
+                addToast(errorData.message, {
+                    appearance: 'error',
+                });
+            }
+            return Promise.reject(errorData);
+        } finally {
+            setIsPending(false);
+        }
+    };
+
+    /*useEffect(() => {
+        fetchUserData()
+    }, []);
+
+    const refetch = () => {
+        fetchUserData();
+    };*/
+
+    return { data, isError, isPending, isSuccess, fetchUserData };
+
+};
