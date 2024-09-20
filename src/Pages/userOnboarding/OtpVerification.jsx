@@ -28,55 +28,16 @@ const OtpVerification = () => {
     }, [otp])
 
     const verifyOtp = async () => {
-
+console.log(formData)
         fetchUserData(formData);
-            if(isSuccess && data?.statusCode == 200){
-                sessionStorage.setItem("SignIn", JSON.stringify(data));
-                sessionStorage.setItem('longToken', JSON.stringify(data.data.longToken));
-                navigate("/ChangePassword");
-            }
-
-        /*setIsPending(true);
-        await fetch(import.meta.env.VITE_USER_VERIFY_TOKEN, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                if (data.success == true) {
-                    setIsPending(false);
-                    addToast(`${data?.message}`, {
-                        appearance: 'success',
-                        autoDismiss: true,
-                    });
-                    setTimeout(() => { navigate("/ChangePassword") }, 4000);
-                    sessionStorage.setItem('longToken', JSON.stringify(data.data.longToken));
-
-                } else if (data.statusCode == 400) {
-                    setIsPending(false);
-                }
-            })
-            .catch(error => {
-                setIsPending(false);
-                console.error('There has been a problem with your fetch operation:', error);
-                addToast("Sorry, There was an error", {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
-            });*/
+        if (isSuccess && data?.statusCode == 200) {
+            sessionStorage.setItem('longToken', JSON.stringify(data.data.longToken));
+            navigate("/ChangePassword");
+        }
     }
 
     return (
-        <>
+        <div>
             <form>
                 <div className='size-14 flex flex-row items-center justify-center mx-auto w-full max-w-xs gap-1'>
                     <OtpInput
@@ -85,7 +46,9 @@ const OtpVerification = () => {
                         numInputs={6}
                         renderSeparator={<span>-</span>}
                         renderInput={(props) => <input {...props} />}
-                    //inputStyle="w-full h-full px-8 py-4 mx-2 outline-none rounded-md border border-gray-200 text-lg bg-white shadow-xl focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                        //containerStyle={{display: "flex", gap: "1rem"}}
+                        //inputStyle={{flex:"1",padding:"0.5rem 1.5rem", gap: "4rem", borderRadius: "0.5rem", fontSize: "1.3rem", fontWeight: "600", userSelect: "none", backgroundColor:"#f9f9f9", color: "#364330"}}
+                        //inputStyle="w-full h-full px-8 py-4 mx-2 outline-none rounded-md border border-gray-200 text-lg bg-white shadow-xl focus:bg-gray-50 focus:ring-1 ring-blue-700"
                     />
                 </div>
 
@@ -100,7 +63,7 @@ const OtpVerification = () => {
             <div className="text-center">
                 <Link className="text-ev-700" to="/SignIn">Go back</Link>
             </div>
-        </>
+        </div>
     )
 }
 
