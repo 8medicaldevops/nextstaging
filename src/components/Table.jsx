@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/table";
 import Status from "./Status";
 import BookingDetails from "./BookingDetails";
+import { Skeleton } from "./ui/skeleton";
 
 
  
@@ -213,6 +214,7 @@ export const columns = (setViewBooking,setBookingId)=> [
 ];
 
 export function DataTableDemo({data, 
+  isLoading,
   currentPage,
   totalPages,
   goToPage,
@@ -224,12 +226,18 @@ export function DataTableDemo({data,
   const [rowSelection, setRowSelection] = useState({});
   const [viewBooking, setViewBooking] = useState(false);
   const [bookingId, setBookingId] = useState('')
- 
+  // const [isLoading,setLoading] = useState(false);
+  //const [tableSize] = useState(30)
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 30,
+  })
   
  
 
   const table = useReactTable({
     data,
+    isLoading,
     columns: columns(setViewBooking,setBookingId),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -239,11 +247,13 @@ export function DataTableDemo({data,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination,
     },
   });
   const pageButtons = [];
@@ -261,8 +271,7 @@ export function DataTableDemo({data,
       </Button>
     );
   }
-  
- 
+
 
   return (
     <div className="w-full">
@@ -340,33 +349,36 @@ export function DataTableDemo({data,
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
+          {isLoading ? (
+          // Generate the number of skeleton rows (e.g., 10 rows) and make sure each spans across all columns
+          Array.from({ length: 10 }).map((_, index) => (
+            <TableRow key={index}>
+              {Array.from({ length: table.getAllColumns().length }).map((_, colIndex) => (
+                <TableCell key={colIndex}>
+                  <Skeleton className="w-full h-[20px] bg-ev-100 rounded-xl" />
                 </TableCell>
-              </TableRow>
-            )}
+              ))}
+            </TableRow>
+          ))
+        ) : table.getRowModel().rows?.length ? (
+          // Render actual table rows when data is loaded
+          table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
+        ) : (
+          // Handle case when there are no results
+          <TableRow>
+            <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
+              No results.
+            </TableCell>
+          </TableRow>
+        )}
           </TableBody>
         </Table>
       </div>
@@ -384,7 +396,7 @@ export function DataTableDemo({data,
             </svg>
 
           </Button>
-          <div>
+          <div >
           {pageButtons}
           </div>
           <Button

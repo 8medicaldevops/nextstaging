@@ -37,9 +37,12 @@ export default function AdminPortal() {
         })
     }, [])
 
-    const { data, statusCount,
+    const { data,
+        isLoading,
+        statusCount,
         currentPage,
         totalPages,
+        totalDocs,
         goToPage,
         nextPage,
         prevPage } = useFetchAndStoreData(
@@ -256,8 +259,7 @@ export default function AdminPortal() {
                         <section className="flex gap-5 justify-between  items-center w-full">
                             <span className="py-5 px-6 bg-white rounded-xl w-full">
                                 <p className="font-brreg text-[#636066]">Total Bookings</p>
-                                <p className="font-brbold text-[32px] text-[#181719]">{statusCount && statusCount[0] && statusCount[0].missionStatusCounts
-                                    ? statusCount[0].orderStatusCounts.CONFIRMED
+                                <p className="font-brbold text-[32px] text-[#181719]">{data ?  totalDocs
                                     : 'Loading...'}</p>
                             </span>
                             <span className="py-5 px-6 bg-white rounded-xl w-full">
@@ -277,6 +279,7 @@ export default function AdminPortal() {
                             <span>
                                 <DataTableDemo
                                     data={data}
+                                    isLoading={isLoading}
                                     currentPage={currentPage}
                                     totalPages={totalPages}
                                     goToPage={goToPage}

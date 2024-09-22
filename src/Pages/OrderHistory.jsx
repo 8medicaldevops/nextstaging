@@ -11,6 +11,8 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import NoBooking from "@/components/NoBooking";
+import { Skeleton } from "@/components/ui/skeleton"
+
   
 
 
@@ -24,15 +26,18 @@ export default function OrderHistory () {
     const [completedOrders, setCompletedOrders] = useState([]);
     const [adminPendningOrders, setAdminPendingOrders] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [hasNextPage, setHasNextPage] = useState(false);
-    const [hasPrevPage, setHasPrevPage] = useState(false);
-    const [itemsPerPage] = useState(10); // Fixed number of items per page
+    const [adminPagination, setAdminPagination] = useState({ totalPages: 1, hasNextPage: false, hasPrevPage: false });
+    const [pendingPagination, setPendingPagination] = useState({ totalPages: 1, totalDocs: 0, hasNextPage: false, hasPrevPage: false });
+    const [upcomingPagination, setUpcomingPagination] = useState({ totalPages: 1, totalDocs: 0, hasNextPage: false, hasPrevPage: false });
+    const [completedPagination, setCompletedPagination] = useState({ totalPages: 1, totalDocs: 0, hasNextPage: false, hasPrevPage: false });
+    const [loading, setLoading] = useState(false)
+    let [color, setColor] = useState("#6D09F9");
+    const [itemsPerPage] = useState(12); // Fixed number of items per page
     const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
     const token = signInData?.data?.tokens?.accessToken || '';
     const decodedToken = token? jwtDecode(token) : '';
     const iaFlag = decodedToken?.userType ;
-    const totalOrders = pendingOrders.length + upcomingOrders.length + completedOrders.length;
+    const totalOrders = pendingPagination.totalDocs + upcomingPagination.totalDocs + completedPagination.totalDocs;
     //console.log(adminPendningOrders)
 
     const handleCategoryClick = (category) => {
@@ -75,12 +80,13 @@ export default function OrderHistory () {
 
         useEffect(()=>{
             const fetchOrders = async () => {
+                setLoading(true);
                 try {
                     const response = await axios.get(
                         iaFlag == "ADMIN"? 
-                        `${import.meta.env.VITE_ORDER_API}?page=${currentPage}` 
+                        `${import.meta.env.VITE_ORDER_API}?page=${currentPage}&limit=${itemsPerPage}` 
                     :  
-                        `${import.meta.env.VITE_USER_ORDER_HISTORY}?page=${currentPage}`, 
+                        `${import.meta.env.VITE_USER_ORDER_HISTORY}?page=${currentPage}&limit=${itemsPerPage}`, 
                         {
                     headers: {
                         Authorization: `Bearer ${token}`, // Add Authorization header
@@ -98,69 +104,109 @@ export default function OrderHistory () {
 
                     if (PENDING && PENDING.orders) {
                         setPendingOrders(PENDING.orders);
+                        setPendingPagination({
+                            totalPages:  PENDING.totalPages,
+                            hasNextPage: PENDING.hasNextPage,
+                            hasPrevPage: PENDING.hasPrevPage,
+                            totalDocs: PENDING.total
+                        });
                     } else {
                         setPendingOrders([]); // Set to empty array if PENDING orders don't exist
+                        setPendingPagination({ totalPages: 1, hasNextPage: false, hasPrevPage: false });
                     }
 
                     if (UP_COMING && UP_COMING.orders) {
                         setUpcomingOrders(UP_COMING.orders);
+                        setUpcomingPagination({
+                            totalPages: UP_COMING.totalPages,
+                            hasNextPage: UP_COMING.hasNextPage,
+                            hasPrevPage: UP_COMING.hasPrevPage,
+                            totalDocs: UP_COMING.total
+                        });
                     } else {
                         setUpcomingOrders([]); // Set to empty array if UP_COMING orders don't exist
+                        setUpcomingPagination({ totalPages: 1, hasNextPage: false, hasPrevPage: false });
                     }
 
                     if (COMPLETED && COMPLETED.orders) {
                         setCompletedOrders(COMPLETED.orders);
+                        setCompletedPagination({
+                            totalPages:  COMPLETED.totalPages,
+                            hasNextPage: COMPLETED.hasNextPage,
+                            hasPrevPage: COMPLETED.hasPrevPage,
+                            totalDocs: COMPLETED.total
+                        });
                     } else {
                         setCompletedOrders([]); // Set to empty array if COMPLETED orders don't exist
+                        setCompletedPagination({ totalPages: 1, hasNextPage: false, hasPrevPage: false });
                     }
 
                     // Check if response.data is valid before setting admin pending orders
                     if (response.data) {
                         setAdminPendingOrders(response.data.data.orders.docs);
-                        setTotalPages(response.data.data.orders.totalPages);   // Set total pages
-                        setHasNextPage(response.data.data.orders.hasNextPage); // Set hasNextPage
-                        setHasPrevPage(response.data.data.orders.hasPrevPage); 
+                        setAdminPagination({
+                            totalPages: response.data.data.orders.totalPages,
+                            hasNextPage: response.data.data.orders.hasNextPage,
+                            hasPrevPage: response.data.data.orders.hasPrevPage,
+                        })
                     } else {
                         setAdminPendingOrders([]); // Set to an empty array if response.data doesn't exist
+                        setAdminPagination({totalPages: 1, hasNextPage: false, hasPrevPage: false })
                     }
 
                     return response.data; // Return the order data
                 } catch (error) {
                     //console.error('Error fetching orders:', error);
                     // Handle the error (e.g., display a message to the user)
+                } finally {
+                    setLoading(false)
                 }
                 };
 
                 // Call the function to fetch orders
-                
                     fetchOrders();
                
         },[token, currentPage,])
 
-        const pageNumbers = generatePageNumbers(currentPage, totalPages);
+        const pendingPageNumbers = generatePageNumbers(currentPage, pendingPagination.totalPages);
+        const upcomingPageNumbers = generatePageNumbers(currentPage, upcomingPagination.totalPages);
+        const completedPageNumbers = generatePageNumbers(currentPage, completedPagination.totalPages);
+        const adminPageNumbers = generatePageNumbers(currentPage, adminPagination.totalPages);
 
-        const handleNextPage = () => {
-            if (hasNextPage) {
-                setCurrentPage(prevPage => prevPage + 1);
+        const handleNextPage = (section) => {
+            if (section === 'pending' && pendingPagination.hasNextPage) {
+                setCurrentPage((prevPage) => prevPage + 1);
+            } else if (section === 'upcoming' && upcomingPagination.hasNextPage) {
+                setCurrentPage((prevPage) => prevPage + 1);
+            } else if (section === 'completed' && completedPagination.hasNextPage) {
+                setCurrentPage((prevPage) => prevPage + 1);
+            } else if (section === 'admin' && adminPagination.hasNextPage) {
+                setCurrentPage((prevPage) => prevPage + 1);
             }
         };
         
-        const handlePrevPage = () => {
-            if (hasPrevPage) {
-                setCurrentPage(prevPage => prevPage - 1);
+        const handlePrevPage = (section) => {
+            if (section === 'pending' && pendingPagination.hasPrevPage) {
+                setCurrentPage((prevPage) => prevPage - 1);
+            } else if (section === 'upcoming' && upcomingPagination.hasPrevPage) {
+                setCurrentPage((prevPage) => prevPage - 1);
+            } else if (section === 'completed' && completedPagination.hasPrevPage) {
+                setCurrentPage((prevPage) => prevPage - 1);
+            } else if (section === 'admin' && adminPagination.hasPrevPage) {
+                setCurrentPage((prevPage) => prevPage -1);
             }
         };
 
          // Handler for page click
-        const handlePageClick = (page) => {
+        const handlePageClick = (page, section) => {
             if (page === "...") return; // Ignore if ellipsis is clicked
             setCurrentPage(page);
         };
 
     return(
-        <div className="pb-8">
+        <div className="pb-8 ">
             <NavBar />
-            <div className="pt-6 px-32 max-md:px-4 flex flex-col gap-9">
+            <div className="pt-6 px-32 max-[1439px]:px-6 max-md:px-4 flex flex-col gap-9">
                 <section className="flex flex-col gap-4 ">
                     <span className="flex justify-between items-center max-md:flex-col max-md:gap-2 ">
                         <div className="flex items-center gap-1 max-[500px]:w-full">
@@ -229,7 +275,7 @@ export default function OrderHistory () {
                                 </g>
                                 </svg>
                             </span>
-                            <p className="font-brbold text-[40px] text-[#181719]">{pendingOrders.length}</p>
+                            <p className="font-brbold text-[40px] text-[#181719]">{pendingPagination.totalDocs}</p>
                         </div>
                         <div className="w-full bg-[#FEF0E6] rounded-xl border border-[#FDD2B3] py-4 px-5">
                             <span className="flex justify-between items-center">
@@ -244,7 +290,7 @@ export default function OrderHistory () {
                                 </g>
                                 </svg>
                             </span>
-                            <p className="font-brbold text-[40px] text-[#181719]">{upcomingOrders.length}</p>
+                            <p className="font-brbold text-[40px] text-[#181719]">{upcomingPagination.totalDocs}</p>
                         </div>
                         <div className="w-full bg-[#ECFBF2] rounded-xl border border-[#C3F3D8] py-4 px-5">
                             <span className="flex justify-between items-center">
@@ -259,7 +305,7 @@ export default function OrderHistory () {
                                 </g>
                                 </svg>
                             </span>
-                            <p className="font-brbold text-[40px] text-[#181719]">{completedOrders.length}</p>
+                            <p className="font-brbold text-[40px] text-[#181719]">{completedPagination.totalDocs}</p>
                         </div>
                     </span>
                     }
@@ -292,15 +338,17 @@ export default function OrderHistory () {
                     </Select>
                     </div>
                 </section>}
+                {/* Display for All categories */}
                 {!searchTerm && activeCategory === "All" && totalOrders > 0 && (
                 <>
                 {pendingOrders.length > 0 &&
                 <section className="flex flex-col gap-2">
                     <p className="font-brbold text-[28px] text-[#0A0116]">Pending Bookings</p>
                     <div className="flex justify-start gap-6 flex-wrap">
-                        {pendingOrders.map(order =>(
+                        {pendingOrders.slice(0, 6).map(order =>(
                             <OrderBox 
                             key={order._id}
+                            id={order._id}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -329,6 +377,11 @@ export default function OrderHistory () {
                         ))}
                     
                     </div>
+                    { pendingOrders.length > 6 ?
+                        <p onClick={()=>handleCategoryClick('Pending Bookings')} className="flex justify-end px-7 py-4 cursor-pointer font-brsemi underline text-ev-700">View all</p>
+                        :
+                        ''
+                    }
                 
                 </section>
                 }
@@ -336,7 +389,7 @@ export default function OrderHistory () {
                 <section className="flex flex-col gap-2">
                     <p className="font-brbold text-[28px] text-[#0A0116]">Upcoming Bookings</p>
                     <div className="flex justify-start  gap-6 flex-wrap ">
-                    {upcomingOrders.map(order =>(
+                    {upcomingOrders.slice(0,6).map(order =>(
                             <OrderBox 
                             key={order._id}
                             eventLocationName={order.ambulances.eventLocationName}
@@ -352,13 +405,18 @@ export default function OrderHistory () {
                             />
                         ))}
                     </div>
+                    { upcomingOrders.length > 6 ?
+                        <p onClick={()=>handleCategoryClick('Upcoming Bookings')} className="flex justify-end px-7 py-4 cursor-pointer font-brsemi underline text-ev-700">View all</p>
+                        :
+                        ''
+                    }
                 </section>
                  }
                  {iaFlag !== 'ADMIN' && completedOrders.length > 0 &&
                 <section className="flex flex-col gap-2">
                     <p className="font-brbold text-[28px] text-[#0A0116]">Completed Bookings</p>
                     <div className="flex justify-start  gap-6 flex-wrap ">
-                    {completedOrders.map(order =>(
+                    {completedOrders.slice(0,6).map(order =>(
                             <OrderBox 
                             key={order._id}
                             eventLocationName={order.ambulances.eventLocationName}
@@ -374,19 +432,35 @@ export default function OrderHistory () {
                             />
                         ))}
                     </div>
+                    {completedOrders.length > 6 ?
+                        <p onClick={()=>handleCategoryClick('Completed Bookings')} className="flex justify-end px-7 py-4 cursor-pointer font-brsemi underline text-ev-700">View all</p>
+                        :
+                        ''
+                    }
                 </section>
                 }
                 </>
             )}
-
+            {/*End Code for Display for All categories */}
             {/* Render sections based on the active category */}
+            {/* PENDING */}
             {iaFlag !== 'ADMIN' && !searchTerm && activeCategory === "Pending Bookings" && (
                 <section className="flex flex-col gap-2">
                 <p className="font-brbold text-[28px] text-[#0A0116]">Pending Bookings</p>
                 <div className="flex justify-start  gap-6 flex-wrap ">
-                {pendingOrders.map(order =>(
+                {loading ?
+            <div> 
+            <div className="flex justify-start gap-6 flex-wrap">
+            {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="w-[378.67px] h-[322px] bg-ev-100 rounded-xl" />
+              ))}
+              </div>
+              </div>
+            :
+                (pendingOrders.map(order =>(
                             <OrderBox 
                             key={order._id}
+                            id={order._id}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -395,20 +469,87 @@ export default function OrderHistory () {
                             endTime={order.ambulances.endTime}
                             largeAmbulance={order.ambulances.largeAmbulance}
                             noOfMedic={order.ambulances.noOfMedic}
-                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            smallAmbulanceCost={order.smallAmbulanceCost}
+                            largeAmbulanceCost={order.largeAmbulanceCost}
                             medicCost={order.medicCost}
+                            smallAmbulanceCount={order.ambulances.smallAmbulance}
+                            largeAmbulanceCount={order.ambulances.largeAmbulance}
+                            estimatedFee={order.price}
+                            venueAddress={order.ambulances.eventAddress}
+                            guests={order.ambulances.estimatedNumberOfGuests}
+                            eventType={order.ambulances.eventType}
+                            description={order.ambulances.description}
+                            fullName={order.callerDetails.fullName}
+                            emailAddress={order.callerDetails.email}
+                            phoneNumber={order.callerDetails.phone}
+                            companyName={order.callerDetails.company}
+                            eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
                             iaFlag={iaFlag}
                             />
-                        ))}
+                        )))}
                 </div>
+                {pendingPagination.totalDocs > 0 &&
+                <div className="flex items-center py-7 justify-center gap-6">
+            <button
+                onClick={()=>handlePrevPage('pending')}
+                disabled={!pendingPagination.hasPrevPage} // Disable if no previous page
+                className="py-2 px-3 border border-[#ECECED] rounded disabled:opacity-50"
+            >
+                <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.82597 9.0008L11.6631 5.16372L10.3372 3.83789L5.17432 9.0008L10.3372 14.1637L11.6631 12.8379L7.82597 9.0008Z" fill="#4A464E"/>
+                </svg>
+            </button>
+
+                {/* Page Number Buttons */}
+                {pendingPageNumbers.map((page, index) => (
+                <button
+                    key={index}
+                    onClick={() => handlePageClick(page, 'pending')}
+                    className={`px-4 py-2 rounded font-brmedium text-sm  ${
+                    currentPage === page ? "bg-ev-700 text-white" : "bg-none "
+                    }`}
+                    disabled={page === "..."}
+                >
+                    {page}
+                </button>
+                ))}
+
+            <button
+                onClick={()=>handleNextPage('pending')}
+                disabled={!pendingPagination.hasNextPage} // Disable if no next page
+                className="py-2 px-3 bg-white border border-[#ECECED] rounded disabled:opacity-50"
+            >
+                <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.174 9.0008L7.33691 5.16372L8.66274 3.83789L13.8257 9.0008L8.66274 14.1637L7.33691 12.8379L11.174 9.0008Z" fill="#4A464E"/>
+                </svg>
+            </button>
+        </div>}
+        {pendingPagination.totalDocs == 0 &&
+        <div>
+            <NoBooking
+             header={'No Pending Bookings'} 
+             text={'You have no Pending booking. Check for bookings in upcoming or completed section'} 
+             btn={true}
+            />
+        </div>
+        }
                 </section>
             )}
-
+                {/* UPCOMING */}
             { iaFlag !== 'ADMIN' && !searchTerm && activeCategory === "Upcoming Bookings" && (
                 <section className="flex flex-col gap-2">
                 <p className="font-brbold text-[28px] text-[#0A0116]">Upcoming Bookings</p>
                 <div className="flex justify-start  gap-6 flex-wrap ">
-                {upcomingOrders.map(order =>(
+                {loading ?
+            <div> 
+            <div className="flex justify-start gap-6 flex-wrap">
+            {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="w-[378.67px] h-[322px] bg-ev-100 rounded-xl" />
+              ))}
+              </div>
+              </div>
+            :
+                (upcomingOrders.map(order =>(
                             <OrderBox 
                             key={order._id}
                             eventLocationName={order.ambulances.eventLocationName}
@@ -423,16 +564,70 @@ export default function OrderHistory () {
                             medicCost={order.medicCost}
                             iaFlag={iaFlag}
                             />
-                        ))}
+                        )))}
                 </div>
+                {upcomingPagination.totalDocs > 0 &&
+                <div className="flex items-center py-7 justify-center gap-6">
+            <button
+                onClick={handlePrevPage('upcoming')}
+                disabled={!upcomingPagination.hasPrevPage} // Disable if no previous page
+                className="py-2 px-3 border border-[#ECECED] rounded disabled:opacity-50"
+            >
+                <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.82597 9.0008L11.6631 5.16372L10.3372 3.83789L5.17432 9.0008L10.3372 14.1637L11.6631 12.8379L7.82597 9.0008Z" fill="#4A464E"/>
+                </svg>
+            </button>
+
+                {/* Page Number Buttons */}
+                {upcomingPageNumbers.map((page, index) => (
+                <button
+                    key={index}
+                    onClick={() => handlePageClick(page, 'upcoming')}
+                    className={`px-4 py-2 rounded font-brmedium text-sm  ${
+                    currentPage === page ? "bg-ev-700 text-white" : "bg-none "
+                    }`}
+                    disabled={page === "..."}
+                >
+                    {page}
+                </button>
+                ))}
+
+            <button
+                onClick={handleNextPage('upcoming')}
+                disabled={!upcomingPagination.hasNextPage} // Disable if no next page
+                className="py-2 px-3 bg-white border border-[#ECECED] rounded disabled:opacity-50"
+            >
+                <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.174 9.0008L7.33691 5.16372L8.66274 3.83789L13.8257 9.0008L8.66274 14.1637L7.33691 12.8379L11.174 9.0008Z" fill="#4A464E"/>
+                </svg>
+            </button>
+        </div>}
+        {upcomingPagination.totalDocs == 0 &&
+        <div>
+            <NoBooking
+             header={'No Upcoming Booking'} 
+             text={'You have no Upcoming booking. Complete your pending bookings or Click on the Book Now button to book an ambulance standby.'} 
+             btn={true}
+            />
+        </div>
+        }
                 </section>
             )}
-
+            {/* COMPLETED  */}
             {iaFlag !== 'ADMIN' && !searchTerm && activeCategory === "Completed Bookings" && (
                 <section className="flex flex-col gap-2">
                 <p className="font-brbold text-[28px] text-[#0A0116]">Completed Bookings</p>
                 <div className="flex justify-start  gap-6 flex-wrap ">
-                {completedOrders.map(order =>(
+                {loading ?
+            <div> 
+            <div className="flex justify-start gap-6 flex-wrap">
+            {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="w-[378.67px] h-[322px] bg-ev-100 rounded-xl" />
+              ))}
+              </div>
+              </div>
+            :
+                (completedOrders.map(order =>(
                             <OrderBox 
                             key={order._id}
                             eventLocationName={order.ambulances.eventLocationName}
@@ -447,27 +642,100 @@ export default function OrderHistory () {
                             medicCost={order.medicCost}
                             iaFlag={iaFlag}
                             />
-                        ))}
+                        )))}
                 </div>
+                {completedPagination.totalDocs > 0 &&
+                <div className="flex items-center py-7 justify-center gap-6">
+            <button
+                onClick={handlePrevPage('completed')}
+                disabled={!completedPagination.hasPrevPage} // Disable if no previous page
+                className="py-2 px-3 border border-[#ECECED] rounded disabled:opacity-50"
+            >
+                <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.82597 9.0008L11.6631 5.16372L10.3372 3.83789L5.17432 9.0008L10.3372 14.1637L11.6631 12.8379L7.82597 9.0008Z" fill="#4A464E"/>
+                </svg>
+            </button>
+
+                {/* Page Number Buttons */}
+                {completedPageNumbers.map((page, index) => (
+                <button
+                    key={index}
+                    onClick={() => handlePageClick(page, 'completed')}
+                    className={`px-4 py-2 rounded font-brmedium text-sm  ${
+                    currentPage === page ? "bg-ev-700 text-white" : "bg-none "
+                    }`}
+                    disabled={page === "..."}
+                >
+                    {page}
+                </button>
+                ))}
+
+            <button
+                onClick={handleNextPage('completed')}
+                disabled={!completedPagination.hasNextPage} // Disable if no next page
+                className="py-2 px-3 bg-white border border-[#ECECED] rounded disabled:opacity-50"
+            >
+                <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.174 9.0008L7.33691 5.16372L8.66274 3.83789L13.8257 9.0008L8.66274 14.1637L7.33691 12.8379L11.174 9.0008Z" fill="#4A464E"/>
+                </svg>
+            </button>
+        </div>}
+        {completedPagination.totalDocs == 0 &&
+        <div>
+            <NoBooking 
+            header={'No Completed Booking Yet!'} 
+            text={'You have no completed bookings'} 
+            btn={false}/>
+        </div>
+        }
                 </section>
             )}
 
             {searchTerm && 
             <div>
-            searching
-           
+            <div> 
+            <div className="flex justify-start gap-6 flex-wrap">
+            {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="w-[378.67px] h-[322px] bg-ev-100 rounded-xl" />
+              ))}
+              </div>
+              </div>
             </div>}
             {iaFlag !== 'ADMIN' && totalOrders == 0 &&
             <section className="py-4">
-               <NoBooking />
+               <NoBooking
+               header={'No Booking Yet!'} 
+               text={'You have not made any booking yet. Book any of our ambulance services via the button below to get started.'} 
+               btn={true}
+               />
             </section>
             }
              {iaFlag == 'ADMIN' && adminPendningOrders.lenght == 0 &&
             <section className="py-4">
-               <NoBooking />
+               <NoBooking
+                header={'No Booking Yet!'} 
+                text={'You have not made any booking yet. Book any of our ambulance services via the button below to get started.'} 
+                btn={true}
+               />
             </section>
             }
             {iaFlag === "ADMIN" &&
+            (!searchTerm && <p className="font-brbold text-[28px] text-[#0A0116]">Pending Orders</p>)
+            }
+            {iaFlag === "ADMIN" &&
+            
+            loading ?
+            <div> 
+            <div className="flex justify-start gap-6 flex-wrap">
+            {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="w-[378.67px] h-[322px] bg-ev-100 rounded-xl" />
+              ))}
+              </div>
+              </div>
+            :
+            <div>
+                {/* <p className="font-brbold text-[28px] text-[#0A0116]">Pending Orders</p> */}
+                {!searchTerm &&
             <div className="flex justify-start gap-6 flex-wrap ">
                         {adminPendningOrders.map(order =>(
                             <OrderBox 
@@ -500,13 +768,16 @@ export default function OrderHistory () {
                         ))}
                     </div>
                     }
+                    </div>
+                    }
             </div>
             {/* Pagination controls */}
             {iaFlag == "ADMIN" &&
-        <div className="flex items-center py-7 justify-center gap-6">
+            (!searchTerm &&
+            <div className="flex items-center py-7 justify-center gap-6">
             <button
-                onClick={handlePrevPage}
-                disabled={!hasPrevPage} // Disable if no previous page
+                onClick={()=>handlePrevPage('pending')}
+                disabled={!adminPagination.hasPrevPage} // Disable if no previous page
                 className="py-2 px-3 border border-[#ECECED] rounded disabled:opacity-50"
             >
                 <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -515,10 +786,10 @@ export default function OrderHistory () {
             </button>
 
                 {/* Page Number Buttons */}
-                {pageNumbers.map((page, index) => (
+                {adminPageNumbers.map((page, index) => (
                 <button
                     key={index}
-                    onClick={() => handlePageClick(page)}
+                    onClick={() => handlePageClick(page, 'admin')}
                     className={`px-4 py-2 rounded font-brmedium text-sm  ${
                     currentPage === page ? "bg-ev-700 text-white" : "bg-none "
                     }`}
@@ -529,8 +800,8 @@ export default function OrderHistory () {
                 ))}
 
             <button
-                onClick={handleNextPage}
-                disabled={!hasNextPage} // Disable if no next page
+                onClick={()=>handleNextPage('admin')}
+                disabled={!adminPagination.hasNextPage} // Disable if no next page
                 className="py-2 px-3 bg-white border border-[#ECECED] rounded disabled:opacity-50"
             >
                 <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -538,6 +809,7 @@ export default function OrderHistory () {
                 </svg>
             </button>
         </div>
+        )
         }
         </div>
     )
