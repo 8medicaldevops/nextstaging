@@ -1,11 +1,11 @@
 import NavBar from "../../components/NavBar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
-import { useToasts } from 'react-toast-notifications';
 import { BeatLoader } from "react-spinners";
-
+import { useGoogleLogin } from '@react-oauth/google'; //GoogleLogin, 
+import { useFetch } from "@/components/hooks/useFetch";
 
 import { createAccountValidation } from "./FormValidation";
 
@@ -14,10 +14,8 @@ import signup from "../../assets/images/signup.svg";
 
 
 export default function CreateAccount() {
-    let navigate = useNavigate();
-
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [isPending, setIsPending] = useState(false);
+    const {fetchUserDataAndRoute, isPending} = useFetch(import.meta.env.VITE_USER_REGISTER);
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
@@ -27,9 +25,6 @@ export default function CreateAccount() {
         password: '',
         //termsAndConditions: false,
     });
-
-    const { addToast } = useToasts()
-
 
     useEffect(() => {
         ReactGA.send({
@@ -44,72 +39,22 @@ export default function CreateAccount() {
         setIsPasswordVisible(!isPasswordVisible);
     }
 
-    const createUserAccount = async () => {
-        setIsPending(true);
-        await fetch(import.meta.env.VITE_USER_REGISTER, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                if (data.success == true) {
-                    setIsPending(false);
-                    addToast(`Hello ${data.data.firstName}, your registration was successful. You will be redirected to the login page in a few seconds.`, {
-                        appearance: 'success',
-                        autoDismiss: true,
-                    });
-                    setTimeout(() => { navigate("/SignIn") }, 4000);
-                    sessionStorage.setItem('SignIn', JSON.stringify(data));
-                    
-                } else if (data.success == false && data.statusCode == 409) {
-                    setIsPending(false);
-                    addToast(`Hello, There was an error. This email might have been used already. Please try again. If it persists, contact support"`, {
-                        appearance: 'error',
-                        autoDismiss: true,
-                    })
-                }
-            })
-            .catch(error => {
-                setIsPending(false);
-                console.error('There has been a problem with your fetch operation:', error);
-                addToast("Hello, There was an error. Please try again. ", {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
-            });
-    };
+    const googleLogin = useGoogleLogin({
+        // eslint-disable-next-line no-unused-vars
+        onSuccess: (codeResponse) => console.log('Login Success'),
+        // eslint-disable-next-line no-unused-vars
+        onError: (error) => console.log('Login Failed:')
+    });
+
+    function createUserAccount(){
+        fetchUserDataAndRoute(values, '/');
+    }
 
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: createAccountValidation,
-        onSubmit: (values) => {
-
-            //fetchUserDataAndRoute(values, import.meta.env.VITE_USER_REGISTER, "/SignIn", "signUpData"); //USEEFFECT
-
-            /*if (isSuccess && myData.statusCode == 201) {
-                addToast(`Hello ${myData.data.firstName}, your account creation was successful. You will be redirected to the login page in a few seconds.`, {
-                    appearance: 'success',
-                    autoDismiss: true,
-                })
-            } else if (isError || myData.statusCode == 409) {
-                addToast(`Hello, There was an error. This email might have been used already. Please try again. If it persists, contact support"`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                })
-            } */
-
-            createUserAccount();
-            console.log(values);
-
+        onSubmit: () => {
+            createUserAccount()
         }
     })
 
@@ -123,14 +68,28 @@ export default function CreateAccount() {
                 </div>
                 <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[40%]  md:self-center">
                     <div className="flex flex-col items-center justify-center my-auto">
-                        <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center">Welcome Back</h3>
+                        <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center">Create Account</h3>
                         <p className="font-[16px] text-lg text-[#636066] my-[0.5rem] text-center">
                             Already have an account? <Link className="text-ev-700 my-[0.5rem]" to="/SignIn">Sign In</Link>
                         </p>
-                        <button className="flex gap-3 bg-[#F9F9FA] py-[16px] px-[12px] border-[#F4F2F5] w-full rounded-mm  justify-center my-[0.5rem]">
+                        <button className="flex gap-3 bg-[#F9F9FA] py-[16px] px-[12px] border-[#F4F2F5] w-full rounded-mm  justify-center my-[0.5rem]" onClick={googleLogin}>
                             <img src={google} alt="" className="self-center" />
                             Continue with Google
                         </button>
+
+                        {/*<GoogleLogin
+                            onSuccess={(response) => {
+                                // Handle the successful response here
+                                console.log('Custom Google login successful', response);
+                            }}
+                            onError={() => {
+                                // Handle errors here
+                                console.error('Custom Google login failed');
+                            }}
+                            size="large"
+                            useOneTap
+                            text="continue_with"
+                        />*/}
                     </div>
 
                     <div className="divider-text my-3">
