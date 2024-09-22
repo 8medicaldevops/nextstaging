@@ -1,28 +1,27 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/components/hooks/useFetch";
 
 import NavBar from "../../components/NavBar";
 
 import forgot from "../../assets/images/password-ambulance.png";
 import lock from "../../assets/images/passwordd.svg";
-//import goodPin from "../../assets/images/good-pincode.svg";
 import { changePasswordValidation } from "./FormValidation";
 
 export default function ChangePassword() {
-    let navigate = useNavigate();
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
-    const { isSuccess, isPending, data, fetchUserData } = useFetch(import.meta.env.VITE_USER_RESET_PASSWORD);
+    const { isPending, fetchUserDataRemoveItemRoute } = useFetch(import.meta.env.VITE_USER_RESET_PASSWORD);
 
 
     // eslint-disable-next-line no-unused-vars
-    const userToken = JSON.parse(sessionStorage.getItem('longToken'));
+    //const [userToken, setUserToken] = useState(JSON.parse(sessionStorage.getItem('email')));
+
+    const userToken = sessionStorage.getItem('longToken');
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
@@ -43,12 +42,7 @@ export default function ChangePassword() {
         initialValues: initialValues,
         validationSchema: changePasswordValidation,
         onSubmit: (values) => {
-            
-            fetchUserData(values);
-            if(isSuccess && data?.statusCode == 200){
-                navigate("/SignIn")
-                sessionStorage.setItem('UpdatePW', JSON.stringify(data));
-            }
+            fetchUserDataRemoveItemRoute (values, "longToken", '/SignIn')
         }
     })
 

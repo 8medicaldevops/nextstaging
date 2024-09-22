@@ -1,5 +1,5 @@
 import NavBar from "../../components/NavBar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
@@ -14,10 +14,8 @@ import signup from "../../assets/images/signup.svg";
 
 
 export default function CreateAccount() {
-    let navigate = useNavigate();
-
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const { isSuccess, isPending, data, fetchUserData } = useFetch(import.meta.env.VITE_USER_REGISTER);
+    const {fetchUserDataAndRoute, isPending} = useFetch(import.meta.env.VITE_USER_REGISTER);
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
@@ -48,16 +46,15 @@ export default function CreateAccount() {
         onError: (error) => console.log('Login Failed:')
     });
 
+    function createUserAccount(){
+        fetchUserDataAndRoute(values, '/');
+    }
 
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: createAccountValidation,
         onSubmit: () => {
-            fetchUserData(values);
-            if(isSuccess && data?.statusCode == 200){
-                navigate("/SignIn")
-                //sessionStorage.setItem('SignUp', JSON.stringify(data));
-            }
+            createUserAccount()
         }
     })
 

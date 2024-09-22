@@ -14,9 +14,9 @@ import reEnterPin from "../../assets/images/re-enter-pincode.svg";
 
 export default function ForgotPassword() {
 
-    const [isOtpSent, setIsOtpSent] = useState(false);
+    const [isOtpSent] = useState(false);
 
-    const { isSuccess, isPending, data, fetchUserData } = useFetch(import.meta.env.VITE_USER_FORGOT_PASSWORD);
+    const {isPending, fetchUserDataSetItemChangeState, otpSent } = useFetch(import.meta.env.VITE_USER_FORGOT_PASSWORD);
 
 
     // eslint-disable-next-line no-unused-vars
@@ -24,16 +24,21 @@ export default function ForgotPassword() {
         email: '',
     });
 
+    function retievePassword(){
+        fetchUserDataSetItemChangeState (values, values.email, "email", isOtpSent)
+    }
+
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: forgotPasswordValidation,
         onSubmit: () => {
-            fetchUserData(values);
-            if(isSuccess && data?.statusCode == 200){
-                setIsOtpSent(true);
-                sessionStorage.setItem('ForgotPassword', JSON.stringify(data));
-                sessionStorage.setItem('email', JSON.stringify(values.email));
-            }
+            retievePassword()
+            
+            /*if(isSuccess || data?.statusCode == 200){
+                //setIsOtpSent(true);
+                //sessionStorage.setItem('ForgotPassword', JSON.stringify(data));
+                //sessionStorage.setItem('email', JSON.stringify(values.email));
+            }*/
         }
     })
 
@@ -57,7 +62,7 @@ export default function ForgotPassword() {
                         </p>
                     </div>
                     {
-                        isOtpSent ? <OtpVerification /> :
+                        otpSent ? <OtpVerification /> :
                             <form action="" className="flex flex-col" onSubmit={handleSubmit}>
                                 <div className="py-[1rem] flex flex-col">
                                     <label htmlFor="emailAddress" className="font-brsemi text-sm text-[#636066]">Email Address</label>

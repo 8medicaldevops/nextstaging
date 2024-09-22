@@ -138,7 +138,7 @@ export default function OrderBox({
                             },
                           }
                     );
-                    console.log("Response:", response.data);
+                    //console.log("Response:", response.data);
                     setCheckoutLink(response.data.data.paymentLink);
                     setModalOpen(true);
                     //navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
