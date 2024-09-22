@@ -90,7 +90,9 @@ export const useFetch = (url) => {
                 addToast(response?.data.message, {
                     appearance: 'success',
                 });
+                sessionStorage.setItem('SignIn', JSON.stringify(response.data));
                 navigate(`${path}`);
+
 
                 setIsSuccess(true);
             } else if (response.data.status && typeof response.data.status === 'string') {
