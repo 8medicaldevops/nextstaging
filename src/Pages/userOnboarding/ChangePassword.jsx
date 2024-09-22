@@ -1,29 +1,27 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
-import { useToasts } from 'react-toast-notifications';
+import { useFetch } from "@/components/hooks/useFetch";
 
 import NavBar from "../../components/NavBar";
 
 import forgot from "../../assets/images/password-ambulance.png";
 import lock from "../../assets/images/passwordd.svg";
-//import goodPin from "../../assets/images/good-pincode.svg";
 import { changePasswordValidation } from "./FormValidation";
 
 export default function ChangePassword() {
-
-    const { addToast } = useToasts();
-    let navigate = useNavigate();
-
-    const [isPending, setIsPending] = useState(false);
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
+    const { isPending, fetchUserDataRemoveItemRoute } = useFetch(import.meta.env.VITE_USER_RESET_PASSWORD);
+
+
     // eslint-disable-next-line no-unused-vars
-    const userToken = JSON.parse(sessionStorage.getItem('longToken'));
+    //const [userToken, setUserToken] = useState(JSON.parse(sessionStorage.getItem('email')));
+
+    const userToken = sessionStorage.getItem('longToken');
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
@@ -44,48 +42,7 @@ export default function ChangePassword() {
         initialValues: initialValues,
         validationSchema: changePasswordValidation,
         onSubmit: (values) => {
-            setIsPending(true);
-
-            //UpdatePassword()
-
-            console.log(values)
-            fetch(import.meta.env.VITE_USER_RESET_PASSWORD, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data);
-                    if (data.success == true) {
-                        setIsPending(false);
-                        addToast(`${data?.message}`, {
-                            appearance: 'success',
-                            autoDismiss: true,
-                        });
-                        setTimeout(() => { navigate("/SignIn") }, 4000);
-                        sessionStorage.setItem('UpdatePW', JSON.stringify(data));
-
-                    } else if (data.success == false) {
-                        setIsPending(false);
-                    }
-                })
-                .catch(error => {
-                    setIsPending(false);
-                    console.error('There has been a problem with your fetch operation:', error);
-                    addToast("ERROR", {
-                        appearance: 'error',
-                        autoDismiss: true,
-                    });
-                });
-            console.log(values);
+            fetchUserDataRemoveItemRoute (values, "longToken", '/SignIn')
         }
     })
 

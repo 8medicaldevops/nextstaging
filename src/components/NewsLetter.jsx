@@ -50,6 +50,7 @@ export default function NewsLetter() {
             return;
         }
 
+
         axios.post(import.meta.env.VITE_NEWSLETTER_API, {
             email: emailAddress,
         })
