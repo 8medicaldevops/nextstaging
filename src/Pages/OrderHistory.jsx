@@ -143,11 +143,11 @@ export default function OrderHistory () {
 
                     // Check if response.data is valid before setting admin pending orders
                     if (response.data) {
-                        setAdminPendingOrders(response.data.data.orders.docs);
+                        setAdminPendingOrders(response.data.data.docs);
                         setAdminPagination({
-                            totalPages: response.data.data.orders.totalPages,
-                            hasNextPage: response.data.data.orders.hasNextPage,
-                            hasPrevPage: response.data.data.orders.hasPrevPage,
+                            totalPages: response.data.data.totalPages,
+                            hasNextPage: response.data.data.hasNextPage,
+                            hasPrevPage: response.data.data.hasPrevPage,
                         })
                     } else {
                         setAdminPendingOrders([]); // Set to an empty array if response.data doesn't exist
