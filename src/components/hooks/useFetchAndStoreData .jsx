@@ -46,9 +46,9 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
         },
       });
       setStatusCount(response.data.data.statuses);
-      setTotalPages(response.data.data.orders.totalPages);
-      setTotalDocs(response.data.data.orders.totalDocs);
-      const mappedData = response.data.data.orders.docs.map((doc) => {
+      setTotalPages(response.data.data.totalPages);
+      setTotalDocs(response.data.data.totalDocs);
+      const mappedData = response.data.data.docs.map((doc) => {
         let dateObject = null;
         let dateBookedObj = null;
       

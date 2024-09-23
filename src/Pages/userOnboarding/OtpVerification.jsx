@@ -27,13 +27,8 @@ const OtpVerification = () => {
 
     const verifyOtp = async () => {
 
-        fetchUserDataSetItemRoute (formData, 'longToken', "/ChangePassword" )
+        fetchUserDataSetItemRoute (formData, 'longToken', "/ChangePassword" );
 
-        /*fetchUserData(formData);
-        if (isSuccess && data?.statusCode == 200) {
-            sessionStorage.setItem('longToken', JSON.stringify(data.data.longToken));
-            navigate("/ChangePassword");
-        }*/
     }
 
     return (

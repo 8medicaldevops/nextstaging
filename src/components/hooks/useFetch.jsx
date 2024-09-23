@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useToasts } from 'react-toast-notifications';
+
 import { useNavigate } from "react-router-dom";
 
 export const useFetch = (url) => {
+
 
     const [data, setData] = useState(null);
     const [isError, setIsError] = useState(false);
@@ -19,6 +21,7 @@ export const useFetch = (url) => {
     const headers = {
         'Content-Type': 'application/json',
     }
+
 
     const fetchUserData = async (values) => {
 
@@ -90,7 +93,9 @@ export const useFetch = (url) => {
                 addToast(response?.data.message, {
                     appearance: 'success',
                 });
+                sessionStorage.setItem('SignIn', JSON.stringify(response.data));
                 navigate(`${path}`);
+
 
                 setIsSuccess(true);
             } else if (response.data.status && typeof response.data.status === 'string') {

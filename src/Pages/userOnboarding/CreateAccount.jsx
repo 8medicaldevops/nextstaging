@@ -15,7 +15,9 @@ import signup from "../../assets/images/signup.svg";
 
 export default function CreateAccount() {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
     const {fetchUserDataAndRoute, isPending} = useFetch(import.meta.env.VITE_USER_REGISTER);
+
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
@@ -46,15 +48,19 @@ export default function CreateAccount() {
         onError: (error) => console.log('Login Failed:')
     });
 
+
     function createUserAccount(){
         fetchUserDataAndRoute(values, '/');
     }
+
 
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: createAccountValidation,
         onSubmit: () => {
+
             createUserAccount()
+
         }
     })
 

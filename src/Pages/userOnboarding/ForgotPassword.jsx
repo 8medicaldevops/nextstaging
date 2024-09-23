@@ -28,17 +28,14 @@ export default function ForgotPassword() {
         fetchUserDataSetItemChangeState (values, values.email, "email", isOtpSent)
     }
 
+
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: forgotPasswordValidation,
         onSubmit: () => {
-            retievePassword()
-            
-            /*if(isSuccess || data?.statusCode == 200){
-                //setIsOtpSent(true);
-                //sessionStorage.setItem('ForgotPassword', JSON.stringify(data));
-                //sessionStorage.setItem('email', JSON.stringify(values.email));
-            }*/
+
+            retievePassword();
+
         }
     })
 
