@@ -219,7 +219,10 @@ export function DataTableDemo({data,
   totalPages,
   goToPage,
   nextPage,
-  prevPage}) {
+  prevPage,
+  searchTerm,
+  setSearchTerm,
+}) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -318,10 +321,8 @@ export function DataTableDemo({data,
                         <input 
                         type="text"
                         placeholder="Search"
-                        value={(table.getColumn("ContactName")?.getFilterValue() || "")}
-                        onChange={(event) =>
-                            table.getColumn("ContactName")?.setFilterValue(event.target.value)
-                        }
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         className="outline-none bg-[#F5F4F6] text-sm placeholder:text-[#868388] font-brreg" 
                         />
 

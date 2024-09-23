@@ -251,40 +251,40 @@ export default function PaymentLinkModal(props) {
             <path d="M163.604 57.0571H161.697V57.353H163.604V57.0571Z" fill="#5A06D1"/>
             <defs>
             <linearGradient id="paint0_linear_3060_22901" x1="74.9014" y1="69.7067" x2="131.729" y2="69.7067" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FFAE00"/>
-            <stop offset="1" stop-color="#FF7800"/>
+            <stop stopColor="#FFAE00"/>
+            <stop offset="1" stopColor="#FF7800"/>
             </linearGradient>
             <linearGradient id="paint1_linear_3060_22901" x1="133.282" y1="102.723" x2="153.395" y2="102.723" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#6A6AE8"/>
-            <stop offset="1" stop-color="#312890"/>
+            <stop stopColor="#6A6AE8"/>
+            <stop offset="1" stopColor="#312890"/>
             </linearGradient>
             <linearGradient id="paint2_linear_3060_22901" x1="50.712" y1="102.723" x2="70.8243" y2="102.723" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#6A6AE8"/>
-            <stop offset="1" stop-color="#312890"/>
+            <stop stopColor="#6A6AE8"/>
+            <stop offset="1" stopColor="#312890"/>
             </linearGradient>
             <linearGradient id="paint3_linear_3060_22901" x1="68.4748" y1="116.211" x2="135.88" y2="116.211" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FFAE00"/>
-            <stop offset="1" stop-color="#FF7800"/>
+            <stop stopColor="#FFAE00"/>
+            <stop offset="1" stopColor="#FF7800"/>
             </linearGradient>
             <linearGradient id="paint4_linear_3060_22901" x1="89.4004" y1="115.833" x2="114.954" y2="115.833" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#6A6AE8"/>
-            <stop offset="1" stop-color="#312890"/>
+            <stop stopColor="#6A6AE8"/>
+            <stop offset="1" stopColor="#312890"/>
             </linearGradient>
             <linearGradient id="paint5_linear_3060_22901" x1="43.6532" y1="141.599" x2="59.8614" y2="141.599" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#6A6AE8"/>
-            <stop offset="1" stop-color="#312890"/>
+            <stop stopColor="#6A6AE8"/>
+            <stop offset="1" stopColor="#312890"/>
             </linearGradient>
             <linearGradient id="paint6_linear_3060_22901" x1="64.6205" y1="146.383" x2="85.7356" y2="146.383" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#6A6AE8"/>
-            <stop offset="1" stop-color="#312890"/>
+            <stop stopColor="#6A6AE8"/>
+            <stop offset="1" stopColor="#312890"/>
             </linearGradient>
             <linearGradient id="paint7_linear_3060_22901" x1="162.396" y1="111.493" x2="163.177" y2="66.2052" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FFAE00"/>
-            <stop offset="1" stop-color="#FF7800"/>
+            <stop stopColor="#FFAE00"/>
+            <stop offset="1" stopColor="#FF7800"/>
             </linearGradient>
             <linearGradient id="paint8_linear_3060_22901" x1="173.87" y1="111.69" x2="174.651" y2="66.4027" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FFAE00"/>
-            <stop offset="1" stop-color="#FF7800"/>
+            <stop stopColor="#FFAE00"/>
+            <stop offset="1" stopColor="#FF7800"/>
             </linearGradient>
             </defs>
             </svg>

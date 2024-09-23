@@ -186,7 +186,7 @@ export default function NavBar() {
             <DropdownMenu>
                 <DropdownMenuTrigger className="flex py-1 pr-3 pl-1 gap-1 rounded-[47px] border-none outline-none bg-ev-50  items-center">
                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_2890_25988)">
+                <g clipPath="url(#clip0_2890_25988)">
                 <path d="M14 28C21.732 28 28 21.732 28 14C28 6.26801 21.732 0 14 0C6.26801 0 0 6.26801 0 14C0 21.732 6.26801 28 14 28Z" fill="#D9CFFF"/>
                 <path d="M4 24.0723C6.58763 26.4981 10.1134 27.9999 14 27.9999C17.8866 27.9999 21.4124 26.4981 24 24.0723C23.2666 21.3498 21.2032 19.0929 18.4389 17.9091C19.9867 16.6713 20.9956 14.8275 20.9956 12.7423C20.9956 9.02476 17.8571 5.99992 14 5.99992C10.1429 5.99992 7.00442 9.02476 7.00442 12.7423C7.00442 14.8275 8.01325 16.6713 9.56112 17.9091C6.79676 19.0929 4.73343 21.3498 4 24.0723Z" fill="#8540FF"/>
                 </g>

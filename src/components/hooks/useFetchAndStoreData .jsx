@@ -14,6 +14,8 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
   const [totalDocs, setTotalDocs] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [itemsPerPage] = useState(30)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const getStoredToken = () => {
     const storedTokenData = localStorage.getItem('token');
     return storedTokenData ? JSON.parse(storedTokenData) : null;
@@ -30,6 +32,19 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     window.location.href = '/Login'; // Redirect to login page
   };
 
+  // Implementing debounce logic for the search term
+  useEffect(() => {
+    const handler = setTimeout(() => {
+        setCurrentPage(1);
+        setDebouncedSearchTerm(searchTerm); // Set debounced search term if input is 3+ characters
+    }, 500); // 500ms delay (you can adjust this)
+
+    // Cleanup the timeout if searchTerm changes (user keeps typing)
+    return () => {
+    clearTimeout(handler);
+    };
+}, [searchTerm]);
+
   const fetchData = async (page = currentPage) => {
     
     const validPage = page || currentPage;
@@ -40,7 +55,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     }
     setIsLoading(true);
     try {
-      const response = await axios.get(`${url}?page=${validPage}&limit=${itemsPerPage}`, {
+      const response = await axios.get(`${url}?search=${debouncedSearchTerm}&page=${validPage}&limit=${itemsPerPage}`, {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },
@@ -124,7 +139,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     } else {
       clearStorageAndRedirect();
     }
-  }, [url, storageKey, accessToken, interval, currentPage]);
+  }, [url, storageKey, accessToken, interval, currentPage, debouncedSearchTerm]);
 
   const goToPage = (page) => {
     if (page > 0 && page <= totalPages) {
@@ -156,7 +171,10 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     totalDocs,
     goToPage,
     nextPage,
-    prevPage,};
+    prevPage,
+    searchTerm,
+    setSearchTerm
+  };
   
 };
 
