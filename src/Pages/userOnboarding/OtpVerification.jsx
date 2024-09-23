@@ -9,8 +9,7 @@ const OtpVerification = () => {
     const { isPending, fetchUserDataSetItemRoute } = useFetch(import.meta.env.VITE_USER_VERIFY_TOKEN);
 
     const [otp, setOtp] = useState('');
-    //const [isPending, setIsPending] = useState('');
-
+    
     // eslint-disable-next-line no-unused-vars
     const [userEmail, setUserEmail] = useState(JSON.parse(sessionStorage.getItem('email')));
 
