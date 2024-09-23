@@ -8,6 +8,9 @@ const OtpVerification = () => {
 
     const { isPending, fetchUserDataSetItemRoute } = useFetch(import.meta.env.VITE_USER_VERIFY_TOKEN);
 
+
+    const { isSuccess, isPending, data, fetchUserData } = useFetch(import.meta.env.VITE_USER_VERIFY_TOKEN);
+
     const [otp, setOtp] = useState('');
     //const [isPending, setIsPending] = useState('');
 
@@ -28,13 +31,8 @@ const OtpVerification = () => {
 
     const verifyOtp = async () => {
 
-        fetchUserDataSetItemRoute (formData, 'longToken', "/ChangePassword" )
+        fetchUserDataSetItemRoute (formData, 'longToken', "/ChangePassword" );
 
-        /*fetchUserData(formData);
-        if (isSuccess && data?.statusCode == 200) {
-            sessionStorage.setItem('longToken', JSON.stringify(data.data.longToken));
-            navigate("/ChangePassword");
-        }*/
     }
 
     return (

@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
 import { useGoogleLogin } from '@react-oauth/google'; //GoogleLogin, 
+
 import  {useFetch} from "@/components/hooks/useFetch.jsx";
+
 import NavBar from "../../components/NavBar";
 
 import google from "../../assets/images/google.svg";
@@ -13,6 +15,7 @@ import { signInValidation } from "./FormValidation";
 
 
 export default function SignIn() {
+
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -36,6 +39,7 @@ export default function SignIn() {
 
 
     const googleLogin = useGoogleLogin({
+
         onSuccess: (codeResponse) => console.log("success"),
         onError: (error) => console.log('Login Failed'),
     });
@@ -45,6 +49,7 @@ export default function SignIn() {
     function signUserIn(){
         fetchUserDataAndRoute(values, '/');
     }
+
 
 
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({

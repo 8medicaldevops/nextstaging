@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
+
 import { useFetch } from "@/components/hooks/useFetch";
 
 import NavBar from "../../components/NavBar";
@@ -10,12 +11,12 @@ import lock from "../../assets/images/passwordd.svg";
 import { changePasswordValidation } from "./FormValidation";
 
 export default function ChangePassword() {
-
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
     const { isPending, fetchUserDataRemoveItemRoute } = useFetch(import.meta.env.VITE_USER_RESET_PASSWORD);
+
 
 
     // eslint-disable-next-line no-unused-vars
@@ -42,7 +43,7 @@ export default function ChangePassword() {
         initialValues: initialValues,
         validationSchema: changePasswordValidation,
         onSubmit: (values) => {
-            fetchUserDataRemoveItemRoute (values, "longToken", '/SignIn')
+            fetchUserDataRemoveItemRoute (values, "longToken", '/SignIn');
         }
     })
 
