@@ -2,10 +2,12 @@ import OtpInput from "react-otp-input";
 import { useState, useEffect } from "react";
 import { useFetch } from "@/components/hooks/useFetch";
 import { BeatLoader } from "react-spinners";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const OtpVerification = () => {
-    let navigate = useNavigate();
+
+    const { isPending, fetchUserDataSetItemRoute } = useFetch(import.meta.env.VITE_USER_VERIFY_TOKEN);
+
 
     const { isSuccess, isPending, data, fetchUserData } = useFetch(import.meta.env.VITE_USER_VERIFY_TOKEN);
 
@@ -28,12 +30,9 @@ const OtpVerification = () => {
     }, [otp])
 
     const verifyOtp = async () => {
-console.log(formData)
-        fetchUserData(formData);
-        if (isSuccess && data?.statusCode == 200) {
-            sessionStorage.setItem('longToken', JSON.stringify(data.data.longToken));
-            navigate("/ChangePassword");
-        }
+
+        fetchUserDataSetItemRoute (formData, 'longToken', "/ChangePassword" );
+
     }
 
     return (

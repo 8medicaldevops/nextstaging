@@ -85,10 +85,10 @@ export default function OrderBox({
         
             return formattedTime;
         };
-        const ogstartDate = parseISO(startDate);
-        const ogendDate = parseISO(endDate);
-        const formattedBackendStartDate = format(ogstartDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
-        const formattedBackendEndDate = format(ogendDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
+        //const ogstartDate = parseISO(startDate);
+        //const ogendDate = parseISO(endDate);
+        //const formattedBackendStartDate = format(ogstartDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
+        //const formattedBackendEndDate = format(ogendDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
         
         //console.log(callerData,eventData,schedule,smallAmbulanceCount,largeAmbulanceCount,noOfMedic,estimatedFee)
         const handleSubmit = () => {

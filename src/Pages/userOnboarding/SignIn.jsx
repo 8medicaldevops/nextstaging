@@ -4,7 +4,9 @@ import ReactGA from "react-ga4";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
 import { useGoogleLogin } from '@react-oauth/google'; //GoogleLogin, 
-import { useFetch } from "@/components/hooks/useFetch";
+
+import  {useFetch} from "@/components/hooks/useFetch.jsx";
+
 import NavBar from "../../components/NavBar";
 
 import google from "../../assets/images/google.svg";
@@ -14,7 +16,6 @@ import { signInValidation } from "./FormValidation";
 
 export default function SignIn() {
 
-    let navigate = useNavigate();
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -23,7 +24,6 @@ export default function SignIn() {
         identifier: '',
         password: ''
     });
-
 
     useEffect(() => {
         ReactGA.send({
@@ -39,22 +39,24 @@ export default function SignIn() {
 
 
     const googleLogin = useGoogleLogin({
-        onSuccess: (codeResponse) => console.log(codeResponse),
-        onError: (error) => console.log('Login Failed:', error)
+
+        onSuccess: (codeResponse) => console.log("success"),
+        onError: (error) => console.log('Login Failed'),
     });
 
-    const { isSuccess, isPending, data, fetchUserData } = useFetch(import.meta.env.VITE_USER_LOGIN);
+    const {fetchUserDataAndRoute, isPending} = useFetch(import.meta.env.VITE_USER_LOGIN,);
+
+    function signUserIn(){
+        fetchUserDataAndRoute(values, '/');
+    }
+
 
 
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: signInValidation,
         onSubmit: () => {
-            fetchUserData(values);
-            if(isSuccess && data?.statusCode == 200){
-                sessionStorage.setItem("SignIn", JSON.stringify(data));
-                navigate("/")
-            }
+            signUserIn();
         }
     })
 

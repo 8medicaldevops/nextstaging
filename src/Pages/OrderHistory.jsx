@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function OrderHistory () {
     const [searchTerm, setSearchTerm] = useState("");
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const [activeCategory, setActiveCategory] = useState("All");
     const [boxData, setBoxData] = useState([]);
     const [pendingOrders, setPendingOrders] = useState([]);
@@ -44,9 +45,9 @@ export default function OrderHistory () {
       setActiveCategory(category);
     };
 
-    const handleInputChange = (event) => {
-        setSearchTerm(event.target.value);
-      };
+    // const handleInputChange = (event) => {
+    //     setSearchTerm(event.target.value);
+    //   };
 
      // Helper function to generate page numbers with ellipses
     const generatePageNumbers = (currentPage, totalPages) => {
@@ -78,15 +79,27 @@ export default function OrderHistory () {
     return range;
   };
 
+        // Implementing debounce logic for the search term
+        useEffect(() => {
+            const handler = setTimeout(() => {
+                setDebouncedSearchTerm(searchTerm); // Set debounced search term if input is 3+ characters
+            }, 500); // 500ms delay (you can adjust this)
+
+            // Cleanup the timeout if searchTerm changes (user keeps typing)
+            return () => {
+            clearTimeout(handler);
+            };
+        }, [searchTerm]);
+
         useEffect(()=>{
             const fetchOrders = async () => {
                 setLoading(true);
                 try {
                     const response = await axios.get(
                         iaFlag == "ADMIN"? 
-                        `${import.meta.env.VITE_ORDER_API}?page=${currentPage}&limit=${itemsPerPage}` 
+                        `${import.meta.env.VITE_ORDER_API}?search=${debouncedSearchTerm}&page=${currentPage}&limit=${itemsPerPage}` 
                     :  
-                        `${import.meta.env.VITE_USER_ORDER_HISTORY}?page=${currentPage}&limit=${itemsPerPage}`, 
+                        `${import.meta.env.VITE_USER_ORDER_HISTORY}?search=${debouncedSearchTerm}&page=${currentPage}&limit=${itemsPerPage}`, 
                         {
                     headers: {
                         Authorization: `Bearer ${token}`, // Add Authorization header
@@ -143,11 +156,11 @@ export default function OrderHistory () {
 
                     // Check if response.data is valid before setting admin pending orders
                     if (response.data) {
-                        setAdminPendingOrders(response.data.data.orders.docs);
+                        setAdminPendingOrders(response.data.data.docs);
                         setAdminPagination({
-                            totalPages: response.data.data.orders.totalPages,
-                            hasNextPage: response.data.data.orders.hasNextPage,
-                            hasPrevPage: response.data.data.orders.hasPrevPage,
+                            totalPages: response.data.data.totalPages,
+                            hasNextPage: response.data.data.hasNextPage,
+                            hasPrevPage: response.data.data.hasPrevPage,
                         })
                     } else {
                         setAdminPendingOrders([]); // Set to an empty array if response.data doesn't exist
@@ -166,7 +179,7 @@ export default function OrderHistory () {
                 // Call the function to fetch orders
                     fetchOrders();
                
-        },[token, currentPage,])
+        },[token, currentPage, debouncedSearchTerm])
 
         const pendingPageNumbers = generatePageNumbers(currentPage, pendingPagination.totalPages);
         const upcomingPageNumbers = generatePageNumbers(currentPage, upcomingPagination.totalPages);
@@ -237,7 +250,7 @@ export default function OrderHistory () {
                         type="text"
                         placeholder="Search"
                         value={searchTerm}
-                        onChange={handleInputChange}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         className="outline-none bg-[#F5F4F6] text-sm placeholder:text-[#868388] font-brreg" 
                         />
                         </div>
@@ -691,16 +704,45 @@ export default function OrderHistory () {
                 </section>
             )}
 
-            {searchTerm && 
+            {/* {searchTerm && 
             <div>
             <div> 
             <div className="flex justify-start gap-6 flex-wrap">
             {Array.from({ length: 3 }).map((_, index) => (
+                loading ? 
                 <Skeleton key={index} className="w-[378.67px] h-[322px] bg-ev-100 rounded-xl" />
+                :
+                <OrderBox 
+                key={order._id}
+                eventLocationName={order.ambulances.eventLocationName}
+                startDate={order.ambulances.startDate}
+                startTime={order.ambulances.startTime}
+                price={order.price}
+                endDate={order.ambulances.endDate}
+                endTime={order.ambulances.endTime}
+                largeAmbulance={order.ambulances.largeAmbulance}
+                noOfMedic={order.ambulances.noOfMedic}
+                smallAmbulanceCost={order.smallAmbulanceCost}
+                largeAmbulanceCost={order.largeAmbulanceCost}
+                medicCost={order.medicCost}
+                smallAmbulanceCount={order.ambulances.smallAmbulance}
+                largeAmbulanceCount={order.ambulances.largeAmbulance}
+                estimatedFee={order.price}
+                venueAddress={order.ambulances.eventAddress}
+                guests={order.ambulances.estimatedNumberOfGuests}
+                eventType={order.ambulances.eventType}
+                description={order.ambulances.description}
+                fullName={order.callerDetails.fullName}
+                emailAddress={order.callerDetails.email}
+                phoneNumber={order.callerDetails.phone}
+                companyName={order.callerDetails.company}
+                token={token}
+                iaFlag={iaFlag}
+                />
               ))}
               </div>
               </div>
-            </div>}
+            </div>} */}
             {iaFlag !== 'ADMIN' && totalOrders == 0 &&
             <section className="py-4">
                <NoBooking
@@ -735,7 +777,7 @@ export default function OrderHistory () {
             :
             <div>
                 {/* <p className="font-brbold text-[28px] text-[#0A0116]">Pending Orders</p> */}
-                {!searchTerm &&
+                {
             <div className="flex justify-start gap-6 flex-wrap ">
                         {adminPendningOrders.map(order =>(
                             <OrderBox 
