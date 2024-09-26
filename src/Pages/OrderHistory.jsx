@@ -12,7 +12,11 @@ import {
   } from "@/components/ui/select"
 import NoBooking from "@/components/NoBooking";
 import { Skeleton } from "@/components/ui/skeleton"
-import { Section } from "lucide-react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+  } from "@/components/ui/popover"
 
   
 
@@ -33,6 +37,7 @@ export default function OrderHistory () {
     const [completedPagination, setCompletedPagination] = useState({ totalPages: 1, totalDocs: 0, hasNextPage: false, hasPrevPage: false });
     const [totalPendingOrdersAdmin, setTotalPendingOrdersAdmin] = useState('')
     const [loading, setLoading] = useState(false)
+    const [selectedPeriod, setSelectedPeriod] = useState('all');
     const [itemsPerPage] = useState(12); // Fixed number of items per page
     const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
     const token = signInData?.data?.tokens?.accessToken || '';
@@ -94,7 +99,7 @@ export default function OrderHistory () {
                 try {
                     const response = await axios.get(
                         iaFlag == "ADMIN"? 
-                        `${import.meta.env.VITE_ORDER_API}?search=${debouncedSearchTerm}&page=${currentPage}&limit=${itemsPerPage}` 
+                        `${import.meta.env.VITE_ORDER_API}?search=${debouncedSearchTerm}&page=${currentPage}&limit=${itemsPerPage}&period=${selectedPeriod}` 
                     :  
                         `${import.meta.env.VITE_USER_ORDER_HISTORY}?search=${debouncedSearchTerm}&page=${currentPage}&limit=${itemsPerPage}`, 
                         {
@@ -178,7 +183,7 @@ export default function OrderHistory () {
                 // Call the function to fetch orders
                     fetchOrders();
                
-        },[token, currentPage, debouncedSearchTerm, activeCategory])
+        },[token, currentPage, debouncedSearchTerm, activeCategory, selectedPeriod])
 
         const pendingPageNumbers = generatePageNumbers(currentPage, pendingPagination.totalPages);
         const upcomingPageNumbers = generatePageNumbers(currentPage, upcomingPagination.totalPages);
@@ -215,6 +220,10 @@ export default function OrderHistory () {
             setCurrentPage(page);
         };
 
+        const handleSelectChange = (value) => {
+            setSelectedPeriod(value);
+          };
+
     return(
         <div className="pb-8 ">
             <NavBar />
@@ -240,7 +249,32 @@ export default function OrderHistory () {
                         </svg>
                         <p className="font-brbold text-[32px] text-[#1F1D21] max-md:text-2xl">Standby Bookings</p>
                         </div>
-                        <div className="max-[500px]:w-full">
+                        <div className="max-[500px]:w-full flex gap-1">
+                            {iaFlag == 'ADMIN' &&
+                                
+                                 <Select onValueChange={handleSelectChange} value={selectedPeriod}>
+                                 <SelectTrigger className="w-full font-brreg text-sm bg-[#F4F2F5] px-2 py-1 h-full border-none rounded-[33px] [&_svg.lucide.lucide-chevron-down]:hidden">
+                                   {/* <SelectValue placeholder="status" /> */}
+                                   <div className="flex items-center gap-1 cursor-pointer">
+                                 <p className="font-brmedium text-sm text-[#1F1D21]">Filter</p>
+                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                 <mask id="mask0_1659_19193"  maskUnits="userSpaceOnUse" x="0" y="0" width="18" height="18">
+                                 <rect width="18" height="18" fill="#D9D9D9"/>
+                                 </mask>
+                                 <g mask="url(#mask0_1659_19193)">
+                                 <path d="M7.5 13.5V12H10.5V13.5H7.5ZM4.5 9.75V8.25H13.5V9.75H4.5ZM2.25 6V4.5H15.75V6H2.25Z" fill="#1F1D21"/>
+                                 </g>
+                                 </svg>
+                                 </div>
+                                 </SelectTrigger>
+                                 <SelectContent className="bg-white text-sm font-brreg">
+                                   <SelectItem value="today">Today</SelectItem>
+                                   <SelectItem value="7">Past 7 days</SelectItem>
+                                   <SelectItem value="lastmonth">Past Month</SelectItem>
+                                   <SelectItem value="all">All</SelectItem>
+                                 </SelectContent>
+                               </Select>
+                            }
                         <div className="bg-[#F5F4F6] flex items-center rounded-mm gap-1 py-1 px-2 ">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.7141 11.786L10.117 9.18779C10.8957 8.17305 11.2592 6.9001 11.1339 5.62717C11.0086 4.35423 10.4037 3.17663 9.44206 2.33325C8.48041 1.48987 7.23395 1.04387 5.95555 1.08571C4.67714 1.12755 3.46252 1.6541 2.55806 2.55855C1.65361 3.463 1.12706 4.67763 1.08522 5.95604C1.04338 7.23444 1.48939 8.4809 2.33277 9.44255C3.17615 10.4042 4.35374 11.0091 5.62668 11.1344C6.89961 11.2597 8.17256 10.8962 9.1873 10.1175L11.7866 12.7173C11.8476 12.7784 11.9201 12.8268 11.9999 12.8598C12.0796 12.8929 12.1651 12.9099 12.2514 12.9099C12.3378 12.9099 12.4233 12.8929 12.503 12.8598C12.5828 12.8268 12.6552 12.7784 12.7163 12.7173C12.7773 12.6563 12.8258 12.5838 12.8588 12.5041C12.8918 12.4243 12.9088 12.3388 12.9088 12.2525C12.9088 12.1661 12.8918 12.0807 12.8588 12.0009C12.8258 11.9211 12.7773 11.8487 12.7163 11.7876L12.7141 11.786ZM2.40605 6.12529C2.40605 5.38979 2.62415 4.67081 3.03278 4.05926C3.4414 3.44772 4.02219 2.97108 4.7017 2.68961C5.38121 2.40815 6.12893 2.33451 6.8503 2.478C7.57166 2.62148 8.23428 2.97566 8.75436 3.49574C9.27443 4.01581 9.62861 4.67843 9.7721 5.3998C9.91559 6.12117 9.84194 6.86888 9.56048 7.5484C9.27902 8.22791 8.80237 8.8087 8.19083 9.21732C7.57928 9.62594 6.8603 9.84404 6.1248 9.84404C5.13884 9.84303 4.19355 9.45091 3.49637 8.75373C2.79919 8.05654 2.40707 7.11125 2.40605 6.12529Z" fill="#4A464E"/>
