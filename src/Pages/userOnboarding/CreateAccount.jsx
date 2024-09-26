@@ -10,7 +10,7 @@ import { useFetch } from "@/components/hooks/useFetch";
 import { createAccountValidation } from "./FormValidation";
 
 import google from "../../assets/images/google.svg";
-import signup from "../../assets/images/signup.svg";
+import signup from "../../assets/images/signup.png";
 
 
 export default function CreateAccount() {
