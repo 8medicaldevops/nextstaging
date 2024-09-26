@@ -137,6 +137,7 @@ export default function ConfirmOrder() {
             },
             country: "NG",
             transactionReference: reference.reference,
+            orderId: invId || "",
         };
 
         try {
@@ -208,20 +209,58 @@ export default function ConfirmOrder() {
                 noOfMedic: storedAmbulanceData.medicsCount,
             },
             country: "NG",
+            orderId: invId || "",
 
         };
+
+        const patchData = {
+            
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+                eventDetails: {
+                    eventLocationName: storedEventData.venueName,
+                    eventAddress: storedEventData.venueAddress,
+                    estimatedNumberOfGuests: storedEventData.guests,
+                    eventType: storedEventData.eventType,
+                    description: storedEventData.description,
+                },
+                scheduleEvent: {
+                    startDate: formattedBackendStartDate,
+                    endDate: formattedBackendEndDate,
+                    startTime: storedScheduleData.startTime,
+                    endTime: storedScheduleData.endTime,
+                }
+              
+        }
+        const requestData = invId ? patchData : data;
         try {
-            const response = await axios.post(
-                iaFlag !== "ADMIN" ? 
-                import.meta.env.VITE_GENERATE_INVOICE 
-                : 
-                import.meta.env.VITE_GENERATE_PAYMENT_LINK, 
-                data,
-                {
-                    headers: {
-                      Authorization: `Bearer ${token}`, 
-                    },
-                  }
+            const apiUrl = iaFlag !== "ADMIN" 
+            ? import.meta.env.VITE_GENERATE_INVOICE 
+            : (
+                invId 
+                ? `${import.meta.env.VITE_ORDER_API}${invId}` 
+                : import.meta.env.VITE_GENERATE_PAYMENT_LINK
+              );
+    
+        const method = iaFlag === "ADMIN" && invId ? 'patch' : 'post'; // Choose 'patch' if admin and invId available, otherwise 'post'
+    
+        const response = await axios[method](
+            apiUrl, 
+            requestData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, 
+                },
+            }
             );
             //console.log("Response:", response.data);
             
@@ -259,16 +298,55 @@ export default function ConfirmOrder() {
                 noOfMedic: storedAmbulanceData.medicsCount,
             },
             country: "NG",
+            orderId: invId || "",
             
         };
+        const patchData = {
+            
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+                eventDetails: {
+                    eventLocationName: storedEventData.venueName,
+                    eventAddress: storedEventData.venueAddress,
+                    estimatedNumberOfGuests: storedEventData.guests,
+                    eventType: storedEventData.eventType,
+                    description: storedEventData.description,
+                },
+                scheduleEvent: {
+                    startDate: formattedBackendStartDate,
+                    endDate: formattedBackendEndDate,
+                    startTime: storedScheduleData.startTime,
+                    endTime: storedScheduleData.endTime,
+                }
+              
+        }
+        const requestData = invId ? patchData : data;
 
         try {
-            const response = await axios.post(import.meta.env.VITE_GENERATE_PAYMENT_LINK, data,
-                {
-                    headers: {
-                      Authorization: `Bearer ${token}`, 
-                    },
-                  }
+            const apiUrl = invId 
+            ? `${import.meta.env.VITE_ORDER_API}${invId}` 
+            : import.meta.env.VITE_GENERATE_PAYMENT_LINK;
+
+        const method = invId ? 'patch' : 'post'; // Use PATCH if invId is available, otherwise POST
+
+        const response = await axios[method](
+            apiUrl, 
+            requestData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, 
+                },
+            }
+    
             );
             console.log("Response:", response.data);
             setCheckoutLink(response.data.data.paymentLink);
