@@ -1,24 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
-import { useGoogleLogin } from '@react-oauth/google'; //GoogleLogin, 
+import { useGoogleLogin } from '@react-oauth/google'; //GoogleLogin,
+import axios from 'axios';
 
-import  {useFetch} from "@/components/hooks/useFetch.jsx";
+//import { useToasts } from 'react-toast-notifications';
+
+import { useFetch } from "@/components/hooks/useFetch.jsx";
 
 import NavBar from "../../components/NavBar";
 
 import google from "../../assets/images/google.svg";
-import signin from "../../assets/images/signin.svg";
+import signin from "../../assets/images/signin.png";
 import { signInValidation } from "./FormValidation";
 
 
 export default function SignIn() {
-
-
+    let navigate = useNavigate();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
+    const { fetchUserDataAndRoute, isPending } = useFetch(import.meta.env.VITE_USER_LOGIN,);
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
         identifier: '',
@@ -37,20 +40,23 @@ export default function SignIn() {
         setIsPasswordVisible(!isPasswordVisible);
     }
 
-
     const googleLogin = useGoogleLogin({
+        onSuccess: (codeResponse) => {
+            axios
+                .post(import.meta.env.VITE_USER_LOGIN_GOOGLE, { "token": `${codeResponse.access_token}` },
+                )
+                .then((res) => {
+                    sessionStorage.setItem('SignInGoogle', JSON.stringify(res.data));
+                    navigate("/")
+                })
+                .catch((err) => console.log(err));
+        },
+        onError: (error) => { console.log(error) }
+    })
 
-        onSuccess: (codeResponse) => console.log("success"),
-        onError: (error) => console.log('Login Failed'),
-    });
-
-    const {fetchUserDataAndRoute, isPending} = useFetch(import.meta.env.VITE_USER_LOGIN,);
-
-    function signUserIn(){
+    function signUserIn() {
         fetchUserDataAndRoute(values, '/');
     }
-
-
 
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
@@ -59,7 +65,6 @@ export default function SignIn() {
             signUserIn();
         }
     })
-
 
     return (
         <div>
