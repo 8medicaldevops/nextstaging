@@ -22,6 +22,7 @@ const { response, error, loading, patchData } = usePatchData(import.meta.env.VIT
         const id = props.id;
         const patchObject = {
             missionStatus: value,
+            orderStatus: value
         };
         patchData(id, patchObject);
     };
@@ -30,14 +31,24 @@ const { response, error, loading, patchData } = usePatchData(import.meta.env.VIT
         switch (selectedValue) {
           case "PENDING":
             return (
-                <div className="bg-[#FEF0E6] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
+                <div className="bg-[#864df1] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
                 <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <p className="text-sm font-brmedium text-[#F96D09]">Upcoming</p>
+                <p className="text-sm font-brmedium text-[#FAFAFA]">Pending</p>
                 </div>
             );
+            case "ASSIGNED":
+              return (
+                  <div className="bg-[#FEF0E6] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
+                  <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <p className="text-sm font-brmedium text-[#F96D09]">Upcoming</p>
+                  </div>
+              );
           case "COMPLETED":
             return (
                 <div className="bg-[#ECFBF2] w-[120px]  gap-2 flex items-center p-2 rounded">
@@ -79,6 +90,15 @@ const { response, error, loading, patchData } = usePatchData(import.meta.env.VIT
         </SelectTrigger>
         <SelectContent className=" bg-white flex flex-col gap-0 m-0 p-0 rounded-mm " >
             <SelectItem  value="PENDING" >
+                <div className="bg-[#864df1] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <p className="text-sm font-brmedium text-[#FAFAFA]">Pending</p>
+            </div>
+            </SelectItem>
+            <SelectItem  value="ASSIGNED" >
                 <div className="bg-[#FEF0E6] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>

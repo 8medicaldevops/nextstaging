@@ -31,6 +31,7 @@ export default function OrderHistory () {
     const [pendingPagination, setPendingPagination] = useState({ totalPages: 1, totalDocs: 0, hasNextPage: false, hasPrevPage: false });
     const [upcomingPagination, setUpcomingPagination] = useState({ totalPages: 1, totalDocs: 0, hasNextPage: false, hasPrevPage: false });
     const [completedPagination, setCompletedPagination] = useState({ totalPages: 1, totalDocs: 0, hasNextPage: false, hasPrevPage: false });
+    const [totalPendingOrdersAdmin, setTotalPendingOrdersAdmin] = useState('')
     const [loading, setLoading] = useState(false)
     const [itemsPerPage] = useState(12); // Fixed number of items per page
     const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
@@ -38,6 +39,7 @@ export default function OrderHistory () {
     const decodedToken = token? jwtDecode(token) : '';
     const iaFlag = decodedToken?.userType ;
     const totalOrders = pendingPagination.totalDocs + upcomingPagination.totalDocs + completedPagination.totalDocs;
+    console.log(totalPendingOrdersAdmin)
 
     const handleCategoryClick = (category) => {
       setActiveCategory(category);
@@ -149,6 +151,7 @@ export default function OrderHistory () {
                     // Check if response.data is valid before setting admin pending orders
                     if (response.data && response.data.data && response.data.data.docs) {
                         setAdminPendingOrders(response.data.data.docs);
+                        setTotalPendingOrdersAdmin(response.data.data.statuses.orderStatusCounts.PENDING);
                         setAdminPagination({
                             totalPages: response.data.data.totalPages,
                             hasNextPage: response.data.data.hasNextPage,
@@ -157,6 +160,7 @@ export default function OrderHistory () {
                        
                     } else {
                         setAdminPendingOrders([]); // Set to an empty array if response.data doesn't exist
+                        setTotalPendingOrdersAdmin(0);
                         setAdminPagination({totalPages: 1, hasNextPage: false, hasPrevPage: false })
                         
                     }
@@ -365,7 +369,7 @@ export default function OrderHistory () {
                         (pendingOrders.slice(0, 6).map((order, index) =>(
                             <OrderBox 
                             key={index}
-                            id={order.invoiceId}
+                            id={order.id}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -498,7 +502,7 @@ export default function OrderHistory () {
                 (pendingOrders.map((order, index) =>(
                             <OrderBox 
                             key={index}
-                            id={order._id}
+                            id={order.id}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -804,10 +808,12 @@ export default function OrderHistory () {
                 {/* <p className="font-brbold text-[28px] text-[#0A0116]">Pending Orders</p> */}
                 {
             <div className="flex justify-start gap-6 flex-wrap ">
-                        {adminPendningOrders.map((order, index) =>(
+                        {adminPendningOrders
+                        .filter(order => order.orderStatus === "PENDING")
+                        .map((order, index) =>(
                             <OrderBox 
                             key={index}
-                            id={order.invoiceId}
+                            id={order._id}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -888,12 +894,20 @@ export default function OrderHistory () {
             btn={false}/>
         </section>
         }
-        {iaFlag == 'ADMIN' && searchTerm && adminPendningOrders.length == 0 &&
+        {iaFlag == 'ADMIN' && searchTerm && totalPendingOrdersAdmin == 0 &&
         <section className="flex items-center justify-center h-dvh">
             <NoBooking 
-            header={'No Results Found!'} 
+            header={'No Results!'} 
             text={''} 
             btn={false}/>
+        </section>
+        }
+        {iaFlag == 'ADMIN'  && totalPendingOrdersAdmin == 0 &&
+        <section className="flex items-center justify-center h-dvh">
+            <NoBooking 
+            header={'No Pending Orders!'} 
+            text={''} 
+            btn={true}/>
         </section>
         }
         </div>

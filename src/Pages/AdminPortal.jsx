@@ -46,7 +46,9 @@ export default function AdminPortal() {
         nextPage,
         prevPage,
         searchTerm,
-        setSearchTerm
+        setSearchTerm,
+        setFilteredDate,
+        setFilteredStatus
      } = useFetchAndStoreData(
             import.meta.env.VITE_ORDER_API,
             'tabledata',
@@ -288,7 +290,9 @@ export default function AdminPortal() {
                                     nextPage={nextPage}
                                     prevPage={prevPage}
                                     searchTerm={searchTerm}
-                                    setSearchTerm={setSearchTerm} />
+                                    setSearchTerm={setSearchTerm}
+                                    setFilteredDate={setFilteredDate}
+                                    setFilteredStatus={setFilteredStatus} />
                             </span>
                         </section>
                     </div>

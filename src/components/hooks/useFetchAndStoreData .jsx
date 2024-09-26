@@ -16,6 +16,12 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
   const [itemsPerPage] = useState(30)
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [filteredDate, setFilteredDate] = useState({
+    from:"",
+    to:""
+  });
+  console.log(filteredDate.from)
+  const [filteredStatus, setFilteredStatus] = useState("");
   const getStoredToken = () => {
     const storedTokenData = localStorage.getItem('token');
     return storedTokenData ? JSON.parse(storedTokenData) : null;
@@ -36,7 +42,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
   useEffect(() => {
     const handler = setTimeout(() => {
         setCurrentPage(1);
-        setDebouncedSearchTerm(searchTerm); // Set debounced search term if input is 3+ characters
+        setDebouncedSearchTerm(searchTerm); // Set debounced search term if input is 3+ characters  
     }, 500); // 500ms delay (you can adjust this)
 
     // Cleanup the timeout if searchTerm changes (user keeps typing)
@@ -53,9 +59,24 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
       clearStorageAndRedirect();
       return;
     }
-    setIsLoading(true);
+    const params = {
+      search: debouncedSearchTerm,
+      page: validPage,
+      limit: itemsPerPage,
+      orderStatus: filteredStatus , 
+      from: filteredDate.from,     
+      to: filteredDate.to             
+    };
+    
+    
+    // Remove undefined or empty values
+    const filteredParams = Object.fromEntries(
+        Object.entries(params).filter(([_, value]) => value !== undefined && value !== '')
+    );
+    const queryString = new URLSearchParams(filteredParams).toString();
+      setIsLoading(true);
     try {
-      const response = await axios.get(`${url}?search=${debouncedSearchTerm}&page=${validPage}&limit=${itemsPerPage}`, {
+      const response = await axios.get(`${url}?${queryString}}`, {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },
@@ -139,7 +160,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     } else {
       clearStorageAndRedirect();
     }
-  }, [url, storageKey, accessToken, interval, currentPage, debouncedSearchTerm]);
+  }, [url, storageKey, accessToken, interval, currentPage, debouncedSearchTerm , filteredDate, filteredStatus]);
 
   const goToPage = (page) => {
     if (page > 0 && page <= totalPages) {
@@ -173,7 +194,9 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     nextPage,
     prevPage,
     searchTerm,
-    setSearchTerm
+    setSearchTerm,
+    setFilteredStatus,
+    setFilteredDate
   };
   
 };

@@ -140,6 +140,16 @@ export default function BookingDetails (props) {
   const renderContent = () => {
     switch (bookingData.missionStatus) {
       case "PENDING":
+            return (
+                <div className="bg-[#864df1] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
+                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <p className="text-sm font-brmedium text-[#FAFAFA]">Pending</p>
+                </div>
+            );
+      case "ASSIGNED":
         return (
             <div className="bg-[#FEF0E6] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -292,7 +302,7 @@ export default function BookingDetails (props) {
                   <section className="flex flex-col gap-4">
                     <span className="flex justify-between items-center">
                         <p className="font-brsemi text-lg text-ev-950">Number of Ambulance and Medics</p>
-                        {import.meta.env.VITE_EDIT_ORDER === 'enabled' &&
+                        {import.meta.env.VITE_EDIT_ORDER === 'enabled' && bookingData.missionStatus == 'PENDING' &&
                           <span onClick={()=>setEditAmbulanceDetails(true)} className="flex cursor-pointer items-center gap-1 font-brsemi text-sm text-[#6D09F9]">
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M14.3838 4.40844L11.5913 1.61532C11.4752 1.49919 11.3374 1.40707 11.1857 1.34422C11.034 1.28137 10.8714 1.24902 10.7072 1.24902C10.543 1.24902 10.3804 1.28137 10.2287 1.34422C10.077 1.40707 9.93921 1.49919 9.82313 1.61532L2.11626 9.32282C1.99976 9.43855 1.90739 9.57627 1.84452 9.72797C1.78165 9.87968 1.74953 10.0424 1.75001 10.2066V12.9997C1.75001 13.3312 1.8817 13.6492 2.11612 13.8836C2.35054 14.118 2.66848 14.2497 3.00001 14.2497H5.79313C5.95734 14.2501 6.12001 14.218 6.27171 14.1551C6.42341 14.0923 6.56112 13.9999 6.67688 13.8834L14.3838 6.17594C14.6181 5.94153 14.7497 5.62365 14.7497 5.29219C14.7497 4.96074 14.6181 4.64285 14.3838 4.40844ZM5.81251 11.2497L10.25 6.81219L10.9375 7.49969L6.50001 11.9372L5.81251 11.2497ZM4.75001 10.1872L4.06251 9.49969L8.50001 5.06219L9.18751 5.74969L4.75001 10.1872ZM3.25001 10.8122L4.21938 11.7816L5.18751 12.7497H3.25001V10.8122ZM12 6.43719L9.56251 3.99969L10.7088 2.85344L13.1463 5.29094L12 6.43719Z" fill="#6D09F9"/>

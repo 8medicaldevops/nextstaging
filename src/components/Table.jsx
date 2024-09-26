@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -34,6 +34,27 @@ import {
 import Status from "./Status";
 import BookingDetails from "./BookingDetails";
 import { Skeleton } from "./ui/skeleton";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+//import * as React from "react"
+import { addDays, format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+//import { DateRange } from "react-day-picker"
+import { cn } from "@/lib/utils"
+// import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+
 
 
  
@@ -222,6 +243,9 @@ export function DataTableDemo({data,
   prevPage,
   searchTerm,
   setSearchTerm,
+  setFilteredDate,
+  setFilteredStatus,
+  className
 }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -229,14 +253,20 @@ export function DataTableDemo({data,
   const [rowSelection, setRowSelection] = useState({});
   const [viewBooking, setViewBooking] = useState(false);
   const [bookingId, setBookingId] = useState('')
+  const [date, setDate] = useState({
+    from: null,
+    to: null,
+  }); // Initially no date selected
+  const [selectedStatus, setSelectedStatus] = useState('');
   // const [isLoading,setLoading] = useState(false);
   //const [tableSize] = useState(30)
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 30,
   })
+  const fromDate = date?.from || null;
+  const toDate = date?.to || null;
   
- 
 
   const table = useReactTable({
     data,
@@ -275,6 +305,33 @@ export function DataTableDemo({data,
     );
   }
 
+  const handleSelectChange = (value) => {
+    setSelectedStatus(value);
+    setFilteredStatus(value)
+  };
+  const handleDateChange = (range) => {
+   setDate(range)
+  };
+
+  const handleClearFilter = () => {
+    setSelectedStatus('');
+    setDate('')
+    setFilteredStatus('')
+    setFilteredDate({
+      fromDate:'',
+      toDate:''
+    })
+  }
+ 
+
+ useEffect(() => {
+  if (date.from && date.to) {
+      setFilteredDate({
+          from: date.from,
+          to: date.to,
+      });
+  }
+}, [date]);
 
   return (
     <div className="w-full">
@@ -301,6 +358,8 @@ export function DataTableDemo({data,
 
                     </div>
                     <div className="flex items-center gap-1">
+                    <Popover>
+                    <PopoverTrigger>
                     <div className="flex items-center gap-1 cursor-pointer">
                         <p className="font-brmedium text-sm text-[#1F1D21]">Filter</p>
                         
@@ -314,6 +373,74 @@ export function DataTableDemo({data,
                         </svg>
 
                         </div>
+                    </PopoverTrigger >
+                    <PopoverContent className="bg-white w-full h-full flex flex-col gap-2 rounded-3xl outline-none border-none">
+                      <p className="font-brsemi text-lg ">Filters</p>
+                      <span className="flex items-center gap-2 h-full w-full justify-between">
+                      <div className={cn("grid px-0 gap-2", className)}>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            id="date"
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-brreg text-sm bg-[#F4F2F5] px-2 py-1 h-full border-none rounded-[33px]",
+                              !date && "text-muted-foreground" // Styling if no date is selected
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {fromDate ? (
+                              toDate ? (
+                                <>
+                                  {format(fromDate, "LLL dd, y")} - {format(toDate, "LLL dd, y")}
+                                </>
+                              ) : (
+                                format(fromDate, "LLL dd, y")
+                              )
+                            ) : (
+                              <span>standby date</span> // Placeholder if no date is selected
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto bg-white p-0" align="start">
+                          <Calendar
+                            initialFocus
+                            mode="range"
+                            defaultMonth={fromDate || new Date()} // Defaults to current month if no date selected
+                            selected={date}
+                            onSelect={handleDateChange}
+                            numberOfMonths={2}
+                          />
+                        </PopoverContent>
+                      </Popover>
+
+                    </div>
+                        <Select onValueChange={handleSelectChange} value={selectedStatus}>
+                        <SelectTrigger className="w-full font-brreg text-sm bg-[#F4F2F5] px-2 py-1 h-full border-none rounded-[33px]">
+                          <SelectValue placeholder="status" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white text-sm font-brreg">
+                          <SelectItem value="PENDING">Pending</SelectItem>
+                          <SelectItem value="UP_COMING">Upcoming</SelectItem>
+                          <SelectItem value="COMPLETED">Completed</SelectItem>
+                          <SelectItem value="CANCELED">Cancelled</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      </span>
+                      <span className="flex justify-end">
+                      {(selectedStatus  || date.from  || date.to ) && (
+                      <button 
+                        onClick={handleClearFilter} 
+                        className="font-brreg text-white bg-red-500 text-sm px-3 py-2 border-none rounded-mm"
+                      >
+                        Clear Filter
+                      </button>
+                    )}
+                      </span>
+                    </PopoverContent>
+                  </Popover>
+
+                  
                         <div className="bg-[#F5F4F6] flex items-center rounded-mm gap-1 py-1 px-2">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.7141 11.786L10.117 9.18779C10.8957 8.17305 11.2592 6.9001 11.1339 5.62717C11.0086 4.35423 10.4037 3.17663 9.44206 2.33325C8.48041 1.48987 7.23395 1.04387 5.95555 1.08571C4.67714 1.12755 3.46252 1.6541 2.55806 2.55855C1.65361 3.463 1.12706 4.67763 1.08522 5.95604C1.04338 7.23444 1.48939 8.4809 2.33277 9.44255C3.17615 10.4042 4.35374 11.0091 5.62668 11.1344C6.89961 11.2597 8.17256 10.8962 9.1873 10.1175L11.7866 12.7173C11.8476 12.7784 11.9201 12.8268 11.9999 12.8598C12.0796 12.8929 12.1651 12.9099 12.2514 12.9099C12.3378 12.9099 12.4233 12.8929 12.503 12.8598C12.5828 12.8268 12.6552 12.7784 12.7163 12.7173C12.7773 12.6563 12.8258 12.5838 12.8588 12.5041C12.8918 12.4243 12.9088 12.3388 12.9088 12.2525C12.9088 12.1661 12.8918 12.0807 12.8588 12.0009C12.8258 11.9211 12.7773 11.8487 12.7163 11.7876L12.7141 11.786ZM2.40605 6.12529C2.40605 5.38979 2.62415 4.67081 3.03278 4.05926C3.4414 3.44772 4.02219 2.97108 4.7017 2.68961C5.38121 2.40815 6.12893 2.33451 6.8503 2.478C7.57166 2.62148 8.23428 2.97566 8.75436 3.49574C9.27443 4.01581 9.62861 4.67843 9.7721 5.3998C9.91559 6.12117 9.84194 6.86888 9.56048 7.5484C9.27902 8.22791 8.80237 8.8087 8.19083 9.21732C7.57928 9.62594 6.8603 9.84404 6.1248 9.84404C5.13884 9.84303 4.19355 9.45091 3.49637 8.75373C2.79919 8.05654 2.40707 7.11125 2.40605 6.12529Z" fill="#4A464E"/>
@@ -419,3 +546,5 @@ export function DataTableDemo({data,
     </div>
   );
 }
+
+
