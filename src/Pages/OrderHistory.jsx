@@ -12,6 +12,7 @@ import {
   } from "@/components/ui/select"
 import NoBooking from "@/components/NoBooking";
 import { Skeleton } from "@/components/ui/skeleton"
+import { Section } from "lucide-react";
 
   
 
@@ -21,7 +22,6 @@ export default function OrderHistory () {
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const [activeCategory, setActiveCategory] = useState("All");
-    const [boxData, setBoxData] = useState([]);
     const [pendingOrders, setPendingOrders] = useState([]);
     const [upcomingOrders, setUpcomingOrders] = useState([]);
     const [completedOrders, setCompletedOrders] = useState([]);
@@ -32,22 +32,16 @@ export default function OrderHistory () {
     const [upcomingPagination, setUpcomingPagination] = useState({ totalPages: 1, totalDocs: 0, hasNextPage: false, hasPrevPage: false });
     const [completedPagination, setCompletedPagination] = useState({ totalPages: 1, totalDocs: 0, hasNextPage: false, hasPrevPage: false });
     const [loading, setLoading] = useState(false)
-    let [color, setColor] = useState("#6D09F9");
     const [itemsPerPage] = useState(12); // Fixed number of items per page
     const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
     const token = signInData?.data?.tokens?.accessToken || '';
     const decodedToken = token? jwtDecode(token) : '';
     const iaFlag = decodedToken?.userType ;
     const totalOrders = pendingPagination.totalDocs + upcomingPagination.totalDocs + completedPagination.totalDocs;
-    //console.log(adminPendningOrders)
 
     const handleCategoryClick = (category) => {
       setActiveCategory(category);
     };
-
-    // const handleInputChange = (event) => {
-    //     setSearchTerm(event.target.value);
-    //   };
 
      // Helper function to generate page numbers with ellipses
     const generatePageNumbers = (currentPage, totalPages) => {
@@ -82,6 +76,7 @@ export default function OrderHistory () {
         // Implementing debounce logic for the search term
         useEffect(() => {
             const handler = setTimeout(() => {
+                setCurrentPage(1);
                 setDebouncedSearchTerm(searchTerm); // Set debounced search term if input is 3+ characters
             }, 500); // 500ms delay (you can adjust this)
 
@@ -106,14 +101,10 @@ export default function OrderHistory () {
                     },
                     });
                     
-                    // Handle the response
-                    //console.log('Orders fetched successfully:', response.data);
-                    setBoxData(response.data || []);
-                    // setPendingOrders(response.data.data.PENDING.orders || []);
-                    // setUpcomingOrders(response.data.data.UP_COMING.orders || []);
-                    // setCompletedOrders(response.data.data.COMPLETED.orders || []);
-                    // setAdminPendingOrders(response.data);
-                    const { PENDING, UP_COMING, COMPLETED } = response.data.data;
+                    const data = response?.data?.data?.data;
+                    const PENDING = data?.PENDING || null;
+                    const UP_COMING = data?.UP_COMING || null;
+                    const COMPLETED = data?.COMPLETED || null;
 
                     if (PENDING && PENDING.orders) {
                         setPendingOrders(PENDING.orders);
@@ -123,6 +114,7 @@ export default function OrderHistory () {
                             hasPrevPage: PENDING.hasPrevPage,
                             totalDocs: PENDING.total
                         });
+                        
                     } else {
                         setPendingOrders([]); // Set to empty array if PENDING orders don't exist
                         setPendingPagination({ totalPages: 1, hasNextPage: false, hasPrevPage: false });
@@ -155,19 +147,22 @@ export default function OrderHistory () {
                     }
 
                     // Check if response.data is valid before setting admin pending orders
-                    if (response.data) {
+                    if (response.data && response.data.data && response.data.data.docs) {
                         setAdminPendingOrders(response.data.data.docs);
                         setAdminPagination({
                             totalPages: response.data.data.totalPages,
                             hasNextPage: response.data.data.hasNextPage,
                             hasPrevPage: response.data.data.hasPrevPage,
                         })
+                       
                     } else {
                         setAdminPendingOrders([]); // Set to an empty array if response.data doesn't exist
                         setAdminPagination({totalPages: 1, hasNextPage: false, hasPrevPage: false })
+                        
                     }
-
+                    
                     return response.data; // Return the order data
+                    
                 } catch (error) {
                     //console.error('Error fetching orders:', error);
                     // Handle the error (e.g., display a message to the user)
@@ -179,7 +174,7 @@ export default function OrderHistory () {
                 // Call the function to fetch orders
                     fetchOrders();
                
-        },[token, currentPage, debouncedSearchTerm])
+        },[token, currentPage, debouncedSearchTerm, activeCategory])
 
         const pendingPageNumbers = generatePageNumbers(currentPage, pendingPagination.totalPages);
         const upcomingPageNumbers = generatePageNumbers(currentPage, upcomingPagination.totalPages);
@@ -223,20 +218,20 @@ export default function OrderHistory () {
                 <section className="flex flex-col gap-4 ">
                     <span className="flex justify-between items-center max-md:flex-col max-md:gap-2 ">
                         <div className="flex items-center gap-1 max-[500px]:w-full">
-                        <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                         <rect width="56" height="56" rx="9.33333" fill="#F4F1FF"/>
-                        <g clip-path="url(#clip0_2890_26796)">
+                        <g clipPath="url(#clip0_2890_26796)">
                         <path d="M45.7717 26.583L39.498 19.2733C39.2911 19.0261 39.0325 18.8274 38.7404 18.691C38.4484 18.5546 38.13 18.4839 37.8076 18.4839H15.1788C14.5942 18.4839 14.0336 18.7162 13.6202 19.1295C13.2068 19.5429 12.9746 20.1035 12.9746 20.6881V36.1175C12.9746 36.7021 13.2068 37.2627 13.6202 37.6761C14.0336 38.0895 14.5942 38.3217 15.1788 38.3217H17.5208C17.7636 39.2699 18.315 40.1104 19.0883 40.7106C19.8615 41.3108 20.8125 41.6366 21.7914 41.6366C22.7702 41.6366 23.7213 41.3108 24.4945 40.7106C25.2677 40.1104 25.8192 39.2699 26.062 38.3217H32.9501C33.1929 39.2699 33.7444 40.1104 34.5177 40.7106C35.2909 41.3108 36.2419 41.6366 37.2208 41.6366C38.1996 41.6366 39.1506 41.3108 39.9239 40.7106C40.6971 40.1104 41.2486 39.2699 41.4914 38.3217H43.8333C44.4179 38.3217 44.9786 38.0895 45.3919 37.6761C45.8053 37.2627 46.0375 36.7021 46.0375 36.1175V27.3007C46.0375 27.0374 45.9432 26.7828 45.7717 26.583ZM15.1788 26.1986V20.6881H22.8935V26.1986H15.1788ZM21.7914 39.4238C21.3554 39.4238 20.9293 39.2945 20.5668 39.0523C20.2043 38.8101 19.9218 38.4659 19.755 38.0631C19.5881 37.6603 19.5445 37.2171 19.6295 36.7896C19.7146 36.362 19.9245 35.9692 20.2328 35.661C20.5411 35.3527 20.9338 35.1428 21.3614 35.0577C21.7889 34.9727 22.2321 35.0163 22.6349 35.1832C23.0377 35.35 23.3819 35.6325 23.6241 35.995C23.8663 36.3575 23.9956 36.7836 23.9956 37.2196C23.9956 37.8042 23.7634 38.3648 23.35 38.7782C22.9366 39.1916 22.376 39.4238 21.7914 39.4238ZM32.8124 26.1986H25.0977V20.6881H32.8124V26.1986ZM37.2208 39.4238C36.7848 39.4238 36.3587 39.2945 35.9962 39.0523C35.6337 38.8101 35.3512 38.4659 35.1843 38.0631C35.0175 37.6603 34.9739 37.2171 35.0589 36.7896C35.144 36.362 35.3539 35.9692 35.6622 35.661C35.9704 35.3527 36.3632 35.1428 36.7907 35.0577C37.2183 34.9727 37.6615 35.0163 38.0643 35.1832C38.467 35.35 38.8113 35.6325 39.0535 35.995C39.2957 36.3575 39.425 36.7836 39.425 37.2196C39.425 37.8042 39.1927 38.3648 38.7794 38.7782C38.366 39.1916 37.8053 39.4238 37.2208 39.4238ZM35.0166 26.1986V20.6881H37.8076L42.537 26.1986H35.0166Z" fill="#6D09F9"/>
                         <path d="M45.7717 26.583L39.498 19.2733C39.2911 19.0261 39.0325 18.8274 38.7404 18.691C38.4484 18.5546 38.13 18.4839 37.8076 18.4839H15.1788C14.5942 18.4839 14.0336 18.7162 13.6202 19.1295C13.2068 19.5429 12.9746 20.1035 12.9746 20.6881V36.1175C12.9746 36.7021 13.2068 37.2627 13.6202 37.6761C14.0336 38.0895 14.5942 38.3217 15.1788 38.3217H17.5208C17.7636 39.2699 18.315 40.1104 19.0883 40.7106C19.8615 41.3108 20.8125 41.6366 21.7914 41.6366C22.7702 41.6366 23.7213 41.3108 24.4945 40.7106C25.2677 40.1104 25.8192 39.2699 26.062 38.3217H32.9501C33.1929 39.2699 33.7444 40.1104 34.5177 40.7106C35.2909 41.3108 36.2419 41.6366 37.2208 41.6366C38.1996 41.6366 39.1506 41.3108 39.9239 40.7106C40.6971 40.1104 41.2486 39.2699 41.4914 38.3217H43.8333C44.4179 38.3217 44.9786 38.0895 45.3919 37.6761C45.8053 37.2627 46.0375 36.7021 46.0375 36.1175V27.3007C46.0375 27.0374 45.9432 26.7828 45.7717 26.583ZM15.1788 26.1986V20.6881H22.8935V26.1986H15.1788ZM21.7914 39.4238C21.3554 39.4238 20.9293 39.2945 20.5668 39.0523C20.2043 38.8101 19.9218 38.4659 19.755 38.0631C19.5881 37.6603 19.5445 37.2171 19.6295 36.7896C19.7146 36.362 19.9245 35.9692 20.2328 35.661C20.5411 35.3527 20.9338 35.1428 21.3614 35.0577C21.7889 34.9727 22.2321 35.0163 22.6349 35.1832C23.0377 35.35 23.3819 35.6325 23.6241 35.995C23.8663 36.3575 23.9956 36.7836 23.9956 37.2196C23.9956 37.8042 23.7634 38.3648 23.35 38.7782C22.9366 39.1916 22.376 39.4238 21.7914 39.4238ZM32.8124 26.1986H25.0977V20.6881H32.8124V26.1986ZM37.2208 39.4238C36.7848 39.4238 36.3587 39.2945 35.9962 39.0523C35.6337 38.8101 35.3512 38.4659 35.1843 38.0631C35.0175 37.6603 34.9739 37.2171 35.0589 36.7896C35.144 36.362 35.3539 35.9692 35.6622 35.661C35.9704 35.3527 36.3632 35.1428 36.7907 35.0577C37.2183 34.9727 37.6615 35.0163 38.0643 35.1832C38.467 35.35 38.8113 35.6325 39.0535 35.995C39.2957 36.3575 39.425 36.7836 39.425 37.2196C39.425 37.8042 39.1927 38.3648 38.7794 38.7782C38.366 39.1916 37.8053 39.4238 37.2208 39.4238ZM35.0166 26.1986V20.6881H37.8076L42.537 26.1986H35.0166Z" fill="url(#pattern0_2890_26796)"/>
                         </g>
                         <defs>
                         <pattern id="pattern0_2890_26796" patternContentUnits="objectBoundingBox" width="5.92593" height="1.52324">
-                        <use xlink:href="#image0_2890_26796" transform="scale(0.0296296 0.0423122)"/>
+                        <use xlinkHref="#image0_2890_26796" transform="scale(0.0296296 0.0423122)"/>
                         </pattern>
                         <clipPath id="clip0_2890_26796">
                         <rect width="35.2671" height="35.2671" fill="white" transform="translate(10.7695 10.7692)"/>
                         </clipPath>
-                        <image id="image0_2890_26796" width="200" height="36" xlink:href="data:image/png;base64,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"/>
+                        <image id="image0_2890_26796" width="200" height="36" xlinkHref="data:image/png;base64,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"/>
                         </defs>
                         </svg>
                         <p className="font-brbold text-[32px] text-[#1F1D21] max-md:text-2xl">Standby Bookings</p>
@@ -257,7 +252,7 @@ export default function OrderHistory () {
                         </div>
                     </span>
                
-                    {iaFlag !== 'ADMIN' && !searchTerm &&
+                    {iaFlag !== 'ADMIN' &&  !searchTerm &&
                     <span className="flex justify-between gap-2 max-md:flex-col">
                         <div className="w-full bg-ev-50 rounded-xl border border-[#ECE5FF] py-4 px-5">
                             <span className="flex justify-between items-center">
@@ -352,16 +347,25 @@ export default function OrderHistory () {
                     </div>
                 </section>}
                 {/* Display for All categories */}
-                {!searchTerm && activeCategory === "All" && totalOrders > 0 && (
+                {activeCategory === "All" && totalOrders > 0 && (
                 <>
                 {pendingOrders.length > 0 &&
                 <section className="flex flex-col gap-2">
                     <p className="font-brbold text-[28px] text-[#0A0116]">Pending Bookings</p>
                     <div className="flex justify-start gap-6 flex-wrap">
-                        {pendingOrders.slice(0, 6).map(order =>(
+                    {loading ?
+                    <div> 
+                    <div className="flex justify-start gap-6 flex-wrap">
+                    {Array.from({ length: 3 }).map((_, index) => (
+                        <Skeleton key={index} className="w-[378.67px] h-[322px] bg-ev-100 rounded-xl" />
+                    ))}
+                    </div>
+                    </div>
+                    :
+                        (pendingOrders.slice(0, 6).map((order, index) =>(
                             <OrderBox 
-                            key={order._id}
-                            id={order._id}
+                            key={index}
+                            id={order.invoiceId}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -387,7 +391,8 @@ export default function OrderHistory () {
                             eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
                             iaFlag={iaFlag}
                             />
-                        ))}
+                        )))
+                       }
                     
                     </div>
                     { pendingOrders.length > 6 ?
@@ -402,9 +407,18 @@ export default function OrderHistory () {
                 <section className="flex flex-col gap-2">
                     <p className="font-brbold text-[28px] text-[#0A0116]">Upcoming Bookings</p>
                     <div className="flex justify-start  gap-6 flex-wrap ">
-                    {upcomingOrders.slice(0,6).map(order =>(
+                    {loading ?
+                    <div> 
+                    <div className="flex justify-start gap-6 flex-wrap">
+                    {Array.from({ length: 3 }).map((_, index) => (
+                        <Skeleton key={index} className="w-[378.67px] h-[322px] bg-ev-100 rounded-xl" />
+                    ))}
+                    </div>
+                    </div>
+                    :
+                    (upcomingOrders.slice(0,6).map((order, index) =>(
                             <OrderBox 
-                            key={order._id}
+                            key={index}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -416,7 +430,8 @@ export default function OrderHistory () {
                             smallAmbulanceCost={order.ambulances.smallAmbulance}
                             medicCost={order.medicCost}
                             />
-                        ))}
+                        )))
+                    }
                     </div>
                     { upcomingOrders.length > 6 ?
                         <p onClick={()=>handleCategoryClick('Upcoming Bookings')} className="flex justify-end px-7 py-4 cursor-pointer font-brsemi underline text-ev-700">View all</p>
@@ -429,9 +444,18 @@ export default function OrderHistory () {
                 <section className="flex flex-col gap-2">
                     <p className="font-brbold text-[28px] text-[#0A0116]">Completed Bookings</p>
                     <div className="flex justify-start  gap-6 flex-wrap ">
-                    {completedOrders.slice(0,6).map(order =>(
+                    {loading ?
+                    <div> 
+                    <div className="flex justify-start gap-6 flex-wrap">
+                    {Array.from({ length: 3 }).map((_, index) => (
+                        <Skeleton key={index} className="w-[378.67px] h-[322px] bg-ev-100 rounded-xl" />
+                    ))}
+                    </div>
+                    </div>
+                    :
+                    (completedOrders.slice(0,6).map((order, index) =>(
                             <OrderBox 
-                            key={order._id}
+                            key={index}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -443,7 +467,8 @@ export default function OrderHistory () {
                             smallAmbulanceCost={order.ambulances.smallAmbulance}
                             medicCost={order.medicCost}
                             />
-                        ))}
+                        )))
+                    }
                     </div>
                     {completedOrders.length > 6 ?
                         <p onClick={()=>handleCategoryClick('Completed Bookings')} className="flex justify-end px-7 py-4 cursor-pointer font-brsemi underline text-ev-700">View all</p>
@@ -457,7 +482,7 @@ export default function OrderHistory () {
             {/*End Code for Display for All categories */}
             {/* Render sections based on the active category */}
             {/* PENDING */}
-            {iaFlag !== 'ADMIN' && !searchTerm && activeCategory === "Pending Bookings" && (
+            {iaFlag !== 'ADMIN'  && activeCategory === "Pending Bookings" && (
                 <section className="flex flex-col gap-2">
                 <p className="font-brbold text-[28px] text-[#0A0116]">Pending Bookings</p>
                 <div className="flex justify-start  gap-6 flex-wrap ">
@@ -470,9 +495,9 @@ export default function OrderHistory () {
               </div>
               </div>
             :
-                (pendingOrders.map(order =>(
+                (pendingOrders.map((order, index) =>(
                             <OrderBox 
-                            key={order._id}
+                            key={index}
                             id={order._id}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
@@ -537,7 +562,7 @@ export default function OrderHistory () {
                 </svg>
             </button>
         </div>}
-        {pendingPagination.totalDocs == 0 &&
+        {pendingPagination.totalDocs == 0 && !loading && !searchTerm &&
         <div>
             <NoBooking
              header={'No Pending Bookings'} 
@@ -549,7 +574,7 @@ export default function OrderHistory () {
                 </section>
             )}
                 {/* UPCOMING */}
-            { iaFlag !== 'ADMIN' && !searchTerm && activeCategory === "Upcoming Bookings" && (
+            { iaFlag !== 'ADMIN'  && activeCategory === "Upcoming Bookings" && (
                 <section className="flex flex-col gap-2">
                 <p className="font-brbold text-[28px] text-[#0A0116]">Upcoming Bookings</p>
                 <div className="flex justify-start  gap-6 flex-wrap ">
@@ -562,9 +587,9 @@ export default function OrderHistory () {
               </div>
               </div>
             :
-                (upcomingOrders.map(order =>(
+                (upcomingOrders.map((order, index) =>(
                             <OrderBox 
-                            key={order._id}
+                            key={index}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -615,7 +640,7 @@ export default function OrderHistory () {
                 </svg>
             </button>
         </div>}
-        {upcomingPagination.totalDocs == 0 &&
+        {upcomingPagination.totalDocs == 0 && !loading &&
         <div>
             <NoBooking
              header={'No Upcoming Booking'} 
@@ -627,7 +652,7 @@ export default function OrderHistory () {
                 </section>
             )}
             {/* COMPLETED  */}
-            {iaFlag !== 'ADMIN' && !searchTerm && activeCategory === "Completed Bookings" && (
+            {iaFlag !== 'ADMIN' &&  activeCategory === "Completed Bookings" && (
                 <section className="flex flex-col gap-2">
                 <p className="font-brbold text-[28px] text-[#0A0116]">Completed Bookings</p>
                 <div className="flex justify-start  gap-6 flex-wrap ">
@@ -640,9 +665,9 @@ export default function OrderHistory () {
               </div>
               </div>
             :
-                (completedOrders.map(order =>(
+                (completedOrders.map((order, index) =>(
                             <OrderBox 
-                            key={order._id}
+                            key={index}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -693,7 +718,7 @@ export default function OrderHistory () {
                 </svg>
             </button>
         </div>}
-        {completedPagination.totalDocs == 0 &&
+        {completedPagination.totalDocs == 0 && !loading &&
         <div>
             <NoBooking 
             header={'No Completed Booking Yet!'} 
@@ -743,7 +768,7 @@ export default function OrderHistory () {
               </div>
               </div>
             </div>} */}
-            {iaFlag !== 'ADMIN' && totalOrders == 0 &&
+            {iaFlag !== 'ADMIN' && totalOrders == 0 && !searchTerm && !loading &&
             <section className="py-4">
                <NoBooking
                header={'No Booking Yet!'} 
@@ -752,7 +777,7 @@ export default function OrderHistory () {
                />
             </section>
             }
-             {iaFlag == 'ADMIN' && adminPendningOrders.lenght == 0 &&
+             {iaFlag == 'ADMIN' && adminPendningOrders.lenght == 0 && !loading &&
             <section className="py-4">
                <NoBooking
                 header={'No Booking Yet!'} 
@@ -766,7 +791,7 @@ export default function OrderHistory () {
             }
             {iaFlag === "ADMIN" &&
             
-            loading ?
+            (loading ?
             <div> 
             <div className="flex justify-start gap-6 flex-wrap">
             {Array.from({ length: 3 }).map((_, index) => (
@@ -779,9 +804,10 @@ export default function OrderHistory () {
                 {/* <p className="font-brbold text-[28px] text-[#0A0116]">Pending Orders</p> */}
                 {
             <div className="flex justify-start gap-6 flex-wrap ">
-                        {adminPendningOrders.map(order =>(
+                        {adminPendningOrders.map((order, index) =>(
                             <OrderBox 
-                            key={order._id}
+                            key={index}
+                            id={order.invoiceId}
                             eventLocationName={order.ambulances.eventLocationName}
                             startDate={order.ambulances.startDate}
                             startTime={order.ambulances.startTime}
@@ -811,6 +837,7 @@ export default function OrderHistory () {
                     </div>
                     }
                     </div>
+            )
                     }
             </div>
             {/* Pagination controls */}
@@ -852,6 +879,22 @@ export default function OrderHistory () {
             </button>
         </div>
         )
+        }
+        {searchTerm && totalOrders == 0 &&
+        <section className="flex items-center justify-center h-dvh">
+            <NoBooking 
+            header={'No Results Found!'} 
+            text={''} 
+            btn={false}/>
+        </section>
+        }
+        {iaFlag == 'ADMIN' && searchTerm && adminPendningOrders.length == 0 &&
+        <section className="flex items-center justify-center h-dvh">
+            <NoBooking 
+            header={'No Results Found!'} 
+            text={''} 
+            btn={false}/>
+        </section>
         }
         </div>
     )

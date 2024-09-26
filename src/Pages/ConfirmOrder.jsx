@@ -4,13 +4,12 @@ import { PaystackButton } from 'react-paystack';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect,  } from "react";
-//import ClipLoader from "react-spinners/ClipLoader";
 import { BeatLoader } from "react-spinners";
 import ReactGA from "react-ga4";
 import LinkPopup from "@/components/LinkPopup";
 import { jwtDecode } from "jwt-decode";
 import PaymentLinkModal from "@/components/PaymentLinkModal";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 
 
@@ -25,13 +24,12 @@ export default function ConfirmOrder() {
     const [token, setToken] = useState('')
 
     const storedCallerData = JSON.parse(localStorage.getItem('callerData'));
-    //console.log(storedCallerData);
     const storedEventData = JSON.parse(localStorage.getItem('eventData'));
-    //console.log(storedEventData);
     const storedScheduleData = JSON.parse(localStorage.getItem('schedule'));
-    //console.log(storedScheduleData);
     const storedAmbulanceData = JSON.parse(localStorage.getItem('ambulanceData'));
-    //console.log(storedAmbulanceData);
+    const invId = JSON.parse(localStorage.getItem('bookingid'));
+    //console.log(invId);
+   
     useEffect(() => {
         const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
     
@@ -104,11 +102,6 @@ export default function ConfirmOrder() {
         }
     }, [startDate, endDate, startTime, currentDate]);
 
-    const handleEditDate = () => {
-        // Logic for editing the date
-        console.log('Edit the date');
-        setShowPopup(false); // Close the popup after editing
-    };
 
     const config = {
         reference: (new Date()).getTime().toString(),
@@ -230,10 +223,10 @@ export default function ConfirmOrder() {
                     },
                   }
             );
-            console.log("Response:", response.data);
+            //console.log("Response:", response.data);
             
         } catch (error) {
-            console.error("You are not logged in:", error);
+            //console.error("You are not logged in:", error);
             //navigate("/BookingError");
         } finally {
             setLoading(false);
