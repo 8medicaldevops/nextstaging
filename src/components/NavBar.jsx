@@ -184,6 +184,7 @@ export default function NavBar() {
             >
             </button>
             <ul className='flex flex-col gap-6 font-light justify-center items-end px-8 font-brreg text-lg text-[#636066] mt-16'>
+
               {token !== "N/A" &&
                 <span className='flex flex-col items-end gap-6'>
                   <Link to="/CreateAccount">
@@ -208,6 +209,7 @@ export default function NavBar() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="bg-white rounded">
                           {/* <DropdownMenuItem>
+
                      <div>some future feature</div>
                           </DropdownMenuItem> */}
                           {/* <DropdownMenuSeparator />

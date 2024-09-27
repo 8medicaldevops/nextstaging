@@ -75,7 +75,7 @@ export default function LinkPopup(props) {
     }
   }, []);
 const handleButtonClick = () => {
-    console.log('clicked')   
+    //console.log('clicked')   
    
 }
 

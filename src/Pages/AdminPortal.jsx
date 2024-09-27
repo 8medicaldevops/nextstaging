@@ -15,7 +15,6 @@ import { Separator } from "@/components/ui/separator"
 
 
 export default function AdminPortal() {
-    const [adminData, setAdminData] = useState(JSON.parse(localStorage.getItem('admindata')));
     const accessToken = JSON.parse(localStorage.getItem('token'))?.accessToken;
 
     const clearStorageAndRedirect = () => {
@@ -45,7 +44,10 @@ export default function AdminPortal() {
         totalDocs,
         goToPage,
         nextPage,
-        prevPage } = useFetchAndStoreData(
+        prevPage,
+        searchTerm,
+        setSearchTerm
+     } = useFetchAndStoreData(
             import.meta.env.VITE_ORDER_API,
             'tabledata',
             accessToken
@@ -284,7 +286,9 @@ export default function AdminPortal() {
                                     totalPages={totalPages}
                                     goToPage={goToPage}
                                     nextPage={nextPage}
-                                    prevPage={prevPage} />
+                                    prevPage={prevPage}
+                                    searchTerm={searchTerm}
+                                    setSearchTerm={setSearchTerm} />
                             </span>
                         </section>
                     </div>
