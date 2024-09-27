@@ -1,21 +1,23 @@
 import NavBar from "../../components/NavBar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
-import { useGoogleLogin } from '@react-oauth/google'; //GoogleLogin, 
+import { GoogleLogin } from '@react-oauth/google'; 
+import { useToasts } from 'react-toast-notifications';
+import axios from 'axios';
 import { useFetch } from "@/components/hooks/useFetch";
 
 import { createAccountValidation } from "./FormValidation";
 
-import google from "../../assets/images/google.svg";
 import signup from "../../assets/images/signup.png";
 
 
 export default function CreateAccount() {
+    let navigate = useNavigate();
+    const { addToast } = useToasts();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
     const {fetchUserDataAndRoute, isPending} = useFetch(import.meta.env.VITE_USER_REGISTER);
 
 
@@ -27,6 +29,33 @@ export default function CreateAccount() {
         password: '',
         //termsAndConditions: false,
     });
+
+    const responseMessage = (response) => {
+        const userData = {
+            "token": `${response.credential}`,
+        }
+        axios
+            .post(import.meta.env.VITE_USER_CONTINUE_GOOGLE,
+                { ...userData },
+            )
+            .then((res) => {
+                sessionStorage.setItem('SignIn', JSON.stringify(res.data));
+                addToast(res.data.message, {
+                    appearance: 'success',
+                });
+                navigate("/")
+            })
+            .catch((err) => {
+                addToast(err.response.data?.message, {
+                    appearance: 'error',
+                });
+             });
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    const errorMessage = (error) => {
+        //console.log(error);
+    };
 
     useEffect(() => {
         ReactGA.send({
@@ -40,14 +69,6 @@ export default function CreateAccount() {
     const handlePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     }
-
-    const googleLogin = useGoogleLogin({
-        // eslint-disable-next-line no-unused-vars
-        onSuccess: (codeResponse) => console.log('Login Success'),
-        // eslint-disable-next-line no-unused-vars
-        onError: (error) => console.log('Login Failed:')
-    });
-
 
     function createUserAccount(){
         fetchUserDataAndRoute(values, '/');
@@ -78,24 +99,12 @@ export default function CreateAccount() {
                         <p className="font-[16px] text-lg text-[#636066] my-[0.5rem] text-center">
                             Already have an account? <Link className="text-ev-700 my-[0.5rem]" to="/SignIn">Sign In</Link>
                         </p>
-                        <button className="flex gap-3 bg-[#F9F9FA] py-[16px] px-[12px] border-[#F4F2F5] w-full rounded-mm  justify-center my-[0.5rem]" onClick={googleLogin}>
-                            <img src={google} alt="" className="self-center" />
-                            Continue with Google
-                        </button>
-
-                        {/*<GoogleLogin
-                            onSuccess={(response) => {
-                                // Handle the successful response here
-                                console.log('Custom Google login successful', response);
-                            }}
-                            onError={() => {
-                                // Handle errors here
-                                console.error('Custom Google login failed');
-                            }}
+                        <GoogleLogin
+                            onSuccess={responseMessage}
+                            onError={errorMessage}
                             size="large"
-                            useOneTap
                             text="continue_with"
-                        />*/}
+                        />
                     </div>
 
                     <div className="divider-text my-3">

@@ -19,8 +19,8 @@ import {
   // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+//import { googleLogout } from '@react-oauth/google';
 // import { Separator } from "@/components/ui/separator"
-
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,6 +29,11 @@ export default function NavBar() {
   const token = signInData?.data?.tokens?.accessToken || "N/A";
   const userName = signInData?.data?.firstName || "N/A";
   // console.log(userName)
+
+  function signUserOut() {
+    sessionStorage.clear();
+    //googleLogout();
+  }
 
   return (
     <div className='flex justify-between px-6 py-4 items-center bg-white shadow-md'>
@@ -210,7 +215,7 @@ export default function NavBar() {
                           {/* <DropdownMenuSeparator />
                              <Separator className="w-full border-[1px] bg-[#181719]" /> */}
                           <DropdownMenuItem>
-                            <div onClick={() => sessionStorage.clear()} className=" flex gap-1   font-brmedium text-sm text-[#F9091D]">
+                            <div onClick={signUserOut} className=" flex gap-1   font-brmedium text-sm text-[#F9091D]">
                               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M14.5332 12.1837L16.6665 10.0503L14.5332 7.91699" stroke="#F9091D" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                                 <path d="M8.1333 10.0498H16.6083" stroke="#F9091D" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
