@@ -55,10 +55,9 @@ export default function SignIn() {
 
                 navigate("/")
             })
+            // eslint-disable-next-line no-unused-vars
             .catch((err) => {
-                addToast(err.response.data?.message, {
-                    appearance: 'error',
-                });
+                //console.log(err)
             });
     }
 
