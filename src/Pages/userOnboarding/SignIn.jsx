@@ -48,8 +48,8 @@ export default function SignIn() {
                 { ...userData },
             )
             .then((res) => {
-                sessionStorage.setItem('SignIn', JSON.stringify(res.data));
-                addToast(res.data.message, {
+                sessionStorage.setItem('SignIn', JSON.stringify(res?.data));
+                addToast(res.data?.message, {
                     appearance: 'success',
                 });
 
@@ -59,7 +59,7 @@ export default function SignIn() {
                 addToast(err.response.data?.message, {
                     appearance: 'error',
                 });
-             });
+            });
     }
 
     // eslint-disable-next-line no-unused-vars
@@ -85,21 +85,22 @@ export default function SignIn() {
             <NavBar />
             <div className="h-full md:mt-1/2 flex gap-6 md:gap-12 flex-col md:flex-row md:justify-center md:items-center md:w-[100%]  md:-px-auto md:-py-auto p-[2rem]">
                 <div className="h-full md:w-[40%] md:self-center">
-                    <img src={signin} alt="" className="object-fill hidden md:flex       mx-auto" />
+                    <img src={signin} alt="" className="object-fill hidden md:flex mx-auto" />
                 </div>
-                <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem]            border-[#F4F2F5] md:w-[40%]  md:self-center">
+                <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[40%]  md:self-center">
                     <div className="flex flex-col items-center justify-center my-[0.5rem]">
                         <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center">Welcome Back</h3>
                         <p className="font-brreg text-lg text-[#636066] my-[0.5rem] text-center">
                             Don&apos;t have an account? <Link className="text-ev-700 my-[0.5rem]" to="/CreateAccount">Sign Up</Link>
                         </p>
-
-                        <GoogleLogin
-                            onSuccess={responseMessage}
-                            onError={errorMessage}
-                            size="large"
-                            text="continue_with"
-                        />
+                        <div className="mx-auto">
+                            <GoogleLogin
+                                onSuccess={responseMessage}
+                                onError={errorMessage}
+                                size="large"
+                                text="continue_with"
+                            />
+                        </div>
                     </div>
 
                     <div className="divider-text my-3">

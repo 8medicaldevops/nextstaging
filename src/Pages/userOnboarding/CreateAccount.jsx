@@ -39,8 +39,8 @@ export default function CreateAccount() {
                 { ...userData },
             )
             .then((res) => {
-                sessionStorage.setItem('SignIn', JSON.stringify(res.data));
-                addToast(res.data.message, {
+                sessionStorage.setItem('SignIn', JSON.stringify(res?.data));
+                addToast(res.data?.message, {
                     appearance: 'success',
                 });
                 navigate("/")
@@ -79,9 +79,7 @@ export default function CreateAccount() {
         initialValues: initialValues,
         validationSchema: createAccountValidation,
         onSubmit: () => {
-
             createUserAccount()
-
         }
     })
 
@@ -99,12 +97,14 @@ export default function CreateAccount() {
                         <p className="font-[16px] text-lg text-[#636066] my-[0.5rem] text-center">
                             Already have an account? <Link className="text-ev-700 my-[0.5rem]" to="/SignIn">Sign In</Link>
                         </p>
-                        <GoogleLogin
-                            onSuccess={responseMessage}
-                            onError={errorMessage}
-                            size="large"
-                            text="continue_with"
-                        />
+                        <div className="mx-auto">
+                            <GoogleLogin
+                                onSuccess={responseMessage}
+                                onError={errorMessage}
+                                size="large"
+                                text="continue_with"
+                            />
+                        </div>
                     </div>
 
                     <div className="divider-text my-3">
