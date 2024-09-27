@@ -428,6 +428,7 @@ export default function OrderHistory () {
                             companyName={order.callerDetails.company}
                             eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
                             pendingOrder = {true}
+                            color={'#F34197'}
                             iaFlag={iaFlag}
                             />
                         )))
@@ -468,6 +469,7 @@ export default function OrderHistory () {
                             noOfMedic={order.ambulances.noOfMedic}
                             smallAmbulanceCost={order.ambulances.smallAmbulance}
                             medicCost={order.medicCost}
+                            color={'#F96D09'}
                             />
                         )))
                     }
@@ -505,6 +507,7 @@ export default function OrderHistory () {
                             noOfMedic={order.ambulances.noOfMedic}
                             smallAmbulanceCost={order.ambulances.smallAmbulance}
                             medicCost={order.medicCost}
+                            color={'#39C574'}
                             />
                         )))
                     }
@@ -563,6 +566,7 @@ export default function OrderHistory () {
                             eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
                             pendingOrder = {true}
                             iaFlag={iaFlag}
+                            color={'#F34197'}
                             />
                         )))}
                 </div>
@@ -641,6 +645,7 @@ export default function OrderHistory () {
                             smallAmbulanceCost={order.ambulances.smallAmbulance}
                             medicCost={order.medicCost}
                             iaFlag={iaFlag}
+                            color={'#F96D09'}
                             />
                         )))}
                 </div>
@@ -719,6 +724,7 @@ export default function OrderHistory () {
                             smallAmbulanceCost={order.ambulances.smallAmbulance}
                             medicCost={order.medicCost}
                             iaFlag={iaFlag}
+                            color={'#39C574'}
                             />
                         )))}
                 </div>
@@ -875,6 +881,7 @@ export default function OrderHistory () {
                             token={token}
                             pendingOrder={true}
                             iaFlag={iaFlag}
+                            color={'#F34197'}
                             />
                         ))}
                     </div>

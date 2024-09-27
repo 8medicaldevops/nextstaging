@@ -268,14 +268,26 @@ export default function AdminPortal() {
                             </span>
                             <span className="py-5 px-6 bg-white rounded-xl w-full">
                                 <p className="font-brreg text-[#636066]">Pending Bookings</p>
-                                <p className="font-brbold text-[32px] text-[#181719]"> {statusCount && statusCount && statusCount.missionStatusCounts
-                                    ? statusCount.missionStatusCounts.PENDING
+                                <p className="font-brbold text-[32px] text-[#181719]"> {statusCount && statusCount && statusCount.orderStatusCounts
+                                    ? statusCount.orderStatusCounts.PENDING
+                                    : 'Loading...'}</p>
+                            </span>
+                            <span className="py-5 px-6 bg-white rounded-xl w-full">
+                                <p className="font-brreg text-[#636066]">Upcoming Bookings</p>
+                                <p className="font-brbold text-[32px] text-[#181719]"> {statusCount && statusCount && statusCount.orderStatusCounts
+                                    ? statusCount.orderStatusCounts.UP_COMING
                                     : 'Loading...'}</p>
                             </span>
                             <span className="py-5 px-6 bg-white rounded-xl w-full">
                                 <p className="font-brreg text-[#636066]">Completed Bookings</p>
-                                <p className="font-brbold text-[32px] text-[#181719]"> {statusCount && statusCount && statusCount.missionStatusCounts
-                                    ? statusCount.missionStatusCounts.COMPLETED
+                                <p className="font-brbold text-[32px] text-[#181719]"> {statusCount && statusCount && statusCount.orderStatusCounts
+                                    ? statusCount.orderStatusCounts.COMPLETED
+                                    : 'Loading...'}</p>
+                            </span>
+                            <span className="py-5 px-6 bg-white rounded-xl w-full">
+                                <p className="font-brreg text-[#636066]">Cancelled Bookings</p>
+                                <p className="font-brbold text-[32px] text-[#181719]"> {statusCount && statusCount && statusCount.orderStatusCounts
+                                    ? statusCount.orderStatusCounts.CANCELLED
                                     : 'Loading...'}</p>
                             </span>
                         </section>

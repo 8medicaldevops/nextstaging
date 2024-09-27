@@ -358,7 +358,7 @@ export function DataTableDemo({data,
 
                     </div>
                     <div className="flex items-center gap-1">
-                    <Popover>
+                    {/* <Popover>
                     <PopoverTrigger>
                     <div className="flex items-center gap-1 cursor-pointer">
                         <p className="font-brmedium text-sm text-[#1F1D21]">Filter</p>
@@ -438,7 +438,7 @@ export function DataTableDemo({data,
                     )}
                       </span>
                     </PopoverContent>
-                  </Popover>
+                  </Popover> */}
 
                   
                         <div className="bg-[#F5F4F6] flex items-center rounded-mm gap-1 py-1 px-2">
