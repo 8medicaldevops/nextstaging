@@ -226,18 +226,21 @@ export default function ConfirmOrder() {
                 largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
                 noOfMedic: storedAmbulanceData.medicsCount,
             },
+
             eventDetails: {
                     eventLocationName: storedEventData.venueName,
                     eventAddress: storedEventData.venueAddress,
                     estimatedNumberOfGuests: storedEventData.guests,
                     eventType: storedEventData.eventType,
                     description: storedEventData.description,
+
             },
             scheduleEvent: {
                     startDate: formattedBackendStartDate,
                     endDate: formattedBackendEndDate,
                     startTime: storedScheduleData.startTime,
                     endTime: storedScheduleData.endTime,
+
             }
               
         }
@@ -248,13 +251,16 @@ export default function ConfirmOrder() {
                 `${import.meta.env.VITE_UPDATE_INVOICE}${invId}`
                 :
                 import.meta.env.VITE_GENERATE_INVOICE )
+
             : (
                 invId 
                 ? `${import.meta.env.VITE_ORDER_API}${invId}` 
                 : import.meta.env.VITE_GENERATE_PAYMENT_LINK
               );
     
+
         const method = invId? 'patch' : 'post'; // Choose 'patch' if  invId available, otherwise 'post'
+
     
         const response = await axios[method](
             apiUrl, 
