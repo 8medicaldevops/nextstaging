@@ -44,7 +44,7 @@ export default function OrderHistory () {
     const decodedToken = token? jwtDecode(token) : '';
     const iaFlag = decodedToken?.userType ;
     const totalOrders = pendingPagination.totalDocs + upcomingPagination.totalDocs + completedPagination.totalDocs;
-    console.log(totalPendingOrdersAdmin)
+    //console.log(totalPendingOrdersAdmin)
 
     const handleCategoryClick = (category) => {
       setActiveCategory(category);
@@ -427,6 +427,7 @@ export default function OrderHistory () {
                             phoneNumber={order.callerDetails.phone}
                             companyName={order.callerDetails.company}
                             eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
+                            pendingOrder = {true}
                             iaFlag={iaFlag}
                             />
                         )))
@@ -560,6 +561,7 @@ export default function OrderHistory () {
                             phoneNumber={order.callerDetails.phone}
                             companyName={order.callerDetails.company}
                             eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
+                            pendingOrder = {true}
                             iaFlag={iaFlag}
                             />
                         )))}
@@ -871,6 +873,7 @@ export default function OrderHistory () {
                             phoneNumber={order.callerDetails.phone}
                             companyName={order.callerDetails.company}
                             token={token}
+                            pendingOrder={true}
                             iaFlag={iaFlag}
                             />
                         ))}

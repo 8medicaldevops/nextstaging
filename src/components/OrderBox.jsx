@@ -29,6 +29,7 @@ export default function OrderBox({
     largeAmbulanceCost,
     medicCost,
     eventEndsSameDay,
+    pendingOrder,
     token,
     iaFlag
 }) {
@@ -93,6 +94,7 @@ export default function OrderBox({
         //console.log(callerData,eventData,schedule,smallAmbulanceCount,largeAmbulanceCount,noOfMedic,estimatedFee)
         const handleSubmit = () => {
         // Save the current state to local storage
+            if (pendingOrder){
         localStorage.setItem('callerData', JSON.stringify(callerData));
         localStorage.setItem('eventData', JSON.stringify(eventData));
         localStorage.setItem('schedule', JSON.stringify(schedule));
@@ -102,6 +104,7 @@ export default function OrderBox({
         localStorage.setItem('medicsTotal', medicCost.toString());
         localStorage.setItem('bookingid',JSON.stringify(id));
         navigate("/StandBy/Nigeria/Event/Schedule/Ambulance%20Size/Confirm%20order")
+        }
         }
 
         // const handlePaymentLink = async() => {
@@ -193,6 +196,7 @@ export default function OrderBox({
                     <p className="text-sm font-brreg text-[#181719]">{noOfMedic}</p>
                 </span>
             </div>
+            {pendingOrder  &&
             <span className="flex justify-end font-brmedium text-ev-700 cursor-pointer mt-1">
                     <div onClick={handleSubmit} className="flex items-center">
                     <p>Complete Booking</p>
@@ -219,6 +223,7 @@ export default function OrderBox({
                 )
                 } */}
             </span>
+            }
             <PaymentLinkModal open={modalOpen} close={()=>setModalOpen(false)} checkoutLink={checkoutLink} />
         </div>
     )
