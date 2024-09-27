@@ -63,7 +63,7 @@ export default function SignIn() {
 
     // eslint-disable-next-line no-unused-vars
     const errorMessage = (error) => {
-        //console.log(error);
+        console.log(error);
     };
 
 

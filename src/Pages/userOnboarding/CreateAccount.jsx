@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
-import { GoogleLogin } from '@react-oauth/google'; 
+import { GoogleLogin } from '@react-oauth/google';
 import { useToasts } from 'react-toast-notifications';
 import axios from 'axios';
 import { useFetch } from "@/components/hooks/useFetch";
@@ -18,7 +18,7 @@ export default function CreateAccount() {
     let navigate = useNavigate();
     const { addToast } = useToasts();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const {fetchUserDataAndRoute, isPending} = useFetch(import.meta.env.VITE_USER_REGISTER);
+    const { fetchUserDataAndRoute, isPending } = useFetch(import.meta.env.VITE_USER_REGISTER);
 
 
     // eslint-disable-next-line no-unused-vars
@@ -45,15 +45,15 @@ export default function CreateAccount() {
                 });
                 navigate("/")
             })
-                        // eslint-disable-next-line no-unused-vars
+            // eslint-disable-next-line no-unused-vars
             .catch((err) => {
                 //console.log(err);
-             });
+            });
     }
 
     // eslint-disable-next-line no-unused-vars
     const errorMessage = (error) => {
-        //console.log(error);
+        console.log(error);
     };
 
     useEffect(() => {
@@ -69,7 +69,7 @@ export default function CreateAccount() {
         setIsPasswordVisible(!isPasswordVisible);
     }
 
-    function createUserAccount(){
+    function createUserAccount() {
         fetchUserDataAndRoute(values, '/');
     }
 
