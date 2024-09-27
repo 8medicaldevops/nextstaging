@@ -6,7 +6,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import './index.css'
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import './index.css';
 import HomePage from './Pages/HomePage.jsx';
 import StandBy from './Pages/StandBy.jsx';
 import OtherCountries from './Pages/OtherCountries.jsx';
@@ -28,12 +29,19 @@ import BookingError from './Pages/BookingError.jsx';
 import AdminPortal from './Pages/AdminPortal.jsx';
 import EditBooking from './Pages/EditBooking.jsx';
 import AdminLogin from './Pages/AdminLogin.jsx';
+import OrderHistory from './Pages/OrderHistory.jsx';
+import SignIn from './Pages/userOnboarding/SignIn';
+import CreateAccount from './Pages/userOnboarding/CreateAccount';
+import ForgotPassword from './Pages/userOnboarding/ForgotPassword';
+import ChangePassword from './Pages/userOnboarding/ChangePassword';
+import { ToastProvider } from 'react-toast-notifications';
 
 
 // eslint-disable-next-line no-undef
-if (process.env.NODE_ENV === 'production' ) clarity.init("nvd25h7exz");
+if (process.env.NODE_ENV === 'production') clarity.init("nvd25h7exz");
 
-ReactGA.initialize("G-23C8DJ5T38");
+// eslint-disable-next-line no-undef
+if (process.env.NODE_ENV === 'production') ReactGA.initialize("G-23C8DJ5T38");
 
 
 const router = createBrowserRouter([
@@ -74,8 +82,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/OtherBookings",
-    element: <OtherBookings />,
-
+    element: <OtherBookings />, 
+     
+  },
+  {
+    path: "/OrderHistory",
+    element: <OrderHistory />, 
+     
   },
 
   {
@@ -86,6 +99,26 @@ const router = createBrowserRouter([
   {
     path: "/Login",
     element: <AdminLogin />,
+
+  },
+  {
+    path: "/SignIn",
+    element: <SignIn />,
+
+  },
+  {
+    path: "/CreateAccount",
+    element: <CreateAccount />,
+
+  },
+  {
+    path: "/ForgotPassword",
+    element: <ForgotPassword />,
+
+  },
+  {
+    path: "/ChangePassword",
+    element: <ChangePassword />,
 
   },
   {
@@ -138,7 +171,15 @@ const router = createBrowserRouter([
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <GoogleOAuthProvider clientId='29064234798-89ki79v2rroat8nr0i7800u8fvnsa30m.apps.googleusercontent.com'>
+    <React.StrictMode>
+      <ToastProvider
+        autoDismiss
+        autoDismissTimeout={6000}
+        placement="bottom-center"
+      >
+        <RouterProvider router={router} />
+      </ToastProvider>
+    </React.StrictMode>
+  </GoogleOAuthProvider>
 )

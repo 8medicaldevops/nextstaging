@@ -11,7 +11,17 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
   const [statusCount,setStatusCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
+  const [totalDocs, setTotalDocs] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [itemsPerPage] = useState(30)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [filteredDate, setFilteredDate] = useState({
+    from:"",
+    to:""
+  });
+  console.log(filteredDate.from)
+  const [filteredStatus, setFilteredStatus] = useState("");
   const getStoredToken = () => {
     const storedTokenData = localStorage.getItem('token');
     return storedTokenData ? JSON.parse(storedTokenData) : null;
@@ -28,23 +38,53 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     window.location.href = '/Login'; // Redirect to login page
   };
 
+  // Implementing debounce logic for the search term
+  useEffect(() => {
+    const handler = setTimeout(() => {
+        setCurrentPage(1);
+        setDebouncedSearchTerm(searchTerm); // Set debounced search term if input is 3+ characters  
+    }, 500); // 500ms delay (you can adjust this)
+
+    // Cleanup the timeout if searchTerm changes (user keeps typing)
+    return () => {
+    clearTimeout(handler);
+    };
+}, [searchTerm]);
+
   const fetchData = async (page = currentPage) => {
+    
     const validPage = page || currentPage;
     const tokenData = getStoredToken();
     if (!tokenData || !tokenData || isTokenExpired(tokenData)) {
       clearStorageAndRedirect();
       return;
     }
-
+    const params = {
+      search: debouncedSearchTerm,
+      page: validPage,
+      limit: itemsPerPage,
+      orderStatus: filteredStatus , 
+      from: filteredDate.from,     
+      to: filteredDate.to             
+    };
+    
+    
+    // Remove undefined or empty values
+    const filteredParams = Object.fromEntries(
+        Object.entries(params).filter(([_, value]) => value !== undefined && value !== '')
+    );
+    const queryString = new URLSearchParams(filteredParams).toString();
+      setIsLoading(true);
     try {
-      const response = await axios.get(`${url}?page=${validPage}`, {
+      const response = await axios.get(`${url}?${queryString}}`, {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },
       });
       setStatusCount(response.data.data.statuses);
-      setTotalPages(response.data.data.orders.totalPages);
-      const mappedData = response.data.data.orders.docs.map((doc) => {
+      setTotalPages(response.data.data.totalPages);
+      setTotalDocs(response.data.data.totalDocs);
+      const mappedData = response.data.data.docs.map((doc) => {
         let dateObject = null;
         let dateBookedObj = null;
       
@@ -81,7 +121,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
           id: doc._id,
           ContactName: doc.callerDetails.fullName,
           amount: doc.price,
-          status: doc.missionStatus,
+          status: doc.orderStatus,
           standbyVenue: doc.ambulances?.eventLocationName || '',
           phoneNumber: doc.callerDetails.phone,
           standbyDate: dateObject ? format(dateObject, 'do MMMM , yyyy') : '',
@@ -105,6 +145,8 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
       if (error.response && error.response.status === 401) {
         clearStorageAndRedirect(); // Token might be invalid or expired, clear storage and redirect
       }
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -118,7 +160,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     } else {
       clearStorageAndRedirect();
     }
-  }, [url, storageKey, accessToken, interval, currentPage]);
+  }, [url, storageKey, accessToken, interval, currentPage, debouncedSearchTerm , filteredDate, filteredStatus]);
 
   const goToPage = (page) => {
     if (page > 0 && page <= totalPages) {
@@ -143,12 +185,19 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
 
   return {
     data, 
+    isLoading,
     statusCount,  
     currentPage,
     totalPages,
+    totalDocs,
     goToPage,
     nextPage,
-    prevPage,};
+    prevPage,
+    searchTerm,
+    setSearchTerm,
+    setFilteredStatus,
+    setFilteredDate
+  };
   
 };
 

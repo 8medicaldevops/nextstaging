@@ -1,26 +1,65 @@
 import NavBar from "../components/NavBar";
-import { parseISO, parse, format } from "date-fns";
+import { parseISO, parse, format, isBefore, isSameDay } from "date-fns";
 import { PaystackButton } from 'react-paystack';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useState, useEffect, CSSProperties } from "react";
-//import ClipLoader from "react-spinners/ClipLoader";
+import { useState, useEffect,  } from "react";
 import { BeatLoader } from "react-spinners";
 import ReactGA from "react-ga4";
+import LinkPopup from "@/components/LinkPopup";
+import { jwtDecode } from "jwt-decode";
+import PaymentLinkModal from "@/components/PaymentLinkModal";
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
+
 
 
 export default function ConfirmOrder() {
     let [loading, setLoading] = useState(false);
     let [color, setColor] = useState("#6D09F9");
+    const [isOpen, setIsOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [checkoutLink, setCheckoutLink] = useState('');
+    const [iaFlag, setIaFlag] = useState('')
+    const [token, setToken] = useState('')
 
-    const storedCallerData = JSON.parse(sessionStorage.getItem('callerData'));
-    //console.log(storedCallerData);
-    const storedEventData = JSON.parse(sessionStorage.getItem('eventData'));
-    //console.log(storedEventData);
-    const storedScheduleData = JSON.parse(sessionStorage.getItem('schedule'));
-    //console.log(storedScheduleData);
-    const storedAmbulanceData = JSON.parse(sessionStorage.getItem('ambulanceData'));
-    //console.log(storedAmbulanceData);
+    const storedCallerData = JSON.parse(localStorage.getItem('callerData'));
+    const storedEventData = JSON.parse(localStorage.getItem('eventData'));
+    const storedScheduleData = JSON.parse(localStorage.getItem('schedule'));
+    const storedAmbulanceData = JSON.parse(localStorage.getItem('ambulanceData'));
+    const invId = JSON.parse(localStorage.getItem('bookingid'));
+    const siginData = JSON.parse(sessionStorage.getItem('SignIn'));
+    const userId = siginData.data.id
+    //console.log(userId);
+   
+    useEffect(() => {
+        const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
+    
+        if (signInData && signInData.data && signInData.data.tokens) {
+            const token = signInData.data.tokens.accessToken || '';
+            setToken(signInData.data.tokens.accessToken)
+            // Check if token exists before decoding
+            if (token) {
+                try {
+                    const decodedToken = jwtDecode(token);
+                    setIaFlag(decodedToken?.userType || ''); // Set iaFlag only once on mount
+                } catch (error) {
+                    console.error('Invalid token:', error);
+                }
+            } else {
+                console.error('No access token found.');
+            }
+        } else {
+            console.error('No sign-in data found.');
+        }
+    }, []); // Empty array ensures this runs only once
+    
+    const handlePaymentLinkClose = () =>{
+        setModalOpen(false);
+        localStorage.clear();
+        navigate('/OrderHistory')
+    }
+    
     const navigate = useNavigate();
     // format fee
     const formattedFee = new Intl.NumberFormat().format(storedAmbulanceData.estimatedFee);
@@ -51,6 +90,48 @@ export default function ConfirmOrder() {
     const formattedEndTime = format(endTime, 'h:mm a');
 
     const formattedTimeRange = `${formattedStartTime} - ${formattedEndTime}`;
+    // Check for Invalid date or Time
+    const currentDate = new Date();
+    const [showPopup, setShowPopup] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(''); // To hold the specific error message
+
+    useEffect(() => {
+        if (!startDate || !endDate || !startTime) return; // Check if dates and times are defined
+    
+        const combinedStartDateTime = new Date(startDate);
+        combinedStartDateTime.setHours(startTime.getHours());
+        combinedStartDateTime.setMinutes(startTime.getMinutes());
+    
+        const combinedEndDateTime = new Date(endDate);
+        combinedEndDateTime.setHours(endTime.getHours());
+        combinedEndDateTime.setMinutes(endTime.getMinutes());
+    
+        let errorMsg = ''; // Track error message
+    
+        if (isSameDay(combinedStartDateTime, currentDate)) {
+            // If the date is today, check the time
+            if (isBefore(combinedStartDateTime, currentDate)) {
+                errorMsg = 'The selected start time is earlier than the current time.';
+            }
+        } else if (isBefore(combinedStartDateTime, currentDate)) {
+            // If the start date and time are before today
+            errorMsg = 'The selected start date and time are earlier than the current date.';
+        }
+    
+        if (isBefore(combinedEndDateTime, currentDate)) {
+            // If the end date and time are before today
+            errorMsg = 'The selected end date is earlier than the current date.';
+        }
+    
+        // If an error message is set, show the popup and update the message
+        if (errorMsg) {
+            setErrorMessage(errorMsg);
+            setShowPopup(true);
+        } else {
+            setShowPopup(false);
+        }
+    }, [startDate, endDate, startTime, endTime, currentDate]);
+
 
     const config = {
         reference: (new Date()).getTime().toString(),
@@ -86,6 +167,8 @@ export default function ConfirmOrder() {
             },
             country: "NG",
             transactionReference: reference.reference,
+            orderId: invId || "",
+            userId:userId || "",
         };
 
         try {
@@ -120,10 +203,10 @@ export default function ConfirmOrder() {
     }
 
     const toggleCancel = () => {
-        sessionStorage.clear(),
+        localStorage.clear(),
             navigate("/")
     }
-
+      
     useEffect(() => {
         ReactGA.send({
             hitType: "pageview",
@@ -132,6 +215,194 @@ export default function ConfirmOrder() {
         })
     }, [])
 
+      const generateInvoice = async() => {
+        setLoading(!loading)
+        const data = {
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                eventLocationName: storedEventData.venueName,
+                eventAddress: storedEventData.venueAddress,
+                estimatedNumberOfGuests: storedEventData.guests,
+                eventType: storedEventData.eventType,
+                description: storedEventData.description,
+                eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
+                startDate: formattedBackendStartDate,
+                endDate: formattedBackendEndDate,
+                startTime: storedScheduleData.startTime,
+                endTime: storedScheduleData.endTime,
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+            country: "NG",
+            orderId: invId || "",
+
+        };
+
+        const patchData = {
+            
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+
+            eventDetails: {
+                    eventLocationName: storedEventData.venueName,
+                    eventAddress: storedEventData.venueAddress,
+                    estimatedNumberOfGuests: storedEventData.guests,
+                    eventType: storedEventData.eventType,
+                    description: storedEventData.description,
+
+            },
+            scheduleEvent: {
+                    startDate: formattedBackendStartDate,
+                    endDate: formattedBackendEndDate,
+                    startTime: storedScheduleData.startTime,
+                    endTime: storedScheduleData.endTime,
+
+            }
+              
+        }
+        const requestData = invId && iaFlag == "ADMIN" ? patchData : data;
+        try {
+            const apiUrl = iaFlag !== "ADMIN" 
+            ? (invId ?
+                `${import.meta.env.VITE_UPDATE_INVOICE}${invId}`
+                :
+                import.meta.env.VITE_GENERATE_INVOICE )
+
+            : (
+                invId 
+                ? `${import.meta.env.VITE_ORDER_API}${invId}` 
+                : import.meta.env.VITE_GENERATE_PAYMENT_LINK
+              );
+    
+
+        const method = invId? 'patch' : 'post'; // Choose 'patch' if  invId available, otherwise 'post'
+
+    
+        const response = await axios[method](
+            apiUrl, 
+            requestData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, 
+                },
+            }
+            );
+            console.log("Response:", response.data.data.id);
+            localStorage.setItem('bookingid', JSON.stringify(response.data.data.id));
+
+            
+            
+        } catch (error) {
+            //console.error("You are not logged in:", error);
+            //navigate("/BookingError");
+        } finally {
+            setLoading(false);
+        }
+        setIsOpen(true);
+      }
+
+      const generatePaymentLink = async() => {
+        setLoading(!loading)
+        const data = {
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                eventLocationName: storedEventData.venueName,
+                eventAddress: storedEventData.venueAddress,
+                estimatedNumberOfGuests: storedEventData.guests,
+                eventType: storedEventData.eventType,
+                description: storedEventData.description,
+                eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
+                startDate: formattedBackendStartDate,
+                endDate: formattedBackendEndDate,
+                startTime: storedScheduleData.startTime,
+                endTime: storedScheduleData.endTime,
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+            country: "NG",
+            orderId: invId || "",
+            
+        };
+        const patchData = {
+            
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+                eventDetails: {
+                    eventLocationName: storedEventData.venueName,
+                    eventAddress: storedEventData.venueAddress,
+                    estimatedNumberOfGuests: storedEventData.guests,
+                    eventType: storedEventData.eventType,
+                    description: storedEventData.description,
+                },
+                scheduleEvent: {
+                    startDate: formattedBackendStartDate,
+                    endDate: formattedBackendEndDate,
+                    startTime: storedScheduleData.startTime,
+                    endTime: storedScheduleData.endTime,
+                }
+              
+        }
+        const requestData = invId ? patchData : data;
+
+        try {
+            const apiUrl = invId 
+            ? `${import.meta.env.VITE_ORDER_API}${invId}` 
+            : import.meta.env.VITE_GENERATE_PAYMENT_LINK;
+
+        const method = invId ? 'patch' : 'post'; // Use PATCH if invId is available, otherwise POST
+
+        const response = await axios[method](
+            apiUrl, 
+            requestData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, 
+                },
+            }
+    
+            );
+            console.log("Response:", response.data);
+            setCheckoutLink(response.data.data.paymentLink);
+            setModalOpen(true);
+            //navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order/Booking successful");
+        } catch (error) {
+            //console.error("Error:", error);
+            //navigate("/BookingError");
+        } finally {
+            setLoading(false);
+            
+        }
+      }
     return (
         <div className={loading ? "overflow-y-hidden h-screen" : ""}>
             <NavBar />
@@ -146,9 +417,18 @@ export default function ConfirmOrder() {
                     </div>
                 </div>
             }
-            <div className="flex flex-col  justify-center items-center bg-[#F9F9FA] pt-9 pb-9" >
+             
+            <div className="flex flex-col  justify-center items-center bg-[#F9F9FA] pt-9 max-md:pb-64 pb-32" >
 
                 <div className="pt-9 max-w-[640px] max-lg:w-full   rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
+                {showPopup && (
+                <Alert variant="destructive" className="border-2 border-red-400 rounded-mm">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription className="text-red-300 font-brmedium text-lg">
+                        {errorMessage} {/* Display the specific error message */}
+                    </AlertDescription>
+                </Alert>
+                 )}
                     <div className="flex items-center gap-3">
                         <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                             <rect width="52" height="52" rx="8.66667" fill="#F8F4FE" />
@@ -462,6 +742,9 @@ export default function ConfirmOrder() {
                         </div>
                     </section>
                 </div>
+                {iaFlag == "ADMIN" ?
+                ' '
+                :
                 <section className="bg-white max-w-[640px] flex flex-col gap-3 p-6 w-full">
                     <p className="font-brsemi text-2xl text-[#181719]">Booking Policies</p>
                     <div className="flex flex-wrap gap-3 justify-between">
@@ -500,14 +783,38 @@ export default function ConfirmOrder() {
                         </div>
                     </div>
                 </section>
-
+                }
             </div>
-            <div className="flex justify-end py-6 px-20 max-lg:px-4">
-                <span className="flex items-center gap-9">
+            <div className="flex justify-between fixed bottom-0 bg-white w-full py-6 px-20 max-lg:px-4 max-md:flex-col max-md:gap-3">
+            <button
+            onClick={() => generateInvoice()}
+            className={`border border-ev-700 rounded-mm px-5 py-3 font-brbold text-lg text-ev-700 ${showPopup ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={showPopup} // Disable the button when showPopup is true
+            >Generate Invoice</button>
+                <span className="flex items-center gap-9 max-md:flex-col-reverse">
                     <button className="font-brsemi text-[#181719] text-lg" onClick={toggleCancel}>Cancel</button>
+                    {iaFlag == "ADMIN" ?
+                    <div>
+                        <button
+                        onClick={() => generatePaymentLink()}
+                        className={`w-full border border-ev-700 rounded-mm px-5 py-3 font-brbold text-lg text-ev-700 ${showPopup ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={showPopup} // Disable the button when showPopup is true
+                        >Generate Payment Link</button>
+                    </div>
+                    :
+                    <div>
+                    {showPopup ?
+                    <button disabled={showPopup} className="w-full border bg-ev-700 rounded-mm px-5 py-3 font-brsemi text-lg text-white cursor-not-allowed opacity-50">Proceed to Payment</button>
+                    :
                     <PaystackButton {...componentProps} />
+                    }
+                    </div>
+                    }
+                   
                 </span>
             </div>
+            <LinkPopup open={isOpen} close={()=>setIsOpen(false)} />
+            <PaymentLinkModal open={modalOpen} close={handlePaymentLinkClose} checkoutLink={checkoutLink} /> 
         </div>
     )
 }
