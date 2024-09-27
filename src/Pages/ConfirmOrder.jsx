@@ -28,7 +28,9 @@ export default function ConfirmOrder() {
     const storedScheduleData = JSON.parse(localStorage.getItem('schedule'));
     const storedAmbulanceData = JSON.parse(localStorage.getItem('ambulanceData'));
     const invId = JSON.parse(localStorage.getItem('bookingid'));
-    //console.log(invId);
+    const siginData = JSON.parse(sessionStorage.getItem('SignIn'));
+    const userId = siginData.data.id
+    //console.log(userId);
    
     useEffect(() => {
         const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
@@ -166,6 +168,7 @@ export default function ConfirmOrder() {
             country: "NG",
             transactionReference: reference.reference,
             orderId: invId || "",
+            userId:userId || "",
         };
 
         try {
