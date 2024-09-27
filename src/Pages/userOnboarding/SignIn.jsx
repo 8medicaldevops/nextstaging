@@ -4,23 +4,22 @@ import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
-import { useGoogleLogin } from '@react-oauth/google'; //GoogleLogin,
+import { GoogleLogin } from '@react-oauth/google';
+import { useToasts } from 'react-toast-notifications';
 import axios from 'axios';
-
-//import { useToasts } from 'react-toast-notifications';
 
 import { useFetch } from "@/components/hooks/useFetch.jsx";
 
 import NavBar from "../../components/NavBar";
 
-import google from "../../assets/images/google.svg";
 import signin from "../../assets/images/signin.png";
 import { signInValidation } from "./FormValidation";
 
-
 export default function SignIn() {
     let navigate = useNavigate();
+    const { addToast } = useToasts();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
     const { fetchUserDataAndRoute, isPending } = useFetch(import.meta.env.VITE_USER_LOGIN,);
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
@@ -40,19 +39,34 @@ export default function SignIn() {
         setIsPasswordVisible(!isPasswordVisible);
     }
 
-    const googleLogin = useGoogleLogin({
-        onSuccess: (codeResponse) => {
-            axios
-                .post(import.meta.env.VITE_USER_LOGIN_GOOGLE, { "token": `${codeResponse.access_token}` },
-                )
-                .then((res) => {
-                    sessionStorage.setItem('SignInGoogle', JSON.stringify(res.data));
-                    navigate("/")
-                })
-                .catch((err) => console.log(err));
-        },
-        onError: (error) => { console.log(error) }
-    })
+    const responseMessage = (response) => {
+        const userData = {
+            "token": `${response.credential}`,
+        }
+        axios
+            .post(import.meta.env.VITE_USER_CONTINUE_GOOGLE,
+                { ...userData },
+            )
+            .then((res) => {
+                sessionStorage.setItem('SignIn', JSON.stringify(res.data));
+                addToast(res.data.message, {
+                    appearance: 'success',
+                });
+
+                navigate("/")
+            })
+            .catch((err) => {
+                addToast(err.response.data?.message, {
+                    appearance: 'error',
+                });
+             });
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    const errorMessage = (error) => {
+        //console.log(error);
+    };
+
 
     function signUserIn() {
         fetchUserDataAndRoute(values, '/');
@@ -79,25 +93,13 @@ export default function SignIn() {
                         <p className="font-brreg text-lg text-[#636066] my-[0.5rem] text-center">
                             Don&apos;t have an account? <Link className="text-ev-700 my-[0.5rem]" to="/CreateAccount">Sign Up</Link>
                         </p>
-                        <button className="flex gap-3 bg-[#F9F9FA] py-[16px] px-[12px] border-[#F4F2F5] w-full rounded-mm  justify-center my-[0.5rem]" onClick={googleLogin}>
-                            <img src={google}
-                                alt=""
-                                className="self-center"
-                            />
-                            Continue with Google
-                        </button>
 
-                        {/*<GoogleLogin
-                            onSuccess={(response) => {
-                                // Handle the successful response here
-                                console.log('Custom Google login successful', response);
-                            }}
-                            onError={() => {
-                                // Handle errors here
-                                console.error('Custom Google login failed');
-                            }}
+                        <GoogleLogin
+                            onSuccess={responseMessage}
+                            onError={errorMessage}
                             size="large"
-                        />*/}
+                            text="continue_with"
+                        />
                     </div>
 
                     <div className="divider-text my-3">
