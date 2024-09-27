@@ -57,7 +57,7 @@ export default function SignIn() {
             })
             // eslint-disable-next-line no-unused-vars
             .catch((err) => {
-                //console.log(err)
+                console.log(err)
             });
     }
 
