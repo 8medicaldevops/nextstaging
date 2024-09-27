@@ -121,7 +121,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
           id: doc._id,
           ContactName: doc.callerDetails.fullName,
           amount: doc.price,
-          status: doc.missionStatus,
+          status: doc.orderStatus,
           standbyVenue: doc.ambulances?.eventLocationName || '',
           phoneNumber: doc.callerDetails.phone,
           standbyDate: dateObject ? format(dateObject, 'do MMMM , yyyy') : '',

@@ -1,5 +1,5 @@
 import NavBar from "../components/NavBar";
-import { parseISO, parse, format, isBefore } from "date-fns";
+import { parseISO, parse, format, isBefore, isSameDay } from "date-fns";
 import { PaystackButton } from 'react-paystack';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -52,6 +52,11 @@ export default function ConfirmOrder() {
         }
     }, []); // Empty array ensures this runs only once
     
+    const handlePaymentLinkClose = () =>{
+        setModalOpen(false);
+        localStorage.clear();
+        navigate('/OrderHistory')
+    }
     
     const navigate = useNavigate();
     // format fee
@@ -86,21 +91,44 @@ export default function ConfirmOrder() {
     // Check for Invalid date or Time
     const currentDate = new Date();
     const [showPopup, setShowPopup] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(''); // To hold the specific error message
 
     useEffect(() => {
-        // Combine startDate and startTime for full comparison
+        if (!startDate || !endDate || !startTime) return; // Check if dates and times are defined
+    
         const combinedStartDateTime = new Date(startDate);
         combinedStartDateTime.setHours(startTime.getHours());
         combinedStartDateTime.setMinutes(startTime.getMinutes());
-
-        // Check if the combined start date and time or end date is before the current date
-        if (
-            isBefore(combinedStartDateTime, currentDate) ||
-            isBefore(endDate, currentDate)
-        ) {
-            setShowPopup(true); // Show popup if the start or end date/time is earlier than the current date/time
+    
+        const combinedEndDateTime = new Date(endDate);
+        combinedEndDateTime.setHours(endTime.getHours());
+        combinedEndDateTime.setMinutes(endTime.getMinutes());
+    
+        let errorMsg = ''; // Track error message
+    
+        if (isSameDay(combinedStartDateTime, currentDate)) {
+            // If the date is today, check the time
+            if (isBefore(combinedStartDateTime, currentDate)) {
+                errorMsg = 'The selected start time is earlier than the current time.';
+            }
+        } else if (isBefore(combinedStartDateTime, currentDate)) {
+            // If the start date and time are before today
+            errorMsg = 'The selected start date and time are earlier than the current date.';
         }
-    }, [startDate, endDate, startTime, currentDate]);
+    
+        if (isBefore(combinedEndDateTime, currentDate)) {
+            // If the end date and time are before today
+            errorMsg = 'The selected end date is earlier than the current date.';
+        }
+    
+        // If an error message is set, show the popup and update the message
+        if (errorMsg) {
+            setErrorMessage(errorMsg);
+            setShowPopup(true);
+        } else {
+            setShowPopup(false);
+        }
+    }, [startDate, endDate, startTime, endTime, currentDate]);
 
 
     const config = {
@@ -271,7 +299,10 @@ export default function ConfirmOrder() {
                 },
             }
             );
-            //console.log("Response:", response.data);
+            console.log("Response:", response.data.data.id);
+            localStorage.setItem('bookingid', JSON.stringify(response.data.data.id));
+
+            
             
         } catch (error) {
             //console.error("You are not logged in:", error);
@@ -366,6 +397,7 @@ export default function ConfirmOrder() {
             //navigate("/BookingError");
         } finally {
             setLoading(false);
+            
         }
       }
     return (
@@ -387,15 +419,13 @@ export default function ConfirmOrder() {
 
                 <div className="pt-9 max-w-[640px] max-lg:w-full   rounded-2xl flex flex-col gap-12 bg-white p-9 max-lg:p-4">
                 {showPopup && (
-                 <Alert variant="destructive " className="border-2 border-red-400 rounded-mm">
-                 <AlertCircle className="h-4 w-4 " />
-                 {/* <AlertTitle className="font-brsemi text-red-400 ">Error</AlertTitle> */}
-                 <AlertDescription className="text-red-300 font-brmedium text-lg">
-                 The selected date or time is earlier than the current date
-                 or time. Please edit the date and time.
-                 </AlertDescription>
-               </Alert>
-                )}
+                <Alert variant="destructive" className="border-2 border-red-400 rounded-mm">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription className="text-red-300 font-brmedium text-lg">
+                        {errorMessage} {/* Display the specific error message */}
+                    </AlertDescription>
+                </Alert>
+                 )}
                     <div className="flex items-center gap-3">
                         <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                             <rect width="52" height="52" rx="8.66667" fill="#F8F4FE" />
@@ -781,7 +811,7 @@ export default function ConfirmOrder() {
                 </span>
             </div>
             <LinkPopup open={isOpen} close={()=>setIsOpen(false)} />
-            <PaymentLinkModal open={modalOpen} close={()=>setModalOpen(false)} checkoutLink={checkoutLink} /> 
+            <PaymentLinkModal open={modalOpen} close={handlePaymentLinkClose} checkoutLink={checkoutLink} /> 
         </div>
     )
 }

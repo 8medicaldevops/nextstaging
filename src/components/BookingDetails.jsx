@@ -100,7 +100,7 @@ export default function BookingDetails (props) {
         estimatedFee: bookingData.price || 0,
       });
     }
-  }, [bookingData]);
+  }, [bookingData, editAmbulanceDetails,editContactDetails, editScheduleDetails, editEventDetails]);
   
   const storedCallerData = callerData;
   //console.log(storedCallerData);
