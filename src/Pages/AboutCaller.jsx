@@ -271,14 +271,14 @@ export default function AboutCaller() {
                         </form>
                     </div>
                     <div className="flex flex-col gap-6">
-                        <Dialog open={isDialogOpen}>
+                        <Dialog open={isDialogOpen} className="">
                             <button disabled={isButtonDisabled} className={isButtonDisabled ? "bg-ev-300 w-full font-brsemi text-lg rounded-mm py-3 text-white flex justify-center gap-1 items-center " : "bg-ev-700 w-full font-brsemi text-lg rounded-mm py-3 text-white flex justify-center gap-1 items-center"} onClick={handleSubmit} type="submit">Save and Continue
                                 <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M10.1201 3.95337L14.1668 8.00004L10.1201 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                                     <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </button>
-                            <DialogContent className=" flex gap-6 bg-white p-6 border-none rounded-[12px] h-[665px] max-lg:w-[90%] max-lg:h-[75%] max-mm:h-[90%] w-[580px] max-sm:p-1">
+                            <DialogContent className=" flex gap-6 bg-white p-6 border-none  h-[665px] max-lg:w-[90%] max-lg:h-[75%] max-mm:h-[90%] w-[580px] max-sm:p-1 rounded-[80px]  max-mm:px-0  max-md:rounded-[24px]">
                                 <DialogHeader>
                                     <DialogTitle >
                                         <div className="flex flex-col pb-6 gap-6 items-center max-lg:pb-0">

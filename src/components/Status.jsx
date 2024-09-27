@@ -39,7 +39,7 @@ const { response, error, loading, patchData } = usePatchData(import.meta.env.VIT
                 <p className="text-sm font-brmedium text-[#FAFAFA]">Pending</p>
                 </div>
             );
-            case "ASSIGNED":
+            case "UP_COMING":
               return (
                   <div className="bg-[#FEF0E6] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
                   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +98,7 @@ const { response, error, loading, patchData } = usePatchData(import.meta.env.VIT
             <p className="text-sm font-brmedium text-[#FAFAFA]">Pending</p>
             </div>
             </SelectItem>
-            <SelectItem  value="ASSIGNED" >
+            <SelectItem  value="UP_COMING" >
                 <div className="bg-[#FEF0E6] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
