@@ -182,6 +182,10 @@ export default function OrderHistory () {
 
                 // Call the function to fetch orders
                     fetchOrders();
+                 // Set an interval to refetch data every X milliseconds (e.g., 60000ms = 60 seconds)
+                const intervalId = setInterval(fetchOrders, 60000);
+                // Cleanup function to clear the interval when the component unmounts
+                return () => clearInterval(intervalId);    
                
         },[token, currentPage, debouncedSearchTerm, activeCategory, selectedPeriod])
 
@@ -946,7 +950,7 @@ export default function OrderHistory () {
             btn={false}/>
         </section>
         }
-        {iaFlag == 'ADMIN'  && totalPendingOrdersAdmin == 0 &&
+        {iaFlag == 'ADMIN'  && totalPendingOrdersAdmin == 0 && !searchTerm &&
         <section className="flex items-center justify-center h-dvh">
             <NoBooking 
             header={'No Pending Orders!'} 
