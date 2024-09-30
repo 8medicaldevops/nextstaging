@@ -6,13 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 export const useFetch = (url) => {
 
-
     const [data, setData] = useState(null);
     const [isError, setIsError] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isPending, setIsPending] = useState(false);
     const[otpSent, setOtpSent] = useState(false);
-
 
     let navigate = useNavigate();
 
@@ -21,7 +19,6 @@ export const useFetch = (url) => {
     const headers = {
         'Content-Type': 'application/json',
     }
-
 
     const fetchUserData = async (values) => {
 
@@ -87,7 +84,6 @@ export const useFetch = (url) => {
                 { ...values }, {
                 headers: headers
             });
-            setData(response.data);
 
             if (response.data.message[0] && typeof response.data.message[0] === 'string') {
                 addToast(response?.data.message, {
@@ -95,7 +91,6 @@ export const useFetch = (url) => {
                 });
                 sessionStorage.setItem('SignIn', JSON.stringify(response.data));
                 navigate(`${path}`);
-
 
                 setIsSuccess(true);
             } else if (response.data.status && typeof response.data.status === 'string') {

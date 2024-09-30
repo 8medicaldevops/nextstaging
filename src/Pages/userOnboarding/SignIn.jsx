@@ -9,18 +9,17 @@ import { useToasts } from 'react-toast-notifications';
 import axios from 'axios';
 
 import { useFetch } from "@/components/hooks/useFetch.jsx";
-
 import NavBar from "../../components/NavBar";
-
 import signin from "../../assets/images/signin.png";
 import { signInValidation } from "./FormValidation";
 
 export default function SignIn() {
     let navigate = useNavigate();
     const { addToast } = useToasts();
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const { fetchUserDataAndRoute, isPending } = useFetch(import.meta.env.VITE_USER_LOGIN,);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
         identifier: '',
@@ -57,15 +56,14 @@ export default function SignIn() {
             })
             // eslint-disable-next-line no-unused-vars
             .catch((err) => {
-                console.log(err)
+                //console.log(err)
             });
     }
 
     // eslint-disable-next-line no-unused-vars
     const errorMessage = (error) => {
-        console.log(error);
+        //console.log(error);
     };
-
 
     function signUserIn() {
         fetchUserDataAndRoute(values, '/');
