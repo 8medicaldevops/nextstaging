@@ -183,9 +183,9 @@ export default function OrderHistory () {
                 // Call the function to fetch orders
                     fetchOrders();
                  // Set an interval to refetch data every X milliseconds (e.g., 60000ms = 60 seconds)
-                const intervalId = setInterval(fetchOrders, 60000);
+               // const intervalId = setInterval(fetchOrders, 60000);
                 // Cleanup function to clear the interval when the component unmounts
-                return () => clearInterval(intervalId);    
+                // return () => clearInterval(intervalId);    
                
         },[token, currentPage, debouncedSearchTerm, activeCategory, selectedPeriod])
 
