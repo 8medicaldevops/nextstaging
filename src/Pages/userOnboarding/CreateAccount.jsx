@@ -18,8 +18,8 @@ export default function CreateAccount() {
     let navigate = useNavigate();
     const { addToast } = useToasts();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const { fetchUserDataAndRoute, isPending } = useFetch(import.meta.env.VITE_USER_REGISTER);
-
+    const { fetchUserDataAndRoute } = useFetch(import.meta.env.VITE_USER_LOGIN);
+    const [isPending, setIsPending] = useState(false);
 
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
@@ -64,24 +64,43 @@ export default function CreateAccount() {
         })
     }, [])
 
-
     const handlePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     }
 
     function createUserAccount() {
-        fetchUserDataAndRoute(values, '/');
-    }
+       
+        setIsPending(true);
 
+        axios
+            .post(import.meta.env.VITE_USER_REGISTER, { ...values })
+
+            .then((response) => {
+                if (response.data.statusCode == 201) {
+                    let loginData = {
+                        identifier: `${values.email}`,
+                        password: `${values.password}`
+                    }
+                    fetchUserDataAndRoute(loginData, '/');
+                }
+                setIsPending(false);
+            })
+
+            .catch((err) => {
+                addToast(err.response.data.message, {
+                    appearance: 'error',
+                });
+                setIsPending(false);
+            });
+    }
 
     const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: initialValues,
         validationSchema: createAccountValidation,
         onSubmit: () => {
-            createUserAccount()
+            createUserAccount();
         }
     })
-
 
     return (
         <div>
@@ -283,7 +302,7 @@ export default function CreateAccount() {
                     </form>
                 </div>
             </div>
-            {/*<ToastContainer />*/}
+            {/*<ToastContainer/>*/}
         </div>
     )
 }
