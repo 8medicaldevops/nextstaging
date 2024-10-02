@@ -107,7 +107,7 @@ export default function CreateAccount() {
             <NavBar />
             <div className="md:h-full flex justify-center gap-6 md:gap-12 flex-col md:flex-row  md:w-[100%]  md:-px-auto p-[2rem]"> {/*items-center md:justify-center md:items-center* */}
                 <div className="md:h-full md:w-[40%] md:self-center">
-                    <img src={signup} alt="" className="object-fill hidden md:flex mx-auto" />
+                    <img src={signup} alt="" className="object-fill hidden md:flex mx-auto rounded-[1rem]" />
                 </div>
                 <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[40%]  md:self-center">
                     <div className="flex flex-col items-center justify-center my-auto">
@@ -125,7 +125,7 @@ export default function CreateAccount() {
                         </div>
                     </div>
 
-                    <div className="divider-text my-3">
+                    <div className="divider-text my-1">
                         <span>OR</span>
                     </div>
 
