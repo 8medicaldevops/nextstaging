@@ -29,7 +29,7 @@ export default function ConfirmOrder() {
     const storedAmbulanceData = JSON.parse(localStorage.getItem('ambulanceData'));
     const invId = JSON.parse(localStorage.getItem('bookingid'));
     const siginData = JSON.parse(sessionStorage.getItem('SignIn'));
-    const userId = siginData.data.id
+    const userId = siginData?.data?.id
     //console.log(userId);
    
     useEffect(() => {
