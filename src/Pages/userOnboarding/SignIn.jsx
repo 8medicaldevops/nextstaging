@@ -4,24 +4,22 @@ import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useFormik } from "formik";
 import { BeatLoader } from "react-spinners";
-import { useGoogleLogin } from '@react-oauth/google'; //GoogleLogin,
+import { GoogleLogin } from '@react-oauth/google';
+import { useToasts } from 'react-toast-notifications';
 import axios from 'axios';
 
-//import { useToasts } from 'react-toast-notifications';
-
 import { useFetch } from "@/components/hooks/useFetch.jsx";
-
 import NavBar from "../../components/NavBar";
-
-import google from "../../assets/images/google.svg";
 import signin from "../../assets/images/signin.png";
 import { signInValidation } from "./FormValidation";
 
-
 export default function SignIn() {
     let navigate = useNavigate();
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const { addToast } = useToasts();
+
     const { fetchUserDataAndRoute, isPending } = useFetch(import.meta.env.VITE_USER_LOGIN,);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
     // eslint-disable-next-line no-unused-vars
     const [initialValues, setInitialValues] = useState({
         identifier: '',
@@ -40,19 +38,32 @@ export default function SignIn() {
         setIsPasswordVisible(!isPasswordVisible);
     }
 
-    const googleLogin = useGoogleLogin({
-        onSuccess: (codeResponse) => {
-            axios
-                .post(import.meta.env.VITE_USER_LOGIN_GOOGLE, { "token": `${codeResponse.access_token}` },
-                )
-                .then((res) => {
-                    sessionStorage.setItem('SignInGoogle', JSON.stringify(res.data));
-                    navigate("/")
-                })
-                .catch((err) => console.log(err));
-        },
-        onError: (error) => { console.log(error) }
-    })
+    const responseMessage = (response) => {
+        const userData = {
+            "token": `${response.credential}`,
+        }
+        axios
+            .post(import.meta.env.VITE_USER_CONTINUE_GOOGLE,
+                { ...userData },
+            )
+            .then((res) => {
+                sessionStorage.setItem('SignIn', JSON.stringify(res?.data));
+                addToast(res.data?.message, {
+                    appearance: 'success',
+                });
+
+                navigate("/")
+            })
+            // eslint-disable-next-line no-unused-vars
+            .catch((err) => {
+                //console.log(err)
+            });
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    const errorMessage = (error) => {
+        //console.log(error);
+    };
 
     function signUserIn() {
         fetchUserDataAndRoute(values, '/');
@@ -71,33 +82,22 @@ export default function SignIn() {
             <NavBar />
             <div className="h-full md:mt-1/2 flex gap-6 md:gap-12 flex-col md:flex-row md:justify-center md:items-center md:w-[100%]  md:-px-auto md:-py-auto p-[2rem]">
                 <div className="h-full md:w-[40%] md:self-center">
-                    <img src={signin} alt="" className="object-fill hidden md:flex       mx-auto" />
+                    <img src={signin} alt="" className="object-fill hidden md:flex mx-auto" />
                 </div>
-                <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem]            border-[#F4F2F5] md:w-[40%]  md:self-center">
+                <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[40%]  md:self-center">
                     <div className="flex flex-col items-center justify-center my-[0.5rem]">
                         <h3 className="font-brsemi text-2xl max-sm:text-xl text-[#181719] text-center">Welcome Back</h3>
                         <p className="font-brreg text-lg text-[#636066] my-[0.5rem] text-center">
                             Don&apos;t have an account? <Link className="text-ev-700 my-[0.5rem]" to="/CreateAccount">Sign Up</Link>
                         </p>
-                        <button className="flex gap-3 bg-[#F9F9FA] py-[16px] px-[12px] border-[#F4F2F5] w-full rounded-mm  justify-center my-[0.5rem]" onClick={googleLogin}>
-                            <img src={google}
-                                alt=""
-                                className="self-center"
+                        <div className="mx-auto">
+                            <GoogleLogin
+                                onSuccess={responseMessage}
+                                onError={errorMessage}
+                                size="large"
+                                text="continue_with"
                             />
-                            Continue with Google
-                        </button>
-
-                        {/*<GoogleLogin
-                            onSuccess={(response) => {
-                                // Handle the successful response here
-                                console.log('Custom Google login successful', response);
-                            }}
-                            onError={() => {
-                                // Handle errors here
-                                console.error('Custom Google login failed');
-                            }}
-                            size="large"
-                        />*/}
+                        </div>
                     </div>
 
                     <div className="divider-text my-3">
