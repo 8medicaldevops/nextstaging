@@ -105,7 +105,7 @@ export default function CreateAccount() {
     return (
         <div>
             <NavBar />
-            <div className="md:h-full flex flex-col justify-center gap-6 md:gap-12 flex-col md:flex-row  md:w-[100%]  md:-px-auto p-[2rem]"> {/*items-center md:justify-center md:items-center* */}
+            <div className="md:h-full flex flex-col justify-center gap-6 md:gap-16 flex-col md:flex-row  md:w-[100%]  md:-px-auto p-[2rem]"> {/*items-center md:justify-center md:items-center* */}
                 <div className="md:h-full md:w-[40%] md:self-center">
                     <img src={signup} alt="" className="object-fill hidden md:flex mx-auto rounded-[1rem]" />
                 </div>
