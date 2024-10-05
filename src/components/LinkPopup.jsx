@@ -7,7 +7,7 @@ import {
 import  InvoicePDF  from "./Invoice"
 import { PDFDownloadLink } from "@react-pdf/renderer"
 import { useState, useEffect } from "react";
-import { parseISO, parse, format } from "date-fns";
+import { parseISO, parse, format, isSameDay } from "date-fns";
 import { FadeLoader } from "react-spinners";
 
 
@@ -52,10 +52,15 @@ export default function LinkPopup(props) {
     if (storedScheduleData) {
       const startDate = parseISO(storedScheduleData?.startDate || '');
       const endDate = parseISO(storedScheduleData?.endDate || '');
+        // Check if start date and end date are the same
+    if (isSameDay(startDate, endDate)) {
+      const formattedStartDate = startDate ? format(startDate, 'do MMMM, yyyy') : 'N/A';
+      setFormattedDateRange(formattedStartDate); // Only display start date
+    } else {
       const formattedStartDate = startDate ? format(startDate, 'do MMMM, yyyy') : 'N/A';
       const formattedEndDate = endDate ? format(endDate, 'do MMMM, yyyy') : 'N/A';
-
-      setFormattedDateRange(`${formattedStartDate} - ${formattedEndDate}`);
+      setFormattedDateRange(`${formattedStartDate} - ${formattedEndDate}`); // Display date range
+    }
     }
 
     // Helper function to parse time strings into Date objects
