@@ -13,7 +13,6 @@ import { createAccountValidation } from "./FormValidation";
 
 import signup from "../../assets/images/signup.png";
 
-
 export default function CreateAccount() {
     let navigate = useNavigate();
     const { addToast } = useToasts();
