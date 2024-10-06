@@ -282,7 +282,7 @@ export default function CreateAccount() {
                             }*/}
                         <div className="pb-[0.5rem] pt-[1rem]">
                             <button
-                                className="bg-ev-700 w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]"
+                                className="bg-ev-700 w-full font-brsemi text-lg rounded-mm  text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]"
                                 type="submit"
                             >
                                 {/*onClick={() => { navigate("/dashboard-home") }} */}
