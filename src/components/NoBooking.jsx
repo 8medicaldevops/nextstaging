@@ -103,7 +103,7 @@ export default function NoBooking(props) {
             </svg>
             <p className="font-brbold text-[40px] text-[#000000]">{props.header}</p>
             <p className="font-brreg text-lg text-[#636066] max-w-[472px]">{props.text}</p>
-            {props.button &&
+            {props.btn &&
             <button onClick={()=>navigate("/StandBy")} className="bg-ev-700 rounded-mm px-5 py-3 border-none text-white font-brsemi text-lg flex items-center gap-1">Book Now<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.61914 3.95334L13.6658 8.00001L9.61914 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M2.33398 8H13.554" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>

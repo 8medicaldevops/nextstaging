@@ -29,6 +29,8 @@ export default function OrderBox({
     largeAmbulanceCost,
     medicCost,
     eventEndsSameDay,
+    pendingOrder,
+    color,
     token,
     iaFlag
 }) {
@@ -93,6 +95,7 @@ export default function OrderBox({
         //console.log(callerData,eventData,schedule,smallAmbulanceCount,largeAmbulanceCount,noOfMedic,estimatedFee)
         const handleSubmit = () => {
         // Save the current state to local storage
+            if (pendingOrder){
         localStorage.setItem('callerData', JSON.stringify(callerData));
         localStorage.setItem('eventData', JSON.stringify(eventData));
         localStorage.setItem('schedule', JSON.stringify(schedule));
@@ -102,6 +105,7 @@ export default function OrderBox({
         localStorage.setItem('medicsTotal', medicCost.toString());
         localStorage.setItem('bookingid',JSON.stringify(id));
         navigate("/StandBy/Nigeria/Event/Schedule/Ambulance%20Size/Confirm%20order")
+        }
         }
 
         // const handlePaymentLink = async() => {
@@ -161,10 +165,10 @@ export default function OrderBox({
                 <span className="flex gap-1 items-center">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_2890_31127)">
-                <path d="M17 20.5H7C4 20.5 2 19 2 15.5V8.5C2 5 4 3.5 7 3.5H17C20 3.5 22 5 22 8.5V15.5C22 19 20 20.5 17 20.5Z" stroke="#F34197" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="#F34197" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5.5 9.5V14.5" stroke="#F34197" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M18.5 9.5V14.5" stroke="#F34197" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M17 20.5H7C4 20.5 2 19 2 15.5V8.5C2 5 4 3.5 7 3.5H17C20 3.5 22 5 22 8.5V15.5C22 19 20 20.5 17 20.5Z" stroke={color} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke={color} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M5.5 9.5V14.5" stroke={color} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M18.5 9.5V14.5" stroke={color} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                 </g>
                 <defs>
                 <clipPath id="clip0_2890_31127">
@@ -172,7 +176,7 @@ export default function OrderBox({
                 </clipPath>
                 </defs>
                 </svg>
-                <p className="font-brsemi text-xl">₦ {price.toLocaleString()}</p>
+                <p style={{ color }} className="font-brsemi text-xl">₦ {price.toLocaleString()}</p>
                 </span>
             </div>
             <div className="bg-[#F4F6FA] p-4 flex flex-col gap-2 rounded-mm">
@@ -193,6 +197,7 @@ export default function OrderBox({
                     <p className="text-sm font-brreg text-[#181719]">{noOfMedic}</p>
                 </span>
             </div>
+            {pendingOrder  &&
             <span className="flex justify-end font-brmedium text-ev-700 cursor-pointer mt-1">
                     <div onClick={handleSubmit} className="flex items-center">
                     <p>Complete Booking</p>
@@ -219,6 +224,7 @@ export default function OrderBox({
                 )
                 } */}
             </span>
+            }
             <PaymentLinkModal open={modalOpen} close={()=>setModalOpen(false)} checkoutLink={checkoutLink} />
         </div>
     )
