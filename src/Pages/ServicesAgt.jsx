@@ -50,8 +50,10 @@ export default function ServicesAgt() {
                                 In partnership with trusted allies featuring emergency-ready jets and helicopters, our team of dedicated doctors and paramedics guarantees safe and expert air transportation.</p>
                         </div>
                         <div className="max-lg:flex max-lg:justify-center">
-                            <button onClick={() => setBookingModal(true)} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
-                                Book Now
+                            <button className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
+                                <Link to="/AmbulanceTp">
+                                    Book Now
+                                </Link>
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                                     <path d="M2.33398 8H13.554" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />

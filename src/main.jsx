@@ -34,6 +34,7 @@ import SignIn from './Pages/userOnboarding/SignIn';
 import CreateAccount from './Pages/userOnboarding/CreateAccount';
 import ForgotPassword from './Pages/userOnboarding/ForgotPassword';
 import ChangePassword from './Pages/userOnboarding/ChangePassword';
+import AmbulanceTp from './Pages/AmbulanceTp';
 import { ToastProvider } from 'react-toast-notifications';
 
 
@@ -119,6 +120,11 @@ const router = createBrowserRouter([
   {
     path: "/ChangePassword",
     element: <ChangePassword />,
+
+  },
+  {
+    path: "/AmbulanceTp",
+    element: <AmbulanceTp />,
 
   },
   {
