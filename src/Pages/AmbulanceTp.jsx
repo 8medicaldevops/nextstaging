@@ -14,10 +14,10 @@ import call from "@/assets/images/call.png";
 //import clock from "@/assets/images/clock.png";
 //import directUp from "@/assets/images/direct-up.png";
 //import directDown from "@/assets/images/direct-down.png";
-import email from "@/assets/images/emailicon.png";
+import email from "@/assets/images/EmailIcon.png";
 import success from "@/assets/images/ground-success.png";
 import location from "@/assets/images/location.png";
-import whatsapp from "@/assets/images/whatsapp.png";
+import whatsapp from "@/assets/images/Whatsapp.png";
 
 export default function AmbulanceTp() {
 
