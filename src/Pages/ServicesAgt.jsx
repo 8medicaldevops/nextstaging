@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
-import air from "../assets/images/airtransport.png";
-import emergency from "../assets/images/playersemergency.png";
+import air from "@/assets/images/airtransport.png";
+import emergency from "@/assets/images/playersemergency.png";
 import { Link } from "react-router-dom";
 import BookServiceModal from "@/components/BookServiceModal";
 import { useState, useEffect } from "react";
