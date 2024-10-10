@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import BookServiceModal from "@/components/BookServiceModal";
 import { useState, useEffect } from "react";
 import ReactGA from "react-ga4";
-//import air from "../../public/air.png"
+//import air from "@/assets/public/air.png"
 
 
 export default function ServicesAgt() {
@@ -105,7 +105,7 @@ export default function ServicesAgt() {
                     <span className="py-12 px-16 max-sm:px-4 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
                         <div className="flex flex-col gap-1 ">
                             <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Book our Ambulance Transport Service Today</p>
-                            {/* <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
+                            {/*<p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
                         </div>
                         <button onClick={() => setBookingModal(true)} className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Book Ambulance Transport</button>
                     </span>
