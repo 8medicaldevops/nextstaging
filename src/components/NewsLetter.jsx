@@ -91,7 +91,7 @@ export default function NewsLetter() {
                 <small className="text-red-500">Invalid email address.</small>
             )}
             {isSubscribed && (
-                <Suscribed isModalOpen={isSubscribed} isModalClosed={() => setIsSubscribed(false)} img = {subscribedImage} title={subscribedData.title} body={subscribedData.body} />
+                <Suscribed isModalOpen={isSubscribed} isModalClosed={() => setIsSubscribed(false)} img = {subscribedImage} title={subscribedData.title} body={subscribedData.body} bg="#181719"/>
             )}
             <Suscribed isModalOpen={isModalOpen} isModalClosed={() => setIsModalOpen(false)} img = {successImage} title={successData.title} body={successData.body} />
         </div>
