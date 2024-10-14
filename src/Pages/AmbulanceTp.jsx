@@ -183,7 +183,7 @@ export default function AmbulanceTp() {
                                     <label htmlFor="gender" className="font-brsemi text-sm text-[#636066]">Gender</label>
                                     <Select onValueChange={(value) => handleSelectChange('gender', value)}>
                                         <SelectTrigger className=" border-[1px] border-[#E4E3E5] text-base w-[568px] h-12 text-[#232323] rounded-mm p-4 font-brreg max-lg:w-full">
-                                            <SelectValue className=" text-6xl " placeholder={initialValues.gender || "Select event type"} />
+                                            <SelectValue className=" text-6xl " placeholder={initialValues.gender || "Select Gender"} />
                                         </SelectTrigger>
                                         <SelectContent className="bg-white rounded-mm" >
                                             <SelectItem value="Wedding">Male</SelectItem>
