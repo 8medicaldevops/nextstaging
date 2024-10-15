@@ -162,9 +162,7 @@ export default function AmbulanceTp() {
                                         </p>
                                     }
                                 </div>
-
                             </div>
-
                             <div className="py-[0.5rem] flex justify-between w-[100%] gap-3 items-center">
                                 <div className="py-[0.5rem] w-1/2 gap-3">
                                     <div className="flex flex-col gap-[3px]">
@@ -445,12 +443,11 @@ export default function AmbulanceTp() {
                                 }
                             </button>
                         </div>
-
                     </form>
                 </div>
                 <div
                     style={{ '--image-url': `url(${line})` }}
-                    className="md:h-full md:w-[40%] md:flex-start bg-[image:var(--image-url)] text-white py-6 px-6 rounded-[1rem] hidden md:flex md:flex-col"
+                    className="md:h-full  md:flex-start bg-[image:var(--image-url)] text-white py-6 px-6 rounded-[1rem] hidden md:flex md:flex-col w-fit"
                 >
                     <h3 className="font-brsemi text-[25px]">Contact Us Via</h3>
                     <ul className="my-3 font-brlight">
