@@ -15,15 +15,16 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import line from "@/assets/images/line.png";
-//import calender from "@/assets/images/calendar.png";
 import call from "@/assets/images/call.png";
-//import clock from "@/assets/images/clock.png";
-//import directUp from "@/assets/images/direct-up.png";
-//import directDown from "@/assets/images/direct-down.png";
 import email from "@/assets/images/EmailIcon.png";
 import success from "@/assets/images/ground-success.png";
 import location from "@/assets/images/location.png";
 import whatsapp from "@/assets/images/Whatsapp.png";
+
+//import calender from "@/assets/images/calendar.png";
+//import clock from "@/assets/images/clock.png";
+//import directUp from "@/assets/images/direct-up.png";
+//import directDown from "@/assets/images/direct-down.png";
 
 export default function AmbulanceTp() {
 
@@ -42,7 +43,7 @@ export default function AmbulanceTp() {
         transportType: '',
         pickUp: '',
         dropOff: '',
-        pickUpDate: '',
+        pickupDate: '',
         pickupTime: '',
         contactFirstName: '',
         contactLastName: '',
@@ -58,8 +59,14 @@ export default function AmbulanceTp() {
         transportType: Yup.bool().oneOf([true], 'You need to pick a transport type'),
         pickUp: Yup.string().required("Pickup location is required"),
         dropOff: Yup.string().required("Drop-off location is required"),
-        //pickUpDate: Yup.date().required("Pickup date is required"),
-        //pickupTime: Yup.number().required("Pickup time is required"),
+        pickupTime: Yup.string().required("Pickup time is required"),
+        pickupDate: Yup
+            .string()
+            .required("Start date is required")
+            /*.matches(
+                /^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/,
+                "Date must be in MM/DD/YYYY format"
+            ),*/,
         contactFirstName: Yup.string().required("Contact first name is required"),
         contactLastName: Yup.string().required("Contact last name is required"),
         contactEmail: Yup.string().required("Contact email is required"),
@@ -92,6 +99,8 @@ export default function AmbulanceTp() {
 
 
     const { values, handleBlur, handleChange, errors, touched } = useFormik({
+        //validateOnChange: "false",
+        //validateOnBlur: "false",
         initialValues: initialValues,
         validationSchema: groundAmbulanceValidation,
         onSubmit: () => {
@@ -155,49 +164,52 @@ export default function AmbulanceTp() {
                                 </div>
 
                             </div>
-                            <div className="py-[0.5rem] w-[100%] gap-3">
-                                <div className="flex flex-col gap-[3px] w-[100%]">
-                                    <label htmlFor="age" className="font-brsemi text-sm text-[#636066] mb-[10px]">Age</label>
-                                    <input
-                                        type="text"
-                                        className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
-                                        placeholder="Enter Age"
-                                        name="age"
-                                        required
-                                        id="age"
-                                        value={values.age}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                    />
-                                    {touched.age && errors.age &&
+
+                            <div className="py-[0.5rem] flex justify-between w-[100%] gap-3 items-center">
+                                <div className="py-[0.5rem] w-1/2 gap-3">
+                                    <div className="flex flex-col gap-[3px]">
+                                        <label htmlFor="age" className="font-brsemi text-sm text-[#636066] mb-[10px]">Age</label>
+                                        <input
+                                            type="text"
+                                            className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                            placeholder="Enter Age"
+                                            name="age"
+                                            required
+                                            id="age"
+                                            value={values.age}
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                        />
+                                        {touched.age && errors.age &&
+                                            <p>
+                                                <small className='text-xs text-red-500'>
+                                                    {errors.age}
+                                                </small>
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                                <div className="flex flex-col gap-3 w-1/2">
+                                    <div className="flex flex-col gap-[12px]">
+                                        <label htmlFor="gender" className="font-brsemi text-sm text-[#636066]">Gender</label>
+                                        <Select onValueChange={(value) => handleSelectChange('gender', value)} className="max-w-full">
+                                            <SelectTrigger className=" border-[1px] border-[#E4E3E5] text-base h-14 text-[#232323] rounded-mm p-4 font-brreg max-lg:w-full">
+                                                <SelectValue className="text-6xl" placeholder={initialValues.gender || "Select Gender"} />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-white rounded-mm" >
+                                                <SelectItem value="Wedding">Male</SelectItem>
+                                                <SelectItem value="Conference">Female</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    {touched.gender && errors.gender &&
                                         <p>
                                             <small className='text-xs text-red-500'>
-                                                {errors.age}
+                                                {errors.gender}
                                             </small>
                                         </p>
                                     }
                                 </div>
-                            </div>
-                            <div className="flex flex-col gap-[3px]">
-                                <div>
-                                    <label htmlFor="gender" className="font-brsemi text-sm text-[#636066]">Gender</label>
-                                    <Select onValueChange={(value) => handleSelectChange('gender', value)}>
-                                        <SelectTrigger className=" border-[1px] border-[#E4E3E5] text-base w-[568px] h-12 text-[#232323] rounded-mm p-4 font-brreg max-lg:w-full">
-                                            <SelectValue className=" text-6xl " placeholder={initialValues.gender || "Select Gender"} />
-                                        </SelectTrigger>
-                                        <SelectContent className="bg-white rounded-mm" >
-                                            <SelectItem value="Wedding">Male</SelectItem>
-                                            <SelectItem value="Conference">Female</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                {touched.gender && errors.gender &&
-                                    <p>
-                                        <small className='text-xs text-red-500'>
-                                            {errors.gender}
-                                        </small>
-                                    </p>
-                                }
                             </div>
                         </div>
                         <div className="w-[100%] mb-6">
@@ -206,24 +218,24 @@ export default function AmbulanceTp() {
                                 <label htmlFor="transportType" className="font-brsemi text-sm text-[#636066]">Transport Type</label>
                                 <div className="flex gap-[2rem] items-center my-3 font-brreg">
                                     <div className="flex gap-5 items-center">
-                                        
+
                                         <div className={"flex items-center gap-2"}
                                             onClick={() => setTransportType('one-way')}>
                                             <input type="radio" name="transportType" className=" bg-ev-700  " value="one-way" checked={transportType === 'one-way'} onChange={() => setTransportType('one-way')} />
-                                            
+
                                             <p className="font-brsemi text-sm text-[#636066]">One-way</p>
                                         </div>
 
                                         <div className={"flex items-center gap-2"}
                                             onClick={() => setTransportType('two-way')}>
                                             <input type="radio" name="transportType" className=" bg-ev-700" value="two-way" checked={transportType === 'two-way'} onChange={() => setTransportType('two-way')} />
-                                            
+
                                             <p className="font-brsemi text-sm text-[#636066]">Two-way</p>
                                         </div>
 
 
                                     </div>
-                                   
+
                                     {touched.transportType && errors.transportType &&
                                         <p>
                                             <small className='text-xs text-red-500'>
@@ -288,14 +300,14 @@ export default function AmbulanceTp() {
                                     name="pickupDate"
                                     required
                                     id="pickupDate"
-                                    value={values.pickUpDate}
+                                    value={values.pickupDate}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                 />
-                                {touched.pickUpDate && errors.pickUpDate &&
+                                {touched.pickupDate && errors.pickupDate &&
                                     <p>
                                         <small className='text-xs text-red-500'>
-                                            {errors.pickUpDate}
+                                            {errors.pickupDate}
                                         </small>
                                     </p>
                                 }
@@ -307,9 +319,9 @@ export default function AmbulanceTp() {
                                     type="time"
                                     className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
                                     placeholder="Select Time(Time)"
-                                    name="pickUpTime"
+                                    name="pickupTime"
                                     required
-                                    id="pickUpTime"
+                                    id="pickupTime"
                                     value={values.pickupTime}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
@@ -398,7 +410,6 @@ export default function AmbulanceTp() {
                             <div className="py-[0.5rem] flex flex-col">
                                 <label htmlFor="contactNumber" className="font-brsemi text-sm text-[#636066] mb-[10px]">Phone Number</label>
                                 <input
-                                    //type="text"
                                     type="tel"
                                     className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
                                     placeholder="Enter Phone Number"
