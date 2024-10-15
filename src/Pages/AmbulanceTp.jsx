@@ -62,7 +62,7 @@ export default function AmbulanceTp() {
         pickupTime: Yup.string().required("Pickup time is required"),
         pickupDate: Yup
             .string()
-            .required("Start date is required")
+            .required("Pickup date is required")
             /*.matches(
                 /^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/,
                 "Date must be in MM/DD/YYYY format"
