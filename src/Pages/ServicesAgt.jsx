@@ -107,7 +107,11 @@ export default function ServicesAgt() {
                             <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Book our Ambulance Transport Service Today</p>
                             {/*<p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
                         </div>
-                        <button onClick={() => setBookingModal(true)} className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Book Ambulance Transport</button>
+                        <button className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">
+                            <Link to="/AmbulanceTp">
+                                Book Ambulance Transport
+                            </Link>
+                        </button>
                     </span>
                 </section>
 

@@ -117,7 +117,7 @@ export default function Hero() {
 
                         </main>
                         <aside className="flex flex-col gap-3 w-[464px] max-lg:w-full">
-                            <p className="font-brreg text-lg text-[#636066]">Be it film sporting events, film shoots,  conferences or weddings, let's provide round the clock medical support.</p>
+                            <p className="font-brreg text-lg text-[#636066]">Be it film sporting events, film shoots,  conferences or weddings, let&apos;s provide round the clock medical support.</p>
                             <Link to='/ServiceAmb'>
                                 <p className="font-brmedium text-ev-700 ">Learn more</p>
                             </Link>
@@ -181,7 +181,7 @@ export default function Hero() {
                             <p className="font-brsemi text-4xl max-lg:text-[28px]">Transport Loved Ones with Dignity and Care</p>
                         </main>
                         <aside className="flex flex-col gap-3 w-[464px] max-lg:w-full">
-                            <p className="font-brreg text-lg text-[#636066]">We handle your loved one's final journey with care and respect. Our dedicated team ensures seamless, compassionate service, allowing you to focus on honoring their memory.</p>
+                            <p className="font-brreg text-lg text-[#636066]">We handle your loved one&apos;s final journey with care and respect. Our dedicated team ensures seamless, compassionate service, allowing you to focus on honoring their memory.</p>
                             <Link to="/ServiceAfterLife">
                                 <p className="font-brmedium text-ev-700 ">Learn More</p>
                             </Link>
@@ -403,7 +403,7 @@ export default function Hero() {
             </section>
             <section className="flex flex-col items-center w-full h-[543px] justify-center">
                 <p className="font-brsemi text-[40px] text-[#181719] max-lg:text-center">What People are Saying</p>
-                <p className="font-brreg text-lg text-[#636066] max-lg:text-center">Here's what customers have to say about our 24/7 support</p>
+                <p className="font-brreg text-lg text-[#636066] max-lg:text-center">Here&apos;s what customers have to say about our 24/7 support</p>
                 <div className=" flex py-8 w-[100%]">
                     <TestimonialCarousel />
 

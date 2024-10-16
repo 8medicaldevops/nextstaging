@@ -96,6 +96,3 @@ export default function StandBy() {
         </div>
     )
 }
-
-
-

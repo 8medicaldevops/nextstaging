@@ -36,6 +36,9 @@ import CreateAccount from './Pages/userOnboarding/CreateAccount';
 import ForgotPassword from './Pages/userOnboarding/ForgotPassword';
 import ChangePassword from './Pages/userOnboarding/ChangePassword';
 import AmbulanceTp from './Pages/AmbulanceTp';
+import AfterLife from './Pages/AfterLife';
+import AfterLifeNigera from './Pages/AfterLifeNigeria';
+import AfterlifeOtherCountries from './Pages/AfterlifeOtherCountries'
 import { ToastProvider } from 'react-toast-notifications';
 
 
@@ -85,13 +88,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/OtherBookings",
-    element: <OtherBookings />, 
-     
+    element: <OtherBookings />,
+
   },
   {
     path: "/OrderHistory",
-    element: <OrderHistory />, 
-     
+    element: <OrderHistory />,
+
   },
 
   {
@@ -175,7 +178,25 @@ const router = createBrowserRouter([
     element: <BookingError />,
 
   },
+
+  // Afterlife Booking Paths
+
+  {
+    path: "/AfterLife",
+    element: <AfterLife />,
+  },
+  {
+    path: "/AfterLife/Others",
+    element: <AfterlifeOtherCountries />,
+  },
+  {
+    path: "/AfterLife/Nigeria",
+    element: <AfterLifeNigera />,
+  },
 ]);
+
+
+
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
