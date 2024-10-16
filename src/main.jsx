@@ -23,6 +23,7 @@ import ServicesEr from './Pages/ServicesEr.jsx';
 import ServicesAgt from './Pages/ServicesAgt.jsx';
 import ServicesAmb from './Pages/ServicesAmb.jsx';
 import ServicesUg from './Pages/ServicesUg.jsx';
+import ServicesAfterLife from './Pages/ServicesAfterLife';
 import Impact from './Pages/Impact.jsx';
 import OtherBookings from './Pages/OtherBookings.jsx';
 import BookingError from './Pages/BookingError.jsx';
@@ -54,17 +55,18 @@ const router = createBrowserRouter([
   {
     path: "/AboutUs",
     element: <AboutUs />,
-
   },
   {
     path: "/ServiceEr",
     element: <ServicesEr />,
-
   },
   {
     path: "/ServiceAgt",
     element: <ServicesAgt />,
-
+  },
+  {
+    path: "/ServiceAfterLife",
+    element: <ServicesAfterLife />,
   },
   {
     path: "/ServiceAmb",

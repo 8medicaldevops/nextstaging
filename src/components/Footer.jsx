@@ -74,14 +74,17 @@ export default function Footer() {
             </span>
             
             <span className="flex gap-9 font-brreg text-[#B3B3C3] max-lg:flex-col max-lg:items-center">
-                <Link to="/ServiceEr" >
-                    <p>Emergency Response</p>
+                <Link to="/ServiceAfterLife" >
+                    <p>AfterLife Transport</p>
                 </Link>
                 <Link to="/ServiceAmb" >
                     <p>Ambulance Standby</p>
                 </Link>
                 <Link to="/ServiceAgt" >
                     <p>Ambulance Transport</p>
+                </Link>
+                <Link to="/ServiceEr" >
+                    <p>Emergency Response</p>
                 </Link>
                 <Link to="/ServiceUg" >
                     <p>Urgent Care</p>

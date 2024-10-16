@@ -5,6 +5,7 @@ import EmblaCarousel from '../components/EmblaCarousel'
 import '../App.css'
 import ambuBig from '../assets/images/ambu-big-transformed.png'
 import doctor from '../assets/images/doctor.jpeg';
+import afterlife from '../assets/images/afterlife.png';
 import NewsLetter from "./NewsLetter";
 import Footer from "./Footer";
 import {
@@ -169,9 +170,48 @@ export default function Hero() {
                             </Link>
                         </aside>
                     </div>
-
                     <button onClick={() => setBookingModal(true)} className="bg-ev-700 font-brbold text-lg mt-4 text-white rounded py-3 px-5 w-40">Get Started</button>
+                </div>;
+            case 'afterLife':
+                return <div className="px-12 py-12 rounded-3xl bg-white">
+                    <p className="font-brmedium text-ev-700 mb-2 ">Afterlife Transport</p>
+                    <div className="flex justify-between gap-32 max-lg:flex-col max-lg:gap-4">
 
+                        <main className="flex flex-col gap-6 w-[464px] max-lg:w-full">
+                            <p className="font-brsemi text-4xl max-lg:text-[28px]">Transport Loved Ones with Dignity and Care</p>
+                        </main>
+                        <aside className="flex flex-col gap-3 w-[464px] max-lg:w-full">
+                            <p className="font-brreg text-lg text-[#636066]">We handle your loved one's final journey with care and respect. Our dedicated team ensures seamless, compassionate service, allowing you to focus on honoring their memory.</p>
+                            <Link to="/ServiceAfterLife">
+                                <p className="font-brmedium text-ev-700 ">Learn More</p>
+                            </Link>
+                        </aside>
+                    </div>
+
+                    <button className="bg-ev-700 font-brbold text-lg mt-4 text-white rounded py-3 px-5 w-40">
+                        <Link to="ServiceAfterLife">Book Now</Link>
+                    </button>
+
+                </div>;
+
+            case 'airGround':
+                return <div className="px-12 py-12 rounded-3xl bg-white">
+                    <p className="font-brmedium text-ev-700 mb-2 ">Air and Ground Ambulance Transport</p>
+                    <div className="flex justify-between gap-32 max-lg:flex-col max-lg:gap-4">
+
+                        <main className="flex flex-col gap-6 w-[464px] max-lg:w-full">
+                            <p className="font-brsemi text-4xl max-lg:text-[28px]">Curate a medical care package to suit your health needs</p>
+                        </main>
+                        <aside className="flex flex-col gap-3 w-[464px] max-lg:w-full">
+                            <p className="font-brreg text-lg text-[#636066]">Need periodic ambulance transport or standby for your individual, family or business use? Curate a package to suit your needs.</p>
+                            <Link to="/ServiceUg">
+                                <p className="font-brmedium text-ev-700 ">Learn More</p>
+                            </Link>
+                        </aside>
+                    </div>
+                    <button className="bg-ev-700 font-brbold text-lg mt-4 text-white rounded py-3 px-5 w-40">
+                    <Link to="ServiceAgt">Book Now</Link>
+                    </button>
                 </div>;
             default:
                 return <p>Select a service to see the details.</p>;
@@ -218,15 +258,26 @@ export default function Hero() {
                 <div className=" max-lg:hidden">
                     <p className="font-brsemi text-3xl pb-6">Choose a Service</p>
                     <div className="flex gap-3">
+                        <button className={`${buttonClass} ${activeService === 'afterLife' ? activeClass : ''}`} onClick={() => handleButtonClick('afterLife')}>
+                            {activeService === 'afterLife' ? ambWhite : ambBlack}
+                            AfterLife Transport
+                        </button>
+                        <button className={`${buttonClass} ${activeService === 'airGround' ? activeClass : ''}`} onClick={() => handleButtonClick('airGround')}>
+                            {activeService === 'airGround' ? ambWhite : ambBlack}
+                            Air/Ground Transport
+                        </button>
                         <button className={`${buttonClass} ${activeService === 'standby' ? activeClass : ''}`} onClick={() => handleButtonClick('standby')}>
                             {activeService === 'standby' ? ambWhite : ambBlack}
-                            Ambulance standby</button>
+                            Ambulance standby
+                        </button>
                         <button className={`${buttonClass} ${activeService === 'transport' ? activeClass : ''}`} onClick={() => handleButtonClick('transport')}>
                             {activeService === 'transport' ? ambWhite : ambBlack}
-                            Ambulance Transport</button>
+                            Ambulance Transport
+                        </button>
                         <button className={`${buttonClass} ${activeService === 'urgentCare' ? activeClass : ''}`} onClick={() => handleButtonClick('urgentCare')} >
                             {activeService === 'urgentCare' ? whiteSteth : blackSteth}
-                            Urgent Care</button>
+                            Urgent Care
+                        </button>
                     </div>
                 </div>
                 <div className="lg:hidden">
@@ -235,6 +286,8 @@ export default function Hero() {
                             <SelectValue placeholder={<div className="flex gap-2 items-center">{ambBlack}Ambulance standby</div>} />
                         </SelectTrigger>
                         <SelectContent className="bg-white rounded-mm">
+                            <SelectItem value="afterLife"><div className="flex gap-2 items-center">{ambBlack}AfterLife Transport</div></SelectItem>
+                            <SelectItem value="airGround"><div className="flex gap-2 items-center">{ambBlack}Air/Ground Transport</div></SelectItem>
                             <SelectItem value="standby"><div className="flex gap-2 items-center">{ambBlack}Ambulance standby</div></SelectItem>
                             <SelectItem value="transport"><div className="flex gap-2 items-center">{ambBlack}Ambulance Transport</div></SelectItem>
                             <SelectItem value="urgentCare"><div className="flex gap-2 items-center">{blackSteth}Urgent Care</div></SelectItem>
@@ -326,7 +379,6 @@ export default function Hero() {
                     </main>
                     <aside className=" flex items-end max-lg:items-center max-lg:justify-end">
                         <ScrollImage />
-
                     </aside>
                 </div>
             </section>
@@ -409,7 +461,6 @@ export function SkeletonCard() {
     return (
         <div className="flex flex-col space-y-3">
             <Skeleton className="h-[180px] w-[324px] rounded-xl" />
-
         </div>
     )
 }
@@ -441,6 +492,12 @@ const serviceContents = [
         title: 'Emergency Response',
         desc: 'Be it night or day, you can count on our emergency response team to show up.',
         link: '/ServiceEr'
+    },
+    {
+        image: afterlife,
+        title: 'AfterLife Transport',
+        desc: "Transport your deceased loved one with care. We guarantee respectful and dignified treatment as their life's journey concludes.",
+        link: '/ServiceAfterLife'
     },
 ]
 
