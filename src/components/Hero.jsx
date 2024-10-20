@@ -286,11 +286,6 @@ export default function Hero() {
                 <EmblaCarousel slides={carouselImgs} options={{ loop: true, stopOnMouseEnter: true, stopOnInteraction: false }} className="flex" />
             </section>
 
-
-
-
-
-
             <section ref={sectionRef} className="bg-[#F9F9FA] py-12 px-32 flex flex-col gap-9 max-lg:px-4 max-lg:py-9">
                 <div className=" max-lg:hidden">
                     <p className="font-brsemi text-3xl pb-6">Choose a Service</p>
@@ -316,7 +311,7 @@ export default function Hero() {
                 <div className="lg:hidden">
                     <Select onValueChange={handleSelectChange}>
                         <SelectTrigger className="w-[240px] rounded-mm border-[1px] border-[#E4E3E5] font-brmedium text-[#181719] ">
-                            <SelectValue placeholder={<div className="flex gap-2 items-center">{ambBlack}Ambulance standby</div>} />
+                            <SelectValue placeholder={<div className="flex gap-2 items-center">{blackTpEmoji}Ambulance standby</div>} />
                         </SelectTrigger>
                         <SelectContent className="bg-white rounded-mm">
                             <SelectItem value="standby">
