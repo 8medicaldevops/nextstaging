@@ -38,7 +38,9 @@ import ChangePassword from './Pages/userOnboarding/ChangePassword';
 import AmbulanceTp from './Pages/AmbulanceTp';
 import AfterLife from './Pages/AfterLife';
 import AfterLifeNigera from './Pages/AfterLifeNigeria';
-import AfterlifeOtherCountries from './Pages/AfterlifeOtherCountries'
+import AfterlifeOtherCountries from './Pages/AfterlifeOtherCountries';
+import AfterLifeNigeriaConfirm from './Pages/AfterLifeNigeriaConfirm';
+import AfterLifeNigeriaRoute from './Pages/AfterLifeNigeriaRoute';
 import { ToastProvider } from 'react-toast-notifications';
 
 
@@ -192,6 +194,14 @@ const router = createBrowserRouter([
   {
     path: "/AfterLife/Nigeria",
     element: <AfterLifeNigera />,
+  },
+  {
+    path: "/AfterLife/Nigeria/Route",
+    element: <AfterLifeNigeriaRoute />,
+  },
+  {
+    path: "/AfterLife/Nigeria/Confirm",
+    element: <AfterLifeNigeriaConfirm />,
   },
 ]);
 
