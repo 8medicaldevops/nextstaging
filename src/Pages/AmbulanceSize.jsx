@@ -51,9 +51,10 @@ const getNumberOfDays = (startDate, endDate) => {
 };
 
 const calculateFinalTotalCost = (smallAmbulanceCount, largeAmbulanceCount, medicsCount, hours, startDate, endDate) => {
-  const days = getNumberOfDays(startDate, endDate);
+ // const days = getNumberOfDays(startDate, endDate);
   const dailyTotalCost = calculateTotalCost(smallAmbulanceCount, largeAmbulanceCount, medicsCount, hours);
-  return dailyTotalCost * days;
+  return dailyTotalCost ; //* days;
+ 
 };
 
 
@@ -96,33 +97,44 @@ export default function AmbulanceSize() {
     });
   }, [smallAmbulanceCount, largeAmbulanceCount, medicsCount, estimatedFee]);
 
+  const stripAmPmSuffix = (time12) => {
+    return time12.replace(/ (AM|PM)/, '');
+  };
+
   useEffect(() => {
     const calculateFee = () => {
-      const [startHours, startMinutes] = storedScheduleData.startTime.split(":").map(Number);
-      const [endHours, endMinutes] = storedScheduleData.endTime.split(":").map(Number);
-
-      let totalHours = endHours - startHours;
-      let totalMinutes = endMinutes - startMinutes;
-
-      if (totalMinutes < 0) {
-        totalHours -= 1;
-        totalMinutes += 60;
+      const strippedStartTime = stripAmPmSuffix(storedScheduleData.startTime);
+      const strippedEndTime = stripAmPmSuffix(storedScheduleData.endTime);
+  
+      // Combine date and time
+      const startDateTime = new Date(`${storedScheduleData.startDate} ${strippedStartTime}`);
+      let endDateTime = new Date(`${storedScheduleData.endDate} ${strippedEndTime}`);
+  
+      // Handle cross-midnight scenario
+      if (endDateTime < startDateTime) {
+        if (!storedScheduleData.eventEndsSameDay) {
+          endDateTime.setDate(endDateTime.getDate() + 1);
+        }
       }
-
-      totalHours = roundUpToNextHour(totalHours, totalMinutes);
-
+  
+      const totalMinutes = Math.floor((endDateTime - startDateTime) / (1000 * 60)); // Difference in minutes
+      const hours = Math.floor(totalMinutes / 60); // Total hours
+      const minutes = totalMinutes % 60; // Remaining minutes
+  
+      const roundedHours = roundUpToNextHour(hours, minutes); // Adjust hours if necessary
+  
       const totalCost = calculateFinalTotalCost(
         smallAmbulanceCount,
         largeAmbulanceCount,
         medicsCount,
-        totalHours,
+        roundedHours,
         storedScheduleData.startDate,
         storedScheduleData.endDate
       );
-
+  
       setEstimatedFee(totalCost);
     };
-
+  
     if (
       storedScheduleData.startTime &&
       storedScheduleData.endTime &&
@@ -140,6 +152,7 @@ export default function AmbulanceSize() {
     largeAmbulanceCount,
     medicsCount
   ]);
+  
 
   const navigate = useNavigate();
   const handleSubmit = (e) => {
