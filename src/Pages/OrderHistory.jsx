@@ -882,6 +882,7 @@ export default function OrderHistory () {
                             emailAddress={order.callerDetails.email}
                             phoneNumber={order.callerDetails.phone}
                             companyName={order.callerDetails.company}
+                            eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
                             token={token}
                             pendingOrder={true}
                             iaFlag={iaFlag}
