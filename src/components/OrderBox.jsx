@@ -34,7 +34,10 @@ export default function OrderBox({
     token,
     iaFlag
 }) {
-        
+    const formatBackendDate = (date) => {
+        const formattedDate = new Date(date).toISOString().slice(0, 10); // Extracts 'YYYY-MM-DD'
+        return formattedDate;
+      };
     const [callerData, setCallerData] = useState({
         fullName: fullName,
         emailAddress: emailAddress,
@@ -50,8 +53,8 @@ export default function OrderBox({
         description: description,
     })
     const [schedule, setSchedule] = useState({
-        startDate: startDate,
-        endDate: endDate,
+        startDate: formatBackendDate(startDate),
+        endDate: formatBackendDate(endDate),
         eventEndsSameDay: eventEndsSameDay,
         startTime: startTime,
         endTime: endTime,
