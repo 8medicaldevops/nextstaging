@@ -138,28 +138,28 @@ export default function BookingDetails (props) {
   const formattedTimeRange = startTime && endTime ? `${formattedStartTime} - ${formattedEndTime}` : 'Invalid time range';
 
   const renderContent = () => {
-    switch (bookingData.missionStatus) {
-      case "PENDING":
-            return (
-                <div className="bg-[#864df1] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
-                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <p className="text-sm font-brmedium text-[#FAFAFA]">Pending</p>
-                </div>
-            );
-      case "ASSIGNED":
+    switch (bookingData.paymentStatus) {
+      // case "PAID":
+      //       return (
+      //           <div className="bg-[#864df1] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
+      //           <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+      //           <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //           <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //           </svg>
+      //           <p className="text-sm font-brmedium text-[#FAFAFA]">Pending</p>
+      //           </div>
+      //       );
+      case "UNPAID":
         return (
             <div className="bg-[#FEF0E6] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <p className="text-sm font-brmedium text-[#F96D09]">Upcoming</p>
+            <p className="text-sm font-brmedium text-[#F96D09]">UNPAiD</p>
             </div>
         );
-      case "COMPLETED":
+      case "PAID":
         return (
             <div className="bg-[#ECFBF2] w-[120px]  gap-2 flex items-center p-2 rounded">
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -167,23 +167,23 @@ export default function BookingDetails (props) {
         <path d="M6.09814 9.49945L8.22064 11.622L12.4731 7.37695" stroke="#39C574" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
         <p className="text-sm font-brmedium text-[#181719]">
-        Completed
+        PAID
         </p>
         </div>
         );
-      case "CANCELLED":
-        return (
-            <div className="bg-[#FEE6E8] w-[120px] gap-2 flex items-center p-2 rounded">
-        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9.28564 17C13.4106 17 16.7856 13.625 16.7856 9.5C16.7856 5.375 13.4106 2 9.28564 2C5.16064 2 1.78564 5.375 1.78564 9.5C1.78564 13.625 5.16064 17 9.28564 17Z" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M7.16455 11.622L11.4096 7.37695" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M11.4096 11.622L7.16455 7.37695" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        <p className="text-sm font-brmedium text-[#F9091D]">
-        Canceled
-        </p>
-        </div>
-        );
+      // case "CANCELLED":
+      //   return (
+      //       <div className="bg-[#FEE6E8] w-[120px] gap-2 flex items-center p-2 rounded">
+      //   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+      //   <path d="M9.28564 17C13.4106 17 16.7856 13.625 16.7856 9.5C16.7856 5.375 13.4106 2 9.28564 2C5.16064 2 1.78564 5.375 1.78564 9.5C1.78564 13.625 5.16064 17 9.28564 17Z" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //   <path d="M7.16455 11.622L11.4096 7.37695" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //   <path d="M11.4096 11.622L7.16455 7.37695" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //   </svg>
+      //   <p className="text-sm font-brmedium text-[#F9091D]">
+      //   Canceled
+      //   </p>
+      //   </div>
+      //   );
       default:
         return null;
     }
@@ -245,7 +245,7 @@ export default function BookingDetails (props) {
                     </span>
                     }
                      <span className="flex flex-col justify-between w-[278px]  py-3  rounded-xl  max-lg:w-full ">
-                        <p className=" font-brmedium text-[#181719] ">Booking Status</p>
+                        <p className=" font-brmedium text-[#181719] ">Payment Status</p>
                         <div className="font-brreg  w-[160px]">
                           {/* <Status id={props.id}  row={bookingData.missionStatus}/> */}
                         <span>
