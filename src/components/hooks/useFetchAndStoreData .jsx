@@ -142,7 +142,7 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
       // }
     } catch (error) {
       console.error('Error fetching data:', error);
-      if (error.response && error.response.status === 401) {
+      if (error.response && error.response.status === 401 || error.response.status === 403) {
         clearStorageAndRedirect(); // Token might be invalid or expired, clear storage and redirect
       }
     } finally {
