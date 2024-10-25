@@ -111,3 +111,11 @@
   background: #fff;
   z-index: 9;
 }
+
+/*.default-option{
+  color:#9C9A9E !important;
+}
+
+option:not(first-child) {
+  color: #232323 !important;
+}*/

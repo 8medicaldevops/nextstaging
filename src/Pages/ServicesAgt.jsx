@@ -6,8 +6,6 @@ import { Link } from "react-router-dom";
 import BookServiceModal from "@/components/BookServiceModal";
 import { useState, useEffect } from "react";
 import ReactGA from "react-ga4";
-//import air from "@/assets/public/air.png"
-
 
 export default function ServicesAgt() {
 
@@ -45,7 +43,7 @@ export default function ServicesAgt() {
                                 </defs>
                             </svg>
 
-                            <p className="text-[40px] w-[448px] text-[#2E0469] font-brbold max-lg:flex max-lg:justify-center max-lg:text-center max-lg:w-full max-lg:text-4xl">Air and Ground Ambulance Transport</p>
+                            <p className="text-[40px] w-[448px] text-[#2E0469] font-brbold max-lg:flex max-lg:justify-center max-lg:text-center max-lg:w-full max-lg:text-4xl">Ambulance Transport (Air and Ground)</p>
                             <p className="w-[448px] text-[#666666] font-brreg max-lg:flex max-lg:text-center text-lg max-lg:w-full ">For both ground and air Transport, we provide bed-to-bed transfers of patients from both homes and hospitals. Experience peace of mind with our accomplished medical professionals and cutting-edge ambulances, ensuring seamless patient transport for any health condition.
                                 In partnership with trusted allies featuring emergency-ready jets and helicopters, our team of dedicated doctors and paramedics guarantees safe and expert air transportation.</p>
                         </div>
