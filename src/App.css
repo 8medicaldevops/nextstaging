@@ -111,3 +111,17 @@
   background: #fff;
   z-index: 9;
 }
+
+
+/*input[type="time"]:invalid:before {
+  content: 'Select Time';
+  color: #9d9d9d;
+  //position: absolute;
+  //background: #fff;
+  //width: 70px;
+}
+
+input[type="time"]:focus:before {
+  width: 0;
+  content: '';
+}*/
