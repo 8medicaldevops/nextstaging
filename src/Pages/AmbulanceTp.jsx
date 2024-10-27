@@ -234,12 +234,11 @@ export default function AmbulanceTp() {
                                         value={values.patientDetails.gender}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
-                                        className="bg-none appearance-none border-[1px] border-[#E4E3E5] rounded-mm p-4 font-brreg w-full"
+                                        className="bg-transparent appearance-none border-[1px] border-[#E4E3E5] rounded-mm p-4 font-brreg w-full"
                                     >
                                         <option value="" disabled selected label="Select Gender" className="default-option">Select Gender</option>
                                         <option value="Male" label="Male">Male</option>
                                         <option value="Female" label="Female" >Female</option>
-
                                     </select>
 
                                     {touched.patientDetails?.gender && errors.patientDetails?.gender &&
@@ -371,7 +370,7 @@ export default function AmbulanceTp() {
                                 <label htmlFor="pickupDate" className="font-brsemi text-sm text-[#636066] mb-[10px]">Pickup Date</label>
                                 <input
                                     type="date"
-                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm py-4 px-2 font-brreg  placeholder:text-[#9C9A9E] outline-none bg-transparent "
                                     placeholder="Select Date(Calender)"
                                     name="transportDetails.pickUpDate"
                                     required
@@ -392,14 +391,16 @@ export default function AmbulanceTp() {
                                 <label htmlFor="pickupTime" className="font-brsemi text-sm text-[#636066] mb-[10px]">Pickup Time</label>
                                 <input
                                     type="time"
-                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
-                                    placeholder="Select Time(Time)"
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm py-4 px-2 font-brreg  placeholder:text-[#9C9A9E] outline-none bg-transparent"
                                     name="transportDetails.pickUpTime"
                                     required
                                     id="transportDetails.pickUpTime"
                                     value={values.transportDetails.pickUpTime}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
+                                    style={{
+                                       
+                                    }}
                                 />
                                 {touched.transportDetails?.pickUpTime && errors.transportDetails?.pickUpTime &&
                                     <p>
@@ -466,17 +467,23 @@ export default function AmbulanceTp() {
                                         value={phone}
                                         onChange={(phone) => setPhone(phone.trim())}
                                         hideDropdown="true"
-                                        style={{ }}
-                                        inputStyle={{ }}
-                                        className={{ }}
+                                        style={{
+                                            "--react-international-phone-border-color": "none",
+                                            "--react-international-phone-border-radius": "none",
+                                            "--react-international-phone-outline": 0,
+                                        }}
+                                        inputStyle={{}}
+                                        className={{}}
                                         inputClassName=""
+                                        forceDialCode="true"
                                         inputProps={
                                             {
                                                 required: true,
-                                                className: "font-brreg w-full pl-3"
+                                                className: "font-brreg w-full pl-3 !outline-none",
+
                                             }
                                         }
-                                        
+
                                     />
                                 </div>
 
