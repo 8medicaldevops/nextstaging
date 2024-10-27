@@ -7,6 +7,9 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useToasts } from 'react-toast-notifications';
 import { useNavigate } from "react-router-dom";
+import { PhoneNumberUtil } from 'google-libphonenumber';
+import { PhoneInput } from 'react-international-phone';
+import 'react-international-phone/style.css';
 
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
@@ -18,10 +21,16 @@ import success from "@/assets/images/ground-success.png";
 import location from "@/assets/images/location.png";
 import whatsapp from "@/assets/images/Whatsapp.png";
 
-//import calender from "@/assets/images/calendar.png";
-//import clock from "@/assets/images/clock.png";
-//import directUp from "@/assets/images/direct-up.png";
-//import directDown from "@/assets/images/direct-down.png";
+
+const phoneUtil = PhoneNumberUtil.getInstance();
+
+const isPhoneValid = (phone) => {
+    try {
+        return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
+    } catch (error) {
+        return false;
+    }
+};
 
 export default function AmbulanceTp() {
     const [token, setToken] = useState('')
@@ -35,11 +44,11 @@ export default function AmbulanceTp() {
     const [modalOpen, setModalOpen] = useState(false);
     const siginData = JSON.parse(sessionStorage.getItem('SignIn'));
     const userId = siginData?.data?.id
+    const [phone, setPhone] = useState('');
+    const isValid = isPhoneValid(phone);
+
     const { addToast } = useToasts();
     let navigate = useNavigate();
-    //const pattern = new RegExp("^\\+[1-9]{1}[0-9]{0,2}-[2-9]{1}[0-9]{2}-[2-9]{1}[0-9]{2}-[0-9]{4}$");
-    //const phoneRegExp =  new RegExp("^\\+(234){1}-[0-9]{10}$ ");
-
 
     const groundAmbulanceValidation = Yup.object().shape({
         patientDetails: Yup.object().shape({
@@ -58,12 +67,7 @@ export default function AmbulanceTp() {
         }),
         callerDetails: Yup.object().shape({
             fullName: Yup.string().required("Full Name is required"),
-            email: Yup.string().required("Contact email is required"),
-            phone: Yup.string()
-                .required("Contact phone number is required")
-                //.matches(pattern, "Phone number is not valid")
-                .min(14, "too short")
-                .max(14, "too long"),
+            email: Yup.string().required("Contact email is required")
         }),
     })
 
@@ -131,7 +135,7 @@ export default function AmbulanceTp() {
         callerDetails: {
             fullName: '',
             email: '',
-            phone: '',
+            phone: phone,
         }
     });
 
@@ -139,6 +143,8 @@ export default function AmbulanceTp() {
         e.preventDefault();
         const apiUrl = import.meta.env.VITE_ORDER_API
         const method = 'post';
+
+        setIsPending(true);
         axios({
             method: method,
             url: apiUrl,
@@ -149,11 +155,13 @@ export default function AmbulanceTp() {
             },
             // eslint-disable-next-line no-unused-vars
         }).then((response) => {
+            setIsPending(false);
             setModalOpen(true);
             setTimeout(() => {
                 navigate("/");
             }, 2000);
         }).catch((error) => {
+            setIsPending(false);
             if (Array.isArray(error?.response.data.message)) {
                 addToast("All required fields should be filled appropriately, please", {
                     appearance: 'error',
@@ -163,6 +171,8 @@ export default function AmbulanceTp() {
                     appearance: 'error',
                 });
             }
+            //console.log(error)
+            //console.log(values);
         })
     }
 
@@ -179,13 +189,17 @@ export default function AmbulanceTp() {
     }, [transportType, setFieldValue]
     );
 
+    useEffect(() => {
+        setFieldValue("callerDetails.phone", phone);
+    }, [phone, setFieldValue]
+    );
+
 
     return (
         <div>
             <NavBar />
             <div className="md:h-full flex flex-col gap-6 md:gap-16 flex-col md:flex-row  md:w-[100%]  md:-px-auto px-[2rem] py-16">
                 <div className="md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[60%] md:flex-start">
-
                     <form action="" className="flex flex-col" noValidate onSubmit={handleSubmit}>
                         <h2 className="text-[#2E0469] font-brsemi text-[40px] max-lg:text-4xl">Book Ambulance Transport</h2>
                         <p className="font-brsemi text-md text-[#636066] my-3">Enter your details for the transport below:</p>
@@ -221,9 +235,8 @@ export default function AmbulanceTp() {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         className="bg-none appearance-none border-[1px] border-[#E4E3E5] rounded-mm p-4 font-brreg w-full"
-
                                     >
-                                        <option value="" disabled label="Select Gender" className="default-option">Select Gender</option>
+                                        <option value="" disabled selected label="Select Gender" className="default-option">Select Gender</option>
                                         <option value="Male" label="Male">Male</option>
                                         <option value="Female" label="Female" >Female</option>
 
@@ -375,7 +388,6 @@ export default function AmbulanceTp() {
                                     </p>
                                 }
                             </div>
-
                             <div className="flex flex-col gap-[3px] w-1/2">
                                 <label htmlFor="pickupTime" className="font-brsemi text-sm text-[#636066] mb-[10px]">Pickup Time</label>
                                 <input
@@ -400,7 +412,6 @@ export default function AmbulanceTp() {
                         </div>
                         <div className="w-[100%] my-6">
                             <h3 className="text-xl font-brsemi mb-3 text-[#181719]">Contact Details</h3>
-
                             <div className="flex flex-col gap-[3px] w-[100%]  py-[0.5rem]">
                                 <label htmlFor="callerDetails.fullName" className="font-brsemi text-sm text-[#636066] mb-[10px]">Full Name</label>
                                 <input
@@ -445,46 +456,44 @@ export default function AmbulanceTp() {
                                 </p>
                             }
                             <div className="py-[0.5rem] flex flex-col">
-                                <label htmlFor="callerDetails.phone" className="font-brsemi text-sm text-[#636066] mb-[10px]">Phone Number</label>
-                                <input
-                                    type="text"
-                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
-                                    placeholder="+234-000-000-0000"
-                                    name="callerDetails.phone"
-                                    required
-                                    id="callerDetails.phone"
-                                    value={values.callerDetails.phone}
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                />
+                                <label htmlFor="phone" className="font-brsemi text-sm text-[#636066] mb-[10px]">Phone Number</label>
 
-                                {/*<div className="flex items-center gap-1 border-[1px] border-[#E4E3E5] w-[568px] max-lg:w-full rounded-mm p-4 font-brreg">
-                                    {!values.callerDetails.phone &&
-                                        <span className="font-brreg text-[#636066]">+234</span>
-                                    }
-                                    <input type="text"
-                                        className=" font-brreg w-full placeholder:text-[#9C9A9E] outline-none "
-                                        placeholder="Enter phone number"
-                                        value={values.callerDetails.phone}
-                                        name="callerDetails.phone"
-                                        onChange={handleInputChange}
+                                <div
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-3 outline-none"
+                                >
+                                    <PhoneInput
+                                        defaultCountry="ng"
+                                        value={phone}
+                                        onChange={(phone) => setPhone(phone.trim())}
+                                        hideDropdown="true"
+                                        style={{ }}
+                                        inputStyle={{ }}
+                                        className={{ }}
+                                        inputClassName=""
+                                        inputProps={
+                                            {
+                                                required: true,
+                                                className: "font-brreg w-full pl-3"
+                                            }
+                                        }
+                                        
                                     />
-                                </div>*/}
+                                </div>
 
+                                {!isValid &&
+                                    <p>
+                                        <small style={{ color: 'red' }}>
+                                            Phone Number is not valid
+                                        </small>
+                                    </p>
+                                }
                             </div>
-                            {touched.callerDetails?.phone && errors.callerDetails?.phone &&
-                                <p>
-                                    <small className='text-xs text-red-500'>
-                                        {errors.callerDetails?.phone}
-                                    </small>
-                                </p>
-                            }
                         </div>
                         <div className="py-[0.5rem] w-[100%]">
                             <button
                                 className={`${!dirty ? 'bg-ev-500' : 'bg-ev-700'} w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]`}
                                 type="submit"
-                                disabled={!dirty || isSubmitting}
+                                disabled={!dirty || isSubmitting || !isValid}
                             >
                                 Send Request
                                 {
@@ -496,7 +505,6 @@ export default function AmbulanceTp() {
                                         </svg>
                                 }
                             </button>
-
                         </div>
                     </form>
                 </div>

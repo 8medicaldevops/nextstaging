@@ -292,7 +292,7 @@ export default function Hero() {
                     <div className="flex gap-3">
                         <button className={`${buttonClass} ${activeService === 'standby' ? activeClass : ''}`} onClick={() => handleButtonClick('standby')}>
                             {activeService === 'standby' ? whiteTpEmoji : blackTpEmoji}
-                            Ambulance standby
+                            Ambulance Standby
                         </button>
                         <button className={`${buttonClass} ${activeService === 'transport' ? activeClass : ''}`} onClick={() => handleButtonClick('transport')}>
                             {activeService === 'transport' ? ambWhite : ambBlack}
@@ -311,7 +311,7 @@ export default function Hero() {
                 <div className="lg:hidden">
                     <Select onValueChange={handleSelectChange}>
                         <SelectTrigger className="w-[240px] rounded-mm border-[1px] border-[#E4E3E5] font-brmedium text-[#181719] ">
-                            <SelectValue placeholder={<div className="flex gap-2 items-center">{blackTpEmoji}Ambulance standby</div>} />
+                            <SelectValue placeholder={<div className="flex gap-2 items-center">{blackTpEmoji}Ambulance Standby</div>} />
                         </SelectTrigger>
                         <SelectContent className="bg-white rounded-mm">
                             <SelectItem value="standby">
