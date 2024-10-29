@@ -316,7 +316,7 @@ export default function Hero() {
                         <SelectContent className="bg-white rounded-mm">
                             <SelectItem value="standby">
                                 <div className="flex gap-2 items-center">
-                                    {blackTpEmoji}Ambulance standby
+                                    {blackTpEmoji}Ambulance Standby
                                 </div>
                             </SelectItem>
                             <SelectItem value="transport">

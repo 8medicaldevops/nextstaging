@@ -34,7 +34,6 @@ const isPhoneValid = (phone) => {
 
 export default function AmbulanceTp() {
     const [token, setToken] = useState('')
-    const [loggedOut, setLoggedOut] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const [decoded, setDecoded] = useState('')
     const [transportType, setTransportType] = useState('')
@@ -94,17 +93,8 @@ export default function AmbulanceTp() {
             }
         } else {
             //console.error('No sign-in data found.');
-            setLoggedOut(true);
         }
     }, []);
-
-    useEffect(() => {
-        if (loggedOut) {
-            addToast("Please, sign in to book Ambulance transport", {
-                appearance: 'info',
-            });
-        }
-    }, [addToast, loggedOut])
 
     useEffect(() => {
         ReactGA.send({
