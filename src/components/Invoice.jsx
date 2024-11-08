@@ -107,6 +107,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'firmaSemi',
   },
+  dateInfoLabel: {
+    color: '#171718',
+    fontSize: 16,
+    fontFamily: 'firmaBold',
+  },
+  dateInfoValue: {
+    color: '#636065',
+    fontSize: 14,
+    fontFamily: 'firmaSemi',
+    width: '150px'
+  },
   bookingInfoContainer: {
     width: '100%',
     paddingLeft: 20,
@@ -119,9 +130,9 @@ const styles = StyleSheet.create({
   bookingInfoSub: {
     width: '100%',
     paddingVertical:20,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    
   },
   bookingInfoLabel: {
     color: '#6D09F9',
@@ -138,6 +149,22 @@ const styles = StyleSheet.create({
     flexWrap:'wrap',
     width: '225px',
     justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    marginBottom: 5,
+  },
+  dateTimeTitle: {
+    flexDirection: 'row',
+    flexWrap:'wrap',
+    width: '350px',
+    gap: '160px',
+    alignItems: 'flex-start',
+    marginBottom: 5,
+  },
+  dateTimeDetail: {
+    flexDirection: 'row',
+    flexWrap:'wrap',
+    width: '350px',
+    justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 5,
   },
@@ -250,6 +277,7 @@ const InvoicePDF =
       formattedFee,
       formattedTimeRange,
       formattedDateRange,
+      scheduleData,
       smallAmbulanceTotal,
       largeAmbulanceTotal,
       medicsTotal
@@ -284,22 +312,24 @@ const InvoicePDF =
       {/* Booking Info Section */}
       <View style={styles.bookingInfoContainer}>
       <Text style={styles.bookingInfoLabel}>Booking Information:</Text>
-      <View style={styles.bookingInfoSub}>
-        <View>
-            <View style={styles.bookingDetail}>
-              <Text style={styles.orderInfoLabel}>Date:</Text>
-              <Text style={styles.orderInfoValue}>{formattedDateRange ?? ''}</Text>
-            </View>
-            <View style={styles.bookingDetail}>
-              <Text style={styles.orderInfoLabel}>Time:</Text>
-              <Text style={styles.orderInfoValue}>{formattedTimeRange ?? ''}</Text>
-            </View>
-         
-        </View>
-        <View style={styles.bookingDetail}>
+      <View style={styles.bookingDetail}>
           <Text style={styles.orderInfoLabel}>Standby Location:</Text>
           <Text style={styles.orderInfoValue}>{eventData?.venueAddress ?? ''}</Text>
         </View>
+      <View style={styles.bookingInfoSub}>
+        <View style={styles.dateTimeTitle}>
+        <Text style={styles.dateInfoLabel}>Date:</Text>
+        <Text style={styles.dateInfoLabel}>Time:</Text>
+      </View>
+        {scheduleData.map((schedule,index) => (  
+      <View key={index}>
+      <View style={styles.dateTimeDetail}>
+      <Text style={styles.dateInfoValue}>{schedule.formattedDateRange ?? ''}</Text>
+        <Text style={styles.dateInfoValue}>{schedule.formattedTimeRange ?? ''}</Text>
+      </View>
+      </View>
+         ))}
+        
         </View>
       </View>
 

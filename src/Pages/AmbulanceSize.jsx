@@ -85,74 +85,88 @@ export default function AmbulanceSize() {
       setMedicsCount(storedFormData.medicsCount);
       setEstimatedFee(storedFormData.estimatedFee);
     }
+
+
   }, []);
 
-  useEffect(() => {
-    // Update ambulanceData state when individual states change
-    setAmbulanceData({
-      smallAmbulanceCount,
-      largeAmbulanceCount,
-      medicsCount,
-      estimatedFee
-    });
-  }, [smallAmbulanceCount, largeAmbulanceCount, medicsCount, estimatedFee]);
 
-  const stripAmPmSuffix = (time12) => {
-    return time12.replace(/ (AM|PM)/, '');
-  };
+
+  // Define a function to remove AM/PM and convert to 24-hour format
+const stripAmPmSuffix = (time) => {
+  const timeParts = time.match(/(\d+):(\d+)\s?(AM|PM)?/i); // Match hours, minutes, and AM/PM
+  if (!timeParts) return time; // If no match, return the original time
+
+  let [ , hours, minutes, period ] = timeParts;
+  hours = parseInt(hours, 10);
+
+  if (period) {
+    if (period.toUpperCase() === 'PM' && hours < 12) hours += 12;
+    if (period.toUpperCase() === 'AM' && hours === 12) hours = 0;
+  }
+
+  return `${hours.toString().padStart(2, '0')}:${minutes}`;
+};
+
 
   useEffect(() => {
-    const calculateFee = () => {
-      const strippedStartTime = stripAmPmSuffix(storedScheduleData.startTime);
-      const strippedEndTime = stripAmPmSuffix(storedScheduleData.endTime);
+    const calculateTotalFee = () => {
+      let accumulatedCost = 0;
   
-      // Combine date and time
-      const startDateTime = new Date(`${storedScheduleData.startDate} ${strippedStartTime}`);
-      let endDateTime = new Date(`${storedScheduleData.endDate} ${strippedEndTime}`);
+      // Loop through each day in the schedule and calculate fee
+      storedScheduleData.forEach((day) => {
+        const strippedStartTime = stripAmPmSuffix(day.startTime);
+        const strippedEndTime = stripAmPmSuffix(day.endTime);
   
-      // Handle cross-midnight scenario
-      if (endDateTime < startDateTime) {
-        if (!storedScheduleData.eventEndsSameDay) {
+        // Combine date and time for start and end
+        const startDateTime = new Date(`${day.startDate} ${strippedStartTime}`);
+        let endDateTime = new Date(`${day.endDate} ${strippedEndTime}`);
+  
+        // Handle cross-midnight scenario
+        if (endDateTime < startDateTime && !day.eventEndsSameDay) {
           endDateTime.setDate(endDateTime.getDate() + 1);
         }
-      }
   
-      const totalMinutes = Math.floor((endDateTime - startDateTime) / (1000 * 60)); // Difference in minutes
-      const hours = Math.floor(totalMinutes / 60); // Total hours
-      const minutes = totalMinutes % 60; // Remaining minutes
+        const totalMinutes = Math.floor((endDateTime - startDateTime) / (1000 * 60)); // Difference in minutes
+        const hours = Math.floor(totalMinutes / 60); // Total hours
+        const minutes = totalMinutes % 60; // Remaining minutes
   
-      const roundedHours = roundUpToNextHour(hours, minutes); // Adjust hours if necessary
+        const roundedHours = roundUpToNextHour(hours, minutes); // Adjust hours if necessary
   
-      const totalCost = calculateFinalTotalCost(
-        smallAmbulanceCount,
-        largeAmbulanceCount,
-        medicsCount,
-        roundedHours,
-        storedScheduleData.startDate,
-        storedScheduleData.endDate
-      );
+        // Calculate cost for the current day
+        const dailyCost = calculateFinalTotalCost(
+          smallAmbulanceCount,
+          largeAmbulanceCount,
+          medicsCount,
+          roundedHours,
+          day.startDate,
+          day.endDate
+        );
   
-      setEstimatedFee(totalCost);
+        // Add the daily cost to the accumulated cost
+        accumulatedCost += dailyCost;
+      });
+  
+      setEstimatedFee(accumulatedCost); // Set the accumulated cost as the total estimated fee
+      setAmbulanceData({
+        ...ambulanceData,
+        estimatedFee: accumulatedCost,
+        smallAmbulanceCount : smallAmbulanceCount,
+        largeAmbulanceCount : largeAmbulanceCount,
+        medicsCount : medicsCount,
+    });
     };
   
-    if (
-      storedScheduleData.startTime &&
-      storedScheduleData.endTime &&
-      storedScheduleData.startDate &&
-      storedScheduleData.endDate
-    ) {
-      calculateFee();
+    if (storedScheduleData && storedScheduleData.length > 0) {
+      calculateTotalFee();
     }
   }, [
-    storedScheduleData.startTime,
-    storedScheduleData.endTime,
-    storedScheduleData.startDate,
-    storedScheduleData.endDate,
+    storedScheduleData,
     smallAmbulanceCount,
     largeAmbulanceCount,
     medicsCount
   ]);
   
+ 
 
   const navigate = useNavigate();
   const handleSubmit = (e) => {

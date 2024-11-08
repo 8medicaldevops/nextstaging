@@ -22,7 +22,8 @@ export default function ConfirmOrder() {
     const [checkoutLink, setCheckoutLink] = useState('');
     const [iaFlag, setIaFlag] = useState('')
     const [token, setToken] = useState('')
-
+    const [showPopup, setShowPopup] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(''); // To hold the specific error message
     const storedCallerData = JSON.parse(localStorage.getItem('callerData'));
     const storedEventData = JSON.parse(localStorage.getItem('eventData'));
     const storedScheduleData = JSON.parse(localStorage.getItem('schedule'));
@@ -30,8 +31,18 @@ export default function ConfirmOrder() {
     const invId = JSON.parse(localStorage.getItem('bookingid'));
     const siginData = JSON.parse(sessionStorage.getItem('SignIn'));
     const userId = siginData?.data?.id
-    //console.log(userId);
-   
+    const navigate = useNavigate();
+    
+    //Google analytics
+    useEffect(() => {
+        ReactGA.send({
+            hitType: "pageview",
+            page: "/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order",
+            title: "Confirm Order",
+        })
+    }, [])
+
+    //Feature flags for Internal adin
     useEffect(() => {
         const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
     
@@ -54,92 +65,118 @@ export default function ConfirmOrder() {
         }
     }, []); // Empty array ensures this runs only once
     
-    const handlePaymentLinkClose = () =>{
-        setModalOpen(false);
-        localStorage.clear();
-        navigate('/OrderHistory')
-    }
-    
-    const navigate = useNavigate();
-    // format fee
-    const formattedFee = new Intl.NumberFormat().format(storedAmbulanceData.estimatedFee);
-    // format start and end date 
-    const startDate = parseISO(storedScheduleData.startDate);
-    const endDate = parseISO(storedScheduleData.endDate);
-
-
-    const formattedBackendStartDate = format(startDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
-    const formattedBackendEndDate = format(endDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
-
-
-    // Format the dates to the desired string format
-    const formattedStartDate = format(startDate, "do");
-    const formattedEndDate = format(endDate, "do MMMM, yyyy");
-    const formattedDateRange = `${formattedStartDate} - ${formattedEndDate}`;
+    //Formatting date, time , fee
     // Helper function to parse time strings into Date objects
     const parseTime = (timeStr) => {
         return parse(timeStr, 'HH:mm', new Date());
-    }
+    };
 
-    // Parse the time strings to Date objects
-    const startTime = parseTime(storedScheduleData.startTime);
-    const endTime = parseTime(storedScheduleData.endTime);
+    // Format fee
+    const formattedFee = new Intl.NumberFormat().format(storedAmbulanceData.estimatedFee);
 
-    // Format the Date objects to the desired string format
-    const formattedStartTime = format(startTime, 'h:mm a');
-    const formattedEndTime = format(endTime, 'h:mm a');
+    // Map over the schedule data array to format each entry
+    const formattedScheduleData = storedScheduleData.map((schedule) => {
+        // Parse start and end dates
+        const startDate = parseISO(schedule.startDate);
+        const endDate = parseISO(schedule.endDate);
+        const formattedBackendStartDate = format(startDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
+        const formattedBackendEndDate = format(endDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
 
-    const formattedTimeRange = `${formattedStartTime} - ${formattedEndTime}`;
-    // Check for Invalid date or Time
-    const currentDate = new Date();
-    const [showPopup, setShowPopup] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(''); // To hold the specific error message
+        // Format dates to desired string format
+        const formattedStartDate = format(startDate, "do");
+        const fullStartDate = format(startDate, "do MMMM, yyyy")
+        const formattedEndDate = format(endDate, "do MMMM, yyyy");
+        const formattedDateRange = fullStartDate === formattedEndDate ? fullStartDate : `${formattedStartDate} - ${formattedEndDate}`;
 
+
+        // Parse start and end times
+        const startTime = parseTime(schedule.startTime);
+        const endTime = parseTime(schedule.endTime);
+
+        // Format times to desired string format
+        const formattedStartTime = format(startTime, 'h:mm a');
+        const formattedEndTime = format(endTime, 'h:mm a');
+        const formattedTimeRange = `${formattedStartTime} - ${formattedEndTime}`;
+
+        // Return all formatted data for each schedule entry
+        return {
+            formattedBackendStartDate,
+            formattedBackendEndDate,
+            formattedDateRange,
+            formattedTimeRange,
+        };
+    });
+
+    console.log(formattedScheduleData);
+
+     
+    
+    /// check for invalid dates 
     useEffect(() => {
-        if (!startDate || !endDate || !startTime) return; // Check if dates and times are defined
+        const currentDate = new Date();
+        let errorMsg = ''; // Initialize error message
     
-        const combinedStartDateTime = new Date(startDate);
-        combinedStartDateTime.setHours(startTime.getHours());
-        combinedStartDateTime.setMinutes(startTime.getMinutes());
+        storedScheduleData.forEach((schedule) => {
+            // Parse dates and times
+            const startDate = parseISO(schedule.startDate);
+            const endDate = parseISO(schedule.endDate);
+            const startTime = parseTime(schedule.startTime);
+            const endTime = parseTime(schedule.endTime);
     
-        const combinedEndDateTime = new Date(endDate);
-        combinedEndDateTime.setHours(endTime.getHours());
-        combinedEndDateTime.setMinutes(endTime.getMinutes());
+            // Check if dates and times are defined
+            if (!startDate || !endDate || !startTime || !endTime) return;
     
-        let errorMsg = ''; // Track error message
+            // Combine dates and times into single Date objects
+            const combinedStartDateTime = new Date(startDate);
+            combinedStartDateTime.setHours(startTime.getHours());
+            combinedStartDateTime.setMinutes(startTime.getMinutes());
     
-        if (isSameDay(combinedStartDateTime, currentDate)) {
-            // If the date is today, check the time
-            if (isBefore(combinedStartDateTime, currentDate)) {
-                errorMsg = 'The selected start time is earlier than the current time.';
+            const combinedEndDateTime = new Date(endDate);
+            combinedEndDateTime.setHours(endTime.getHours());
+            combinedEndDateTime.setMinutes(endTime.getMinutes());
+    
+            // Check for invalid date conditions
+            if (isSameDay(combinedStartDateTime, currentDate)) {
+                if (isBefore(combinedStartDateTime, currentDate)) {
+                    errorMsg = 'The selected start time is earlier than the current time.';
+                }
+            } else if (isBefore(combinedStartDateTime, currentDate)) {
+                errorMsg = 'The selected start date and time are earlier than the current date.';
             }
-        } else if (isBefore(combinedStartDateTime, currentDate)) {
-            // If the start date and time are before today
-            errorMsg = 'The selected start date and time are earlier than the current date.';
-        }
     
-        if (isBefore(combinedEndDateTime, currentDate)) {
-            // If the end date and time are before today
-            errorMsg = 'The selected end date is earlier than the current date.';
-        }
+            if (isBefore(combinedEndDateTime, currentDate)) {
+                errorMsg = 'The selected end date is earlier than the current date.';
+            }
     
-        // If an error message is set, show the popup and update the message
+            // Stop further checks if an error message is already set
+            if (errorMsg) return;
+        });
+    
+        // Set error message and popup display if any invalid date is found
         if (errorMsg) {
             setErrorMessage(errorMsg);
             setShowPopup(true);
         } else {
             setShowPopup(false);
         }
-    }, [startDate, endDate, startTime, endTime, currentDate]);
+    }, [storedScheduleData]);
+    
 
 
+
+    /// Paystack actions
+    const handlePaymentLinkClose = () =>{
+        setModalOpen(false);
+        localStorage.clear();
+        navigate('/OrderHistory')
+    }
+    // Paystack Config function
     const config = {
         reference: (new Date()).getTime().toString(),
         email: storedCallerData.emailAddress,
         amount: storedAmbulanceData.estimatedFee * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
         publicKey: import.meta.env.VITE_PAYSTACK_KEY,
     };
-
     // Paystack functions for succes action
     const handlePaystackSuccessAction = async (reference) => {
         setLoading(!loading)
@@ -183,12 +220,12 @@ export default function ConfirmOrder() {
         }
     };
 
-    // you can call this function anything
+    // you can call this function anything 
     const handlePaystackCloseAction = () => {
         // implementation for  whatever you want to do when the Paystack dialog closed.
         console.log('closed')
     }
-
+    // Paystack paynow button 
     const componentProps = {
         ...config,
 
@@ -201,122 +238,107 @@ export default function ConfirmOrder() {
         onSuccess: (reference) => handlePaystackSuccessAction(reference),
         onClose: handlePaystackCloseAction,
     }
-
+    // cancel incomplete booking/order flow and clear data 
     const toggleCancel = () => {
         localStorage.clear(),
             navigate("/")
     }
       
-    useEffect(() => {
-        ReactGA.send({
-            hitType: "pageview",
-            page: "/StandBy/Nigeria/Event/Schedule/Ambulance Size/Confirm order",
-            title: "Confirm Order",
-        })
-    }, [])
-
+    // axios post request to generate invoice
       const generateInvoice = async() => {
-        setLoading(!loading)
-        const data = {
-            callerDetails: {
-                fullName: storedCallerData.fullName,
-                email: storedCallerData.emailAddress,
-                phone: storedCallerData.phoneNumber,
-                company: storedCallerData.companyName,
-            },
-            ambulances: {
-                eventLocationName: storedEventData.venueName,
-                eventAddress: storedEventData.venueAddress,
-                estimatedNumberOfGuests: storedEventData.guests,
-                eventType: storedEventData.eventType,
-                description: storedEventData.description,
-                eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
-                startDate: formattedBackendStartDate,
-                endDate: formattedBackendEndDate,
-                startTime: storedScheduleData.startTime,
-                endTime: storedScheduleData.endTime,
-                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
-                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
-                noOfMedic: storedAmbulanceData.medicsCount,
-            },
-            country: "NG",
-            orderId: invId || "",
-            userId:userId || "",
+        // setLoading(!loading)
+        // // create fresh booking/order
+        // const data = {
+        //     callerDetails: {
+        //         fullName: storedCallerData.fullName,
+        //         email: storedCallerData.emailAddress,
+        //         phone: storedCallerData.phoneNumber,
+        //         company: storedCallerData.companyName,
+        //     },
+        //     ambulances: {
+        //         eventLocationName: storedEventData.venueName,
+        //         eventAddress: storedEventData.venueAddress,
+        //         estimatedNumberOfGuests: storedEventData.guests,
+        //         eventType: storedEventData.eventType,
+        //         description: storedEventData.description,
+        //         eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
+        //         startDate: formattedBackendStartDate,
+        //         endDate: formattedBackendEndDate,
+        //         startTime: storedScheduleData.startTime,
+        //         endTime: storedScheduleData.endTime,
+        //         smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+        //         largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+        //         noOfMedic: storedAmbulanceData.medicsCount,
+        //     },
+        //     country: "NG",
+        //     orderId: invId || "",
+        //     userId:userId || "",
+        // };
+        // // patch/update data for already existing invoice/order
+        // const patchData = {
+        //     callerDetails: {
+        //         fullName: storedCallerData.fullName,
+        //         email: storedCallerData.emailAddress,
+        //         phone: storedCallerData.phoneNumber,
+        //         company: storedCallerData.companyName,
+        //     },
+        //     ambulances: {
+        //         smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+        //         largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+        //         noOfMedic: storedAmbulanceData.medicsCount,
+        //     },
+        //     eventDetails: {
+        //             eventLocationName: storedEventData.venueName,
+        //             eventAddress: storedEventData.venueAddress,
+        //             estimatedNumberOfGuests: storedEventData.guests,
+        //             eventType: storedEventData.eventType,
+        //             description: storedEventData.description,
+        //     },
+        //     scheduleEvent: {
+        //             startDate: formattedBackendStartDate,
+        //             endDate: formattedBackendEndDate,
+        //             startTime: storedScheduleData.startTime,
+        //             endTime: storedScheduleData.endTime,
+        //     }   
+        // }
+        // // condition for internal admin/customer to either create or patch order
+        // const requestData = invId && iaFlag == "ADMIN" ? patchData : data;
+        // try {
+        //     const apiUrl = iaFlag !== "ADMIN" 
+        //     ? (invId ?
+        //         `${import.meta.env.VITE_UPDATE_INVOICE}${invId}`
+        //         :
+        //         import.meta.env.VITE_GENERATE_INVOICE )
 
-        };
-
-        const patchData = {
-            
-            callerDetails: {
-                fullName: storedCallerData.fullName,
-                email: storedCallerData.emailAddress,
-                phone: storedCallerData.phoneNumber,
-                company: storedCallerData.companyName,
-            },
-            ambulances: {
-                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
-                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
-                noOfMedic: storedAmbulanceData.medicsCount,
-            },
-
-            eventDetails: {
-                    eventLocationName: storedEventData.venueName,
-                    eventAddress: storedEventData.venueAddress,
-                    estimatedNumberOfGuests: storedEventData.guests,
-                    eventType: storedEventData.eventType,
-                    description: storedEventData.description,
-
-            },
-            scheduleEvent: {
-                    startDate: formattedBackendStartDate,
-                    endDate: formattedBackendEndDate,
-                    startTime: storedScheduleData.startTime,
-                    endTime: storedScheduleData.endTime,
-
-            }
-              
-        }
-        const requestData = invId && iaFlag == "ADMIN" ? patchData : data;
-        try {
-            const apiUrl = iaFlag !== "ADMIN" 
-            ? (invId ?
-                `${import.meta.env.VITE_UPDATE_INVOICE}${invId}`
-                :
-                import.meta.env.VITE_GENERATE_INVOICE )
-
-            : (
-                invId 
-                ? `${import.meta.env.VITE_ORDER_API}${invId}` 
-                : import.meta.env.VITE_GENERATE_PAYMENT_LINK
-              );
+        //     : (
+        //         invId 
+        //         ? `${import.meta.env.VITE_ORDER_API}${invId}` 
+        //         : import.meta.env.VITE_GENERATE_PAYMENT_LINK
+        //       );
     
+        // const method = invId? 'patch' : 'post'; // Choose 'patch' if  invId available, otherwise 'post'
+        // // await function 
+        // const response = await axios[method](
+        //     apiUrl, 
+        //     requestData,
+        //     {
+        //         headers: {
+        //             Authorization: `Bearer ${token}`, 
+        //         },
+        //     }
+        //     );
+        //     console.log("Response:", response.data.data.id);
+        //     localStorage.setItem('bookingid', JSON.stringify(response.data.data.id));
 
-        const method = invId? 'patch' : 'post'; // Choose 'patch' if  invId available, otherwise 'post'
-
-    
-        const response = await axios[method](
-            apiUrl, 
-            requestData,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`, 
-                },
-            }
-            );
-            console.log("Response:", response.data.data.id);
-            localStorage.setItem('bookingid', JSON.stringify(response.data.data.id));
-
-            
-            
-        } catch (error) {
-            //console.error("You are not logged in:", error);
-            //navigate("/BookingError");
-        } finally {
-            setLoading(false);
-        }
+        // } catch (error) {
+        //     //console.error("You are not logged in:", error);
+        //     //navigate("/BookingError");
+        // } finally {
+        //     setLoading(false);
+        // }
         setIsOpen(true);
       }
-
+      /// generate payment link for internal admins
       const generatePaymentLink = async() => {
         setLoading(!loading)
         const data = {
@@ -635,14 +657,26 @@ export default function ConfirmOrder() {
                                 </span>
                             </Link>
                         </span>
-                        <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
-                            <p className=" font-brmedium text-[#181719] ">Date</p>
-                            <p className="font-semibold text-[#181719]">{formattedDateRange}</p>
-                        </span>
-                        <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
+                        <div className=" space-y-3">
+                        {formattedScheduleData.map((schedule, index) => (
+                            <div key={index} className="flex justify-between py-3 px-5 rounded-xl bg-[#F9F9FA] flex-wrap"> {/* Each date-time entry */}
+                                <p className="font-semibold text-[#181719]">
+                                    {schedule.formattedDateRange}. {/* Date */}
+                                </p>
+                                <p className="font-brmedium text-[#181719]">
+                                    {schedule.formattedTimeRange} {/* Time */}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+
+                        {/* <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
                             <p className=" font-brmedium text-[#181719]">Time</p>
-                            <p className=" font-brmedium text-[#181719]">{formattedTimeRange}</p>
-                        </span>
+                            {formattedScheduleData.map((schedule, index) => (
+                            
+                            ))}
+                           
+                        </span> */}
                     </section>
 
                     <section className="flex flex-col gap-4">

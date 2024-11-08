@@ -15,13 +15,13 @@ import ReactGA from "react-ga4";
 
 
 export default function Schedule() {
-  const [schedule, setSchedule] = useState({
+  const [schedule, setSchedule] = useState([{
     startDate: null,
     endDate: null,
-    eventEndsSameDay: true,
+    eventEndsSameDay: false,
     startTime: '',
     endTime: '',
-  });
+  }]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [selectedDate, setSelectedDate] = useState('');
   const [someHours, setSomeHours] = useState(0)
@@ -51,119 +51,125 @@ export default function Schedule() {
 
   useEffect(() => {
     const { startDate, eventEndsSameDay } = schedule;
-
+  
     if (startDate) {
       const start = new Date(startDate);
-
-      if (!eventEndsSameDay) {
-        // Set the endDate to be one day after the startDate
-        const nextDay = new Date(start);
-        nextDay.setDate(start.getDate() + 1);
-        
-        setSchedule(prevSchedule => ({
-          ...prevSchedule,
-          endDate: nextDay.toISOString().split('T')[0] // Format as YYYY-MM-DD
-        }));
-      } else {
-        // For same day events, set endDate to be the same as startDate
-        setSchedule(prevSchedule => ({
-          ...prevSchedule,
-          endDate: startDate // Same day event, end date is the start date
-        }));
-      }
+  
+      const endDate = eventEndsSameDay 
+        ? startDate  // same day event; end date is start date
+        : new Date(start.setDate(start.getDate() + 1)).toISOString().split('T')[0]; // next day for overnight event
+      
+      setSchedule((prevSchedule) => ({
+        ...prevSchedule,
+        endDate,
+      }));
     }
   }, [schedule.startDate, schedule.eventEndsSameDay]);
   
 
- // Handle date change for startDate and endDate
  
 
- const handleDateChange = (field, date) => {
-   // Check for invalid date
-   if (!date) {
-     alert("Invalid date selected");
-     return;
-   }
- 
-   const formattedDate = format(date, 'yyyy-MM-dd');
-   const updatedSchedule = { ...schedule, [field]: formattedDate }; // Store formatted date in schedule
- 
-   // Convert startDate and endDate for comparison
-   const startDate = schedule.startDate ? new Date(schedule.startDate) : null;
-   const endDate = new Date(formattedDate);
- 
-   // If startDate changes and eventEndsSameDay is true, set endDate to startDate
-   if (field === 'startDate') {
-     setSelectedDate(formattedDate);
-     if (schedule.eventEndsSameDay) {
-       updatedSchedule.endDate = formattedDate; // Set endDate to the same as startDate
-     } else {
-       // If event doesn't end on the same day, set endDate to the day after startDate
-       const nextDay = new Date(date);
-       nextDay.setDate(date.getDate() + 1);
-       updatedSchedule.endDate = format(nextDay, 'yyyy-MM-dd');
-     }
-   }
- 
-   // Validate that endDate is not earlier than startDate
-   if (field === 'endDate' && startDate && endDate < startDate) {
-     alert("End date cannot be earlier than the start date");
-     return;
-   }
- 
-   setSchedule(updatedSchedule); // Update the state with the new schedule
- };
+ // Handle date change for startDate and endDate
+ const handleDateChange = (index, field, date) => {
+   // Check if the date is a valid Date object
+   if (!(date instanceof Date) || isNaN(date)) {
+    alert("Invalid date selected");
+    console.log("Received date:", date); // For debugging
+    return;
+  }
+
+  const formattedDate = format(date, 'yyyy-MM-dd');
+  const updatedSchedule = [...schedule];
+  updatedSchedule[index] = { ...updatedSchedule[index], [field]: formattedDate };
+
+  if (field === 'startDate') {
+    if (!updatedSchedule[index].eventEndsSameDay) {
+      updatedSchedule[index].endDate = formattedDate;
+    } else {
+      const nextDay = new Date(date);
+      nextDay.setDate(date.getDate() + 1);
+      updatedSchedule[index].endDate = format(nextDay, 'yyyy-MM-dd');
+    }
+  }
+
+  setSchedule(updatedSchedule);
+};
  
 
 // Handle checkbox for 'eventEndsSameDay'
-const handleCheckboxChange = (e) => {
-  if (e.target.checked) {
-    setSchedule({ ...schedule, eventEndsSameDay: true, endDate: schedule.startDate });
-  } else {
-    setSchedule({ ...schedule, eventEndsSameDay: false });
-  }
+const handleCheckboxChange = (index, checked) => {
+  // Determine if the event ends on the same day
+  const isSameDay = checked;
+
+  // Calculate the new endDate based on the same-day checkbox state
+  const endDate = isSameDay 
+    ? schedule[index].startDate // Use the start date if same-day
+    : format(new Date(new Date(schedule[index].startDate).setDate(new Date(schedule[index].startDate).getDate() + 1)), 'yyyy-MM-dd'); // Add one day if not
+
+  // Update the specific schedule item
+  setSchedule((prevSchedule) => {
+    const updatedSchedule = [...prevSchedule];
+    updatedSchedule[index] = {
+      ...updatedSchedule[index], // Keep existing properties
+      eventEndsSameDay: isSameDay,
+      endDate: endDate,
+    };
+    return updatedSchedule; // Return the updated schedule
+  });
 };
 
 const stripAmPmSuffix = (time12) => {
   return time12.replace(/ (AM|PM)/, '');
 };
 
+// function to add new schedule
+const addDay = () => {
+  setSchedule([...schedule, 
+    { startDate: null,
+    endDate: null,
+    eventEndsSameDay: false,
+    startTime: '',
+    endTime: '',}])
+}
+
 // Handle time change for startTime and endTime
-const handleTimeChange = (field, value) => {
-  let newSchedule = { ...schedule, [field]: value };
+const handleTimeChange = (index, field, value) => {
+  const updatedSchedule = [...schedule];
+  updatedSchedule[index] = { ...updatedSchedule[index], [field]: value }; // Update the specific field for the selected day
 
   const now = new Date();
   const currentTime = now.toTimeString().slice(0, 5);
   const today = format(new Date(), 'yyyy-MM-dd');
 
- 
-
-  const strippedStartTime = newSchedule.startTime ? stripAmPmSuffix(newSchedule.startTime) : '';
-  const strippedEndTime = newSchedule.endTime ? stripAmPmSuffix(newSchedule.endTime) : '';
+  const strippedStartTime = updatedSchedule[index].startTime ? stripAmPmSuffix(updatedSchedule[index].startTime) : '';
+  const strippedEndTime = updatedSchedule[index].endTime ? stripAmPmSuffix(updatedSchedule[index].endTime) : '';
   const strippedValue = stripAmPmSuffix(value);
 
-  // Handle time validation when eventEndsSameDay is true
-  if (schedule.eventEndsSameDay) {
+  // Event validation for same-day end
+  if (!updatedSchedule[index].eventEndsSameDay) {
     if (field === 'endTime' && strippedStartTime && strippedValue < strippedStartTime) {
       alert("End time cannot be earlier than the start time for events ending the same day");
       return;
     }
   }
 
-  // Check if the selected date is today and validate against the current time
+  // Check if the selected date is today to validate against the current time
   if (selectedDate === today) {
     if (field === 'startTime' && strippedValue < currentTime) {
       alert("Start time cannot be earlier than the current time");
       return;
     }
 
+    // If startTime changes and endTime is earlier, automatically set endTime to startTime
     if (field === 'startTime' && strippedEndTime && strippedEndTime < strippedValue) {
-      newSchedule.endTime = value; // Automatically set endTime to startTime
+      updatedSchedule[index].endTime = value; 
     }
   }
 
-  setSchedule(newSchedule);
+  // Update the state with the validated schedule
+  setSchedule(updatedSchedule);
 };
+
 
 const generateTimeOptions = (startTime, isStartTime, selectedDate) => {
   const times = [];
@@ -207,23 +213,37 @@ const generateTimeOptions = (startTime, isStartTime, selectedDate) => {
 
 
 
+// remove day 
+const removeDay = (index) => {
+  setSchedule((prevSchedule) => {
+    // Create a new array excluding the day at the specified index
+    const updatedSchedule = prevSchedule.filter((_, i) => i !== index);
+
+    // Update local storage with the new schedule
+    localStorage.setItem('schedule', JSON.stringify(updatedSchedule));
+
+    return updatedSchedule;
+  });
+};
+
+
 
 
 
 
 // Calculate hours and minutes for time difference
-const calculateHoursAndMinutes = () => {
-  if (schedule.startTime && schedule.endTime && schedule.startDate && schedule.endDate) {
-    const strippedStartTime = stripAmPmSuffix(schedule.startTime);
-    const strippedEndTime = stripAmPmSuffix(schedule.endTime);
+const calculateHoursAndMinutes = (startTime, endTime, startDate, endDate, eventEndsSameDay) => {
+  if (startTime && endTime && startDate && endDate) {
+    const strippedStartTime = stripAmPmSuffix(startTime);
+    const strippedEndTime = stripAmPmSuffix(endTime);
 
     // Combine date and time
-    const startDateTime = new Date(`${schedule.startDate} ${strippedStartTime}`);
-    let endDateTime = new Date(`${schedule.endDate} ${strippedEndTime}`);
+    const startDateTime = new Date(`${startDate} ${strippedStartTime}`);
+    let endDateTime = new Date(`${endDate} ${strippedEndTime}`);
 
     // Handle cross-midnight scenario
     if (endDateTime < startDateTime) {
-      if (!schedule.eventEndsSameDay) {
+      if (eventEndsSameDay) {
         endDateTime.setDate(endDateTime.getDate() + 1);
       }
     }
@@ -237,42 +257,76 @@ const calculateHoursAndMinutes = () => {
   return { hours: 0, minutes: 0 };
 };
 
-const { hours, minutes } = calculateHoursAndMinutes();
+
+///calculate total
+const calculateTotalHoursAndMinutes = () => {
+  let totalHours = 0;
+  let totalMinutes = 0;
+
+  schedule.forEach(day => {
+    const { hours, minutes } = calculateHoursAndMinutes(
+      day.startTime,
+      day.endTime,
+      day.startDate,
+      day.endDate,
+      day.eventEndsSameDay
+    );
+
+    totalHours += hours;
+    totalMinutes += minutes;
+  });
+
+  // Convert total minutes to hours and minutes
+  totalHours += Math.floor(totalMinutes / 60);
+  totalMinutes = totalMinutes % 60;
+
+  return { totalHours, totalMinutes };
+};
+
+const { totalHours, totalMinutes } = calculateTotalHoursAndMinutes();
+
 
 useEffect(() => {
-  const { startDate, startTime, endTime, endDate } = schedule;
+  const isFormValid = schedule.every(day => {
+    const { startDate, startTime, endTime, endDate, eventEndsSameDay } = day;
 
-  // Parse the start and end dates to validate
-  const startDateObj = new Date(startDate);
-  const endDateObj = new Date(endDate);
+    // Parse the start and end dates to validate
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
 
-  // Validate start date, end date, start time, and end time
-  const isStartDateValid = !isNaN(startDateObj.getTime());
-  const isEndDateValid = !isNaN(endDateObj.getTime());
-  const isStartTimeValid = startTime !== '';
-  const isEndTimeValid = endTime !== '';
+    // Validate start date, end date, start time, and end time
+    const isStartDateValid = !isNaN(startDateObj.getTime());
+    const isEndDateValid = !isNaN(endDateObj.getTime());
+    const isStartTimeValid = startTime !== '';
+    const isEndTimeValid = endTime !== '';
 
-  // Check if end date is earlier than start date
-  const isEndAfterStart = isEndDateValid && endDateObj >= startDateObj;
+    // Check if end date is earlier than start date
+    const isEndAfterStart = isEndDateValid && endDateObj >= startDateObj;
 
-  // Retrieve and parse hours from local storage
-  const storedSchedule = localStorage.getItem('schedule');
-  const parsedSchedule = storedSchedule ? JSON.parse(storedSchedule) : {};
-  //const hours = hours || 0; // Default to 0 if hours is not set
+    // Calculate hours for the current day
+    const { hours } = calculateHoursAndMinutes(startTime, endTime, startDate, endDate, eventEndsSameDay);
 
-  // Ensure hours is a number and check for negative value
-  const isHoursValid = typeof hours === 'number' && hours >= 0;
+    // Ensure hours is a number and check for negative value
+    const isHoursValid = typeof hours === 'number' && hours >= 0;
 
-  // Form validation check
-  const isFormValid =
-    isStartDateValid &&
-    isStartTimeValid &&
-    isEndTimeValid &&
-    isEndAfterStart &&
-    isHoursValid;
+    // Form validation check for this day
+    return isStartDateValid && isStartTimeValid && isEndTimeValid && isEndAfterStart && isHoursValid;
+  });
 
-  setIsButtonDisabled(!isFormValid);
+  // If all days are valid, check if the total hours across all days is valid
+  const totalHours = schedule.reduce((acc, day) => {
+    const { startTime, endTime, startDate, endDate, eventEndsSameDay } = day;
+    const { hours } = calculateHoursAndMinutes(startTime, endTime, startDate, endDate, eventEndsSameDay);
+    return acc + hours;
+  }, 0);
+
+  // Check if total hours is valid (non-negative)
+  const isTotalHoursValid = totalHours >= 0;
+
+  // Final form validation
+  setIsButtonDisabled(!(isFormValid && isTotalHoursValid));
 }, [schedule]);
+
 
 
 // Calculate the number of days (accounting for overnight bookings)
@@ -290,7 +344,7 @@ const getNumberOfDays = () => {
     const startDateTime = parse(strippedStartTime, 'HH:mm', new Date());
     const endDateTime = parse(strippedEndTime, 'HH:mm', new Date());
 
-    if (endDateTime < startDateTime && !schedule.eventEndsSameDay) {
+    if (endDateTime < startDateTime && schedule.eventEndsSameDay) {
       return 2; // Crosses midnight, so count as 2 days
     }
   }
@@ -306,10 +360,20 @@ const daysDiff = getNumberOfDays();
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem('schedule', JSON.stringify({ ...schedule, hours }));
-    //console.log(schedule);
-    navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size")
+  
+    // Create an array of schedule items with their respective hours
+    const updatedSchedule = schedule.map((day, index) => ({
+      ...day,
+      hours: calculateTotalHoursAndMinutes(totalHours,totalMinutes), // You need to implement this function or adjust accordingly
+    }));
+  
+    // Store the updated schedule in local storage
+    localStorage.setItem('schedule', JSON.stringify(updatedSchedule));
+  
+    // Navigate to the next route
+    navigate("/StandBy/Nigeria/Event/Schedule/Ambulance Size");
   };
+  
 
   const formatTime = (time) => {
     if (!time) return '';
@@ -475,74 +539,120 @@ const daysDiff = getNumberOfDays();
             </div>
 
           </div>
-          <div className="flex flex-col gap-6">
-
-            <div className="flex flex-col gap-9">
-              <p className="font-brsemi text-lg text-[#181719]">Standby Date and Duration</p>
+        <div className="flex flex-col gap-6">
+          {schedule.map((day, index) => {
+        // Calculate hours and minutes for the current day
+        const { hours, minutes } = calculateHoursAndMinutes(
+          day.startTime,
+          day.endTime,
+          day.startDate,
+          day.endDate,
+          day.eventEndsSameDay
+        );
+         return (
+            <div
+              key={index}
+              className="flex flex-col gap-9 transition-transform transform duration-500 ease-in-out scale-95"
+              style={{ transform: 'scale(1)', opacity: 1 }} // Optional inline style for initial state
+            >
+              <span className="font-brsemi text-lg text-[#181719] flex justify-between items-center">
+                <p>
+                 {index >= 1 ? `(Day: ${index + 1})` : `Standby Date and Duration`}
+                </p>
+                { index >= 1 ? 
+                  <button onClick={() => removeDay(index)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.9199 22C17.4199 22 21.9199 17.5 21.9199 12C21.9199 6.5 17.4199 2 11.9199 2C6.41992 2 1.91992 6.5 1.91992 12C1.91992 17.5 6.41992 22 11.9199 22Z" stroke="#F9091D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7.91992 12H15.9199" stroke="#F9091D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                </button>
+                :
+                ''
+                }
+              </span>
               <DatePickerDemo
-                date={schedule.startDate ? new Date(schedule.startDate) : null}
-                setDate={(date) => handleDateChange('startDate', date)}
+                date={day.startDate ? new Date(day.startDate) : null}
+                setDate={(date) => handleDateChange(index, 'startDate', date)}
                 placeholder="Start Date"
               />
-              {!schedule.eventEndsSameDay &&
+              {day.eventEndsSameDay && (
                 <DatePickerDemo
-                  date={schedule.endDate ? new Date(schedule.endDate) : null}
-                  setDate={(date) => handleDateChange('endDate', date)}
+                  date={day.endDate ? new Date(day.endDate) : null}
+                  setDate={(date) => handleDateChange(index, 'endDate', date)}
                   placeholder="End Date"
-                />}
+                />
+              )}
               <span className="flex items-center gap-1">
-                <input type="checkbox" className=" indeterminate:bg-[#A7A8A9] checked:bg-blue-500"
-                  checked={schedule.eventEndsSameDay}
-                  onChange={handleCheckboxChange} />
-                <p className="font-brmedium text-[#212121]">Event ends on same day</p>
+                <input
+                  type="checkbox"
+                  className="indeterminate:bg-[#A7A8A9] checked:bg-blue-500"
+                  checked={day.eventEndsSameDay}
+                  onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                />
+                <p className="font-brmedium text-[#212121]">Overnight</p>
               </span>
-              {/* <span className="flex justify-between">
-                        <input type="time" 
-                        className="w-[278px] h-12 flex flex-col gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl "
-                        value={schedule.startTime}
-                        onChange={(e) => handleTimeChange('startTime', e.target.value)}
-                        />
-                        <input type="time" className="w-[278px] h-12 flex flex-col gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl"
-                        value={schedule.endTime}
-                        onChange={(e) => handleTimeChange('endTime', e.target.value)}
-                        />
-                    </span> */}
-              <span>
-                <span className="flex justify-between max-lg:gap-2">
-                  <select
-                    className="w-[278px] h-12 flex items-center gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-lg:w-full max-lg:h-full"
-                    value={schedule.startTime}
-                    onChange={(e) => handleTimeChange('startTime', e.target.value)}
-                  >
-                    <option value="" disabled>Select start time</option>
-                    {generateTimeOptions(null, true).map(({ time24, time12 }) => (
-                      <option key={time24} value={time24}>{time12}</option>
-                    ))}
-                  </select>
-                  <select
-                    className="w-[278px] h-12 flex items-center  gap-3 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-lg:w-full max-lg:h-full"
-                    value={schedule.endTime}
-                    onChange={(e) => handleTimeChange('endTime', e.target.value)}
-                  >
-                    <option value="" disabled>Select end time</option>
-                    {generateTimeOptions(schedule.startTime, false).map(({ time24, time12 }) => (
-                      <option key={time24} value={time24}>{time12}</option>
-                    ))}
-                  </select>
-
-                </span>
-                <small className="flex items-center gap-1 text-[#636066]"> <p className="text-red-700">*</p> Medics shift coverage is determined per 12-hour period.</small>
+              <span className="flex justify-between max-lg:gap-2">
+                <select
+                  className="w-[278px] h-12 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-lg:w-full max-lg:h-full"
+                  value={day.startTime}
+                  onChange={(e) => handleTimeChange(index, 'startTime', e.target.value)}
+                >
+                  <option value="" disabled>Select start time</option>
+                  {generateTimeOptions(null, true).map(({ time24, time12 }) => (
+                    <option key={time24} value={time24}>{time12}</option>
+                  ))}
+                </select>
+                <select
+                  className="w-[278px] h-12 border-[1px] border-[#E4E3E5] outline-none p-3 rounded-xl max-lg:w-full max-lg:h-full"
+                  value={day.endTime}
+                  onChange={(e) => handleTimeChange(index, 'endTime', e.target.value)}
+                >
+                  <option value="" disabled>Select end time</option>
+                  {generateTimeOptions(day.startTime, false).map(({ time24, time12 }) => (
+                    <option key={time24} value={time24}>{time12}</option>
+                  ))}
+                </select>
               </span>
-              <span>
-                <span className="flex justify-between py-3 px-5 rounded-xl bg-[#F9F9FA]">
+              <span className="flex justify-between py-3 px-5 rounded-xl bg-[#F9F9FA]">
                   <p className="font-brsemi text-[#181719]">Event Duration:</p>
                   <span className="flex items-center gap-1">
+                    {/* <p className="font-brsemi text-xl text-[#6D09F9]">{hours}:{minutes}hrs</p> */}
                     <p className="font-brsemi text-xl text-[#6D09F9]">{hours}:{minutes}hrs</p>
                     {/* {daysDiff > 1 &&
                       <p className="font-brsemi text-xl text-[#6D09F9]">|{daysDiff}Days</p>
                     } */}
                   </span>
                 </span>
+             
+            </div>
+          );
+          })}
+        <div className="flex flex-col gap-4">
+        <small className="flex items-center gap-1 text-[#636066]">
+                <p className="text-red-700">*</p> Medics shift coverage is determined per 12-hour period.
+              </small>
+            <span>
+                <button onClick={addDay} className="w-full justify-center flex items-center gap-1 text-lg font-brsemi text-ev-700 bg-white border-2 border-ev-700 rounded-mm py-3 px-5 transition-transform transform duration-500 ease-in-out hover:scale-105">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 8H12" stroke="#6D09F9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 12V4" stroke="#6D09F9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                  Add Another Day
+                </button>
+              </span>
+              <span>
+                {schedule.length > 1 &&
+                <span className="flex justify-between py-3 px-5 rounded-xl bg-[#F9F9FA]">
+                  <p className="font-brsemi text-[#181719]">Cummulative Duration:</p>
+                  <span className="flex items-center gap-1">
+                    {/* <p className="font-brsemi text-xl text-[#6D09F9]">{hours}:{minutes}hrs</p> */}
+                    <p className="font-brsemi text-xl text-[#6D09F9]">{totalHours}:{totalMinutes}hrs</p>
+                    {/* {daysDiff > 1 &&
+                      <p className="font-brsemi text-xl text-[#6D09F9]">|{daysDiff}Days</p>
+                    } */}
+                  </span>
+                </span>
+                }
                 {daysDiff > 1 &&
                   <small className="flex items-center gap-1 text-[#636066]"> <p className="text-red-700">*</p> You are selecting to book standby from {format(schedule.startDate, 'yyyy-MM-dd')} to {format(schedule.endDate, 'yyyy-MM-dd')} within time periods of {formatTime(schedule.startTime)} to {formatTime(schedule.endTime)}</small>
                 }
