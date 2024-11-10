@@ -1,98 +1,622 @@
-import NavBar from "../components/NavBar";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { BeatLoader } from "react-spinners";
+import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
+import { useFormik } from "formik";
+import * as Yup from 'yup';
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useToasts } from 'react-toast-notifications';
+import { useNavigate } from "react-router-dom";
+import { PhoneNumberUtil } from 'google-libphonenumber';
+import { PhoneInput } from 'react-international-phone';
+import 'react-international-phone/style.css';
 
-export default function StandBy() {
+import Footer from "@/components/Footer";
+import NavBar from "@/components/NavBar";
+import Subscribed from "@/components/Suscribed";
+import line from "@/assets/images/line.png";
+import call from "@/assets/images/call.png";
+import email from "@/assets/images/EmailIcon.png";
+import success from "@/assets/images/ground-success.png";
+import location from "@/assets/images/location.png";
+import whatsapp from "@/assets/images/Whatsapp.png";
 
-    const [country, setCountry] = useState('Nigeria')
-    const navigate = useNavigate();
-    const submitSelection = (e) => {
-        e.preventDefault()
-        navigate(`/AfterLife/${country}`)
+
+const phoneUtil = PhoneNumberUtil.getInstance();
+
+const isPhoneValid = (phone) => {
+    try {
+        return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
+    } catch (error) {
+        return false;
     }
+};
+
+export default function AfterLife() {
+    const [token, setToken] = useState('')
+    // eslint-disable-next-line no-unused-vars
+    const [decoded, setDecoded] = useState('')
+    const [deathCertificate, setDeathCertificate] = useState('')
+    const bg = "#6D09F9";
+    // eslint-disable-next-line no-unused-vars
+    const [isPending, setIsPending] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+    const siginData = JSON.parse(sessionStorage.getItem('SignIn'));
+    const userId = siginData?.data?.id
+    const [phone, setPhone] = useState('');
+    const isValid = isPhoneValid(phone);
+
+    const { addToast } = useToasts();
+    let navigate = useNavigate();
+
+    const afterLifeValidation = Yup.object().shape({
+        deceasedDetails: Yup.object().shape({
+            fullName: Yup.string().required("Full Name is required"),
+            gender: Yup.string().required("Gender is required"),
+            age: Yup.string().required("Age is required"),
+            causeOfDeath: Yup.string().required("Cause of death is required"),
+            locationOfDeath: Yup.string().required("Location of death is required"),
+            deathCertificate: Yup.bool().oneOf([true], 'Field is required'),
+        }),
+        transportDetails: Yup.object().shape({
+            pickUpLocation: Yup.string().required("Pickup location is required"),
+            dropOffLocation: Yup.string().required("Drop-off location is required"),
+            pickUpDate: Yup
+                .string()
+                .required("Pickup date is required"),
+            pickUpTime: Yup.string().required("Pickup time is required"),
+        }),
+        callerDetails: Yup.object().shape({
+            fullName: Yup.string().required("Full Name is required"),
+            email: Yup.string().required("Contact email is required"),
+            company: Yup.string().required("Relationship with deceased is required")
+        }),
+    })
+
+    const successData = {
+        title: "Request Received!",
+        body: "We have successfully received your request. Our team will be in touch shortly to get additional details."
+    }
+
+    useEffect(() => {
+        const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
+
+        if (signInData && signInData.data && signInData.data.tokens) {
+            const token = signInData.data.tokens.accessToken || '';
+            setToken(signInData.data.tokens.accessToken)
+            if (token) {
+                try {
+                    const decodedToken = jwtDecode(token);
+                    setDecoded(decodedToken);
+                } catch (error) {
+                    //console.error('Invalid token:', error);
+                }
+            } else {
+                //console.error('No access token found.');
+            }
+        } else {
+            //console.error('No sign-in data found.');
+        }
+    }, []);
 
     useEffect(() => {
         ReactGA.send({
             hitType: "pageview",
             page: "/AfterLife",
-            title: "AfterLife Transport",
+            title: "After Life TP",
         })
     }, [])
 
+    // eslint-disable-next-line no-unused-vars
+    const [initialValues, setInitialValues] = useState({
+        orderId: userId,
+        userId: userId,
+        country: "NG",
+        orderType: "AFTER_LIFE_TRANSPORT",
+        deceasedDetails: {
+            fullName: '',
+            gender: '',
+            age: '',
+            causeOfDeath: '',
+            locationOfDeath: '',
+            deathCertificate: deathCertificate
+        },
+        transportDetails: {
+            transportType: "ONE_WAY",
+            pickUpLocation: '',
+            dropOffLocation: '',
+            pickUpDate: '',
+            pickUpTime: ''
+        },
+        callerDetails: {
+            fullName: '',
+            email: '',
+            phone: phone,
+            company: ''
+        }
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const apiUrl = import.meta.env.VITE_ORDER_API
+        const method = 'post';
+
+        setIsPending(true);
+        axios({
+            method: method,
+            url: apiUrl,
+            data: values,
+            headers: {
+                "Content-Type": 'application/json; charset=UTF-8',
+                Authorization: `Bearer ${token}`,
+            },
+            // eslint-disable-next-line no-unused-vars
+        }).then((response) => {
+            setIsPending(false);
+            setModalOpen(true);
+            setTimeout(() => {
+                navigate("/");
+            }, 2000);
+        }).catch((error) => {
+            setIsPending(false);
+            if (Array.isArray(error?.response.data.message)) {
+                addToast("All required fields should be filled appropriately, please", {
+                    appearance: 'error',
+                });
+            } else {
+                addToast(error?.response.data.message, {
+                    appearance: 'error',
+                });
+            }
+            //console.log(error)
+            //console.log(values);
+        })
+    }
+
+    const { values, handleBlur, handleChange, setFieldValue, dirty, isSubmitting, errors, touched } = useFormik({
+        initialValues: initialValues,
+        validationSchema: afterLifeValidation,
+        onSubmit: () => {
+            handleSubmit();
+        }
+    })
+
+    useEffect(() => {
+        setFieldValue("deceasedDetails.deathCertificate", deathCertificate);
+    }, [deathCertificate, setFieldValue]
+    );
+
+    useEffect(() => {
+        setFieldValue("callerDetails.phone", phone);
+    }, [phone, setFieldValue]
+    );
 
     return (
         <div>
             <NavBar />
-            <div className="flex flex-col justify-center items-center bg-[#F9F9FA] h-[100vh]">
-                <div className="pt-9 max-w-[640px] max-lg:w-full h-[504px] rounded-2xl bg-white p-9 max-lg:p-4">
-                    <form className="flex flex-col gap-8" onSubmit={submitSelection}>
-                        <div className="flex items-center gap-3">
-                            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-                                <rect width="52" height="52" rx="8.66667" fill="#F8F4FE" />
-                                <g clipPath="url(#clip0_1585_10996)">
-                                    <path d="M42.2809 24.7753L37.0776 18.7128C36.906 18.5078 36.6916 18.3429 36.4494 18.2298C36.2071 18.1167 35.943 18.0581 35.6757 18.0581H16.9077C16.4229 18.0581 15.9579 18.2507 15.615 18.5936C15.2722 18.9364 15.0796 19.4014 15.0796 19.8862V32.6831C15.0796 33.168 15.2722 33.6329 15.615 33.9758C15.9579 34.3186 16.4229 34.5112 16.9077 34.5112H18.8501C19.0515 35.2977 19.5089 35.9948 20.1502 36.4926C20.7915 36.9904 21.5802 37.2606 22.3921 37.2606C23.2039 37.2606 23.9927 36.9904 24.634 36.4926C25.2753 35.9948 25.7327 35.2977 25.9341 34.5112H31.647C31.8483 35.2977 32.3057 35.9948 32.9471 36.4926C33.5884 36.9904 34.3771 37.2606 35.189 37.2606C36.0008 37.2606 36.7896 36.9904 37.4309 36.4926C38.0722 35.9948 38.5296 35.2977 38.731 34.5112H40.6733C41.1582 34.5112 41.6232 34.3186 41.966 33.9758C42.3089 33.6329 42.5015 33.168 42.5015 32.6831V25.3706C42.5014 25.1522 42.4232 24.941 42.2809 24.7753ZM16.9077 24.4565V19.8862H23.3062V24.4565H16.9077ZM22.3921 35.4253C22.0305 35.4253 21.6771 35.3181 21.3764 35.1172C21.0758 34.9163 20.8415 34.6308 20.7031 34.2968C20.5648 33.9627 20.5286 33.5951 20.5991 33.2405C20.6696 32.8859 20.8437 32.5602 21.0994 32.3045C21.3551 32.0488 21.6808 31.8747 22.0354 31.8042C22.3901 31.7336 22.7576 31.7698 23.0917 31.9082C23.4257 32.0466 23.7112 32.2809 23.9121 32.5815C24.113 32.8821 24.2202 33.2356 24.2202 33.5972C24.2202 34.082 24.0276 34.547 23.6848 34.8898C23.3419 35.2327 22.8769 35.4253 22.3921 35.4253ZM31.5327 24.4565H25.1343V19.8862H31.5327V24.4565ZM35.189 35.4253C34.8274 35.4253 34.4739 35.3181 34.1733 35.1172C33.8727 34.9163 33.6384 34.6308 33.5 34.2968C33.3616 33.9627 33.3254 33.5951 33.396 33.2405C33.4665 32.8859 33.6406 32.5602 33.8963 32.3045C34.152 32.0488 34.4777 31.8747 34.8323 31.8042C35.1869 31.7336 35.5545 31.7698 35.8886 31.9082C36.2226 32.0466 36.5081 32.2809 36.709 32.5815C36.9099 32.8821 37.0171 33.2356 37.0171 33.5972C37.0171 34.082 36.8245 34.547 36.4816 34.8898C36.1388 35.2327 35.6738 35.4253 35.189 35.4253ZM33.3608 24.4565V19.8862H35.6757L39.5982 24.4565H33.3608Z" fill="#6D09F9" />
-                                    <path d="M42.2809 24.7753L37.0776 18.7128C36.906 18.5078 36.6916 18.3429 36.4494 18.2298C36.2071 18.1167 35.943 18.0581 35.6757 18.0581H16.9077C16.4229 18.0581 15.9579 18.2507 15.615 18.5936C15.2722 18.9364 15.0796 19.4014 15.0796 19.8862V32.6831C15.0796 33.168 15.2722 33.6329 15.615 33.9758C15.9579 34.3186 16.4229 34.5112 16.9077 34.5112H18.8501C19.0515 35.2977 19.5089 35.9948 20.1502 36.4926C20.7915 36.9904 21.5802 37.2606 22.3921 37.2606C23.2039 37.2606 23.9927 36.9904 24.634 36.4926C25.2753 35.9948 25.7327 35.2977 25.9341 34.5112H31.647C31.8483 35.2977 32.3057 35.9948 32.9471 36.4926C33.5884 36.9904 34.3771 37.2606 35.189 37.2606C36.0008 37.2606 36.7896 36.9904 37.4309 36.4926C38.0722 35.9948 38.5296 35.2977 38.731 34.5112H40.6733C41.1582 34.5112 41.6232 34.3186 41.966 33.9758C42.3089 33.6329 42.5015 33.168 42.5015 32.6831V25.3706C42.5014 25.1522 42.4232 24.941 42.2809 24.7753ZM16.9077 24.4565V19.8862H23.3062V24.4565H16.9077ZM22.3921 35.4253C22.0305 35.4253 21.6771 35.3181 21.3764 35.1172C21.0758 34.9163 20.8415 34.6308 20.7031 34.2968C20.5648 33.9627 20.5286 33.5951 20.5991 33.2405C20.6696 32.8859 20.8437 32.5602 21.0994 32.3045C21.3551 32.0488 21.6808 31.8747 22.0354 31.8042C22.3901 31.7336 22.7576 31.7698 23.0917 31.9082C23.4257 32.0466 23.7112 32.2809 23.9121 32.5815C24.113 32.8821 24.2202 33.2356 24.2202 33.5972C24.2202 34.082 24.0276 34.547 23.6848 34.8898C23.3419 35.2327 22.8769 35.4253 22.3921 35.4253ZM31.5327 24.4565H25.1343V19.8862H31.5327V24.4565ZM35.189 35.4253C34.8274 35.4253 34.4739 35.3181 34.1733 35.1172C33.8727 34.9163 33.6384 34.6308 33.5 34.2968C33.3616 33.9627 33.3254 33.5951 33.396 33.2405C33.4665 32.8859 33.6406 32.5602 33.8963 32.3045C34.152 32.0488 34.4777 31.8747 34.8323 31.8042C35.1869 31.7336 35.5545 31.7698 35.8886 31.9082C36.2226 32.0466 36.5081 32.2809 36.709 32.5815C36.9099 32.8821 37.0171 33.2356 37.0171 33.5972C37.0171 34.082 36.8245 34.547 36.4816 34.8898C36.1388 35.2327 35.6738 35.4253 35.189 35.4253ZM33.3608 24.4565V19.8862H35.6757L39.5982 24.4565H33.3608Z" fill="url(#pattern0_1585_10996)" />
-                                </g>
-                                <defs>
-                                    <pattern id="pattern0_1585_10996" patternContentUnits="objectBoundingBox" width="5.92593" height="1.52324">
-                                        <use xlinkHref="#image0_1585_10996" transform="scale(0.0296296 0.0423122)" />
-                                    </pattern>
-                                    <clipPath id="clip0_1585_10996">
-                                        <rect width="29.25" height="29.25" fill="white" transform="translate(13.2515 11.6597)" />
-                                    </clipPath>
-                                    <image id="image0_1585_10996" width="200" height="36" xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAAkCAYAAADM3nVnAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAXlSURBVHgB7Z1bUuNGFIZPt+xBnuTBO8A7GGYFMCsAVgC8pRIGzAqwV4DJkFTeBlaAWUGYFcRZQcQOlKrUWL6oO+foMhiXh7Jk9UW2viqX/WC7cLf+c2/BPjZGEp7xkwfCvPgJPCnCJymlzxgbiDD0f5/8OACD/NII2hzYJb5sgn48YOxxIsLuH0HDgxJw6g73OK/tSinakG/NfJDi4lPQuIUS85M7bNU432FCNPGibzHubIOUuB4MH7KVvK0JM2vE5gSyNCQWFI0nRPiFXt8EjUfQSBt/bMj4n/iyBYaIDIYIH9Bo9E0bjXmeRSH3cPP3ID/eRIoPZTEGRLspm9Mg2MHfvsOd2jsGQK9bkMM45BbId77uUcrwC7541CWY00bQY8DOwTwePgapwai57qDnMx80MH9BoFU8gAK8qwR5Xdva6uj6HaswZxB2oKDoomCBvMBHE9vHRX64+brVB4XQ4jDGP4NBb7KI2MuCz1E4oQz/RUvmyVhIME2eX7PMdOEHQRBtNA/DJnecJn5HS2BYUOO1bRGHBXQxtKBYPAzHTnRHBVlIjQKGSUdFGYRFqBTILLFYRHinatGjBRuNOpZ4k9Jiu9cgY+gwZx+NwzFoyEF1CWQWDxO+ruO6fRWbYENuUkakZI8AYddGr0HGbzIcHmMItb9iPpUZEwJJUVoN+ugOj4FxqnS1oOI1fLTG3d+Gbg8sg4QhxtPzFapvK2NSIDN/BbtVIRTyJhjrH7NYKBUv8fHCu8ZiQs+2cMoGYaTYIZAEvJA7YzG9UySUDn7/EVRUwsiAVQJJiHIUFU2pGaHswuaFXtYKgzhrjM+xQNABS4SRYqNAUpQ1qMhShUFwsAk5CiXfUk4f6o3GrY3CiPsXzhX1cMBCbBZIBAfWY1v1rqrNpQ2COE/BCold1msFfAbyDvslfVt7GWSk5GhyiQWCNlgMo2oPzaVwxppC8nfAJDWjbFOzF04nh6rHOU7fjg5AiIOSisUHSY3Z8E5nFz8Pyhq7khqcMOBcPoVCeHhN+9SYpflB4TjReriu67+2NjSvRc+15G9ji940O7rAwNllXEm3NjOUxP/6td4FDSSeBR/4+5ne2vuSYE7B0GDoHe1ZlfPG+KogrxEZBCGnf6sc7WHLvvHn+n873HEobt837GGMDM+RYFKDgXFfS/MaRJaQoSBUXxCqoAKJ4M79KrlG0szUahCWFsgsiVjaBqtBVoxfJ+vQjISDISqKZ1t+c83J+DR7OT49B/6O+HiBpOMF8ZECFEP4FM1tce5PhRiUaZJ2EWc/TI+kCKkRmWvUnqpvYMhL5hLILCY71jpDrorsrJKIk7dgmE+pGklalpUFkmJQKKU7r7AJ5A2pbJsJK0wgKYaEYv149iaRVKnuIVtIZeUeFi6QlORYLI2et0ATVchlnrO3k0u80DsZPhLlGCiMLJ/RhjKBEEZmoBi7dd7UL8pU4VkHoumE8eQKY6TjDB/rO1tvTmzeK6UCSTEQdlV5iUZynMEpTUjMQQNUjnXwgsVFuQM9tOq4YVFnvEIptMYojr9gSXHQiUX0Gu/Lki9q8SCz6PYmVV6ijoz5hi8ZnKi+P0HRaBcIEbtk57PG45N9DLkuqpCrGKJ8YzS5X3b/qHQ7hfCkjOtvRCApWA7saDztV+UlBZB10BCbhBc2HuddFi05yPeg0l44nbyH5BY4iqG85B8KC6AiF3SoiS2fjFMi/qHM4iCMepCUKuSym6z7QyFVza0frkOp3QqBpOgOuVQd7V0nqErFJFBItVRXHL1G19amXx6sEgiRdUNWRtEdVcpOjkFD6ogfrtu4j3UCIQzc/K3yJjPkOPG3tgUQKwVCJKcae7rHVDbZm8Tl2zEJY+kGKzV/a67bXtfRHmsFkqI5LyE83PbrTyWvvmQlafpluh/VuuUbi7BeIIShu7dvRNiVc23XMt9YRCkEQhi8KfVaCiUWhnOZtbRO5+HHIjzclDC0NAJJMfgPc0ovlOcb5jlHeXpONGh4M3Stvo9V0fwPL+jRyZ0AxyEAAAAASUVORK5CYII=" />
-                                </defs>
-                            </svg>
-                            <p className="font-brsemi text-3xl text-[#181719] ">AfterLife Transport</p>
+            <div className="md:h-full flex flex-col gap-6 md:gap-16 flex-col md:flex-row  md:w-[100%]  md:-px-auto px-[2rem] py-16">
+                <div className="md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[60%] md:flex-start">
+                    <form action="" className="flex flex-col" noValidate onSubmit={handleSubmit}>
+                        <h2 className="text-[#2E0469] font-brsemi text-[40px] max-lg:text-4xl">Book AfterLife Transport</h2>
+                        <p className="font-brsemi text-md text-[#636066] my-3">Enter your details for the transport below:</p>
+                        <div className="w-[100%] my-6">
+                            <h3 className="font-brsemi text-xl font-brsemi mb-3 text-[#181719]">Deceased Details</h3>
+                            <div className="flex flex-col gap-[3px] w-[100%]  py-[0.5rem]">
+                                <label htmlFor="deceasedDetails.fullName" className="font-brsemi text-sm text-[#636066] mb-[10px]">Full Name</label>
+                                <input
+                                    type="text"
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                    placeholder="Enter Full Name"
+                                    name="deceasedDetails.fullName"
+                                    required
+                                    id="deceasedDetails.fullName"
+                                    value={values.deceasedDetails.fullName}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                                {touched.deceasedDetails?.fullName && errors.deceasedDetails?.fullName &&
+                                    <p>
+                                        <small className='text-xs text-red-500'>
+                                            {errors.deceasedDetails?.fullName}
+                                        </small>
+                                    </p>
+                                }
+                            </div>
+                            <div className="py-[0.5rem] flex justify-between w-[100%] gap-3">
+                                <div className="flex flex-col gap-[3px] w-1/2">
+                                    <label htmlFor="deceasedDetails.gender" className="font-brsemi text-sm text-[#636066]">Gender</label>
+                                    <select
+                                        name="deceasedDetails.gender"
+                                        value={values.deceasedDetails.gender}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        className="bg-transparent appearance-none border-[1px] border-[#E4E3E5] rounded-mm p-4 font-brreg w-full"
+                                    >
+                                        <option value="" disabled selected label="Select Gender" className="default-option">Select Gender</option>
+                                        <option value="Male" label="Male">Male</option>
+                                        <option value="Female" label="Female" >Female</option>
+                                    </select>
+
+                                    {touched.deceasedDetails?.gender && errors.deceasedDetails?.gender &&
+                                        <p>
+                                            <small className='text-xs text-red-500'>
+                                                {errors.deceasedDetails?.gender}
+                                            </small>
+                                        </p>
+                                    }
+                                </div>
+                                <div className="flex flex-col gap-[3px] w-1/2">
+                                    <label htmlFor="deceasedDetails.age" className="font-brsemi text-sm text-[#636066]">Age</label>
+                                    <input
+                                        type="text"
+                                        className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                        placeholder="Enter Age"
+                                        name="deceasedDetails.age"
+                                        required
+                                        id="deceasedDetails.age"
+                                        value={values.deceasedDetails.age}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                    />
+                                    {touched.deceasedDetails?.age && errors.deceasedDetails?.age &&
+                                        <p>
+                                            <small className='text-xs text-red-500'>
+                                                {errors.deceasedDetails?.age}
+                                            </small>
+                                        </p>
+                                    }
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+                            <div>
+                                <div className="flex flex-col gap-[3px] w-[100%]  py-[0.5rem]">
+                                    <label htmlFor="deceasedDetails.causeOfDeath" className="font-brsemi text-sm text-[#636066] mb-[10px]">Cause of Death</label>
+                                    <input
+                                        type="text"
+                                        className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                        placeholder="Cause of Death"
+                                        name="deceasedDetails.causeOfDeath"
+                                        required
+                                        id="deceasedDetails.causeOfDeath"
+                                        value={values.deceasedDetails.causeOfDeath}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                    />
+                                    {touched.deceasedDetails?.causeOfDeath && errors.deceasedDetails?.causeOfDeath &&
+                                        <p>
+                                            <small className='text-xs text-red-500'>
+                                                {errors.deceasedDetails?.causeOfDeath}
+                                            </small>
+                                        </p>
+                                    }
+                                </div>
+
+                                <div className="flex flex-col gap-[3px] w-[100%]  py-[0.5rem]">
+                                    <label htmlFor="deceasedDetails.locationOfDeath" className="font-brsemi text-sm text-[#636066] mb-[10px]">Location of Death</label>
+                                    <input
+                                        type="text"
+                                        className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                        placeholder="Location of Death"
+                                        name="deceasedDetails.locationOfDeath"
+                                        required
+                                        id="deceasedDetails.locationOfDeath"
+                                        value={values.deceasedDetails.locationOfDeath}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                    />
+                                    {touched.deceasedDetails?.locationOfDeath && errors.deceasedDetails?.locationOfDeath &&
+                                        <p>
+                                            <small className='text-xs text-red-500'>
+                                                {errors.deceasedDetails?.locationOfDeath}
+                                            </small>
+                                        </p>
+                                    }
+                                </div>
+
+                                <div className="flex flex-col gap-[3px] w-[100%]  py-[0.5rem]">
+                                    <label htmlFor="deceasedDetails.deathCerificate" className="font-brsemi text-sm text-[#636066]">Do you have a Death Certificate?</label>
+                                    <div className="flex gap-[2rem] items-center my-3 font-brreg">
+                                        <div className="flex gap-5 items-center">
+
+                                            <div className={"flex items-center gap-2"}
+                                                onClick={() => setDeathCertificate(true)}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="deathCertificate"
+                                                    className="bg-ev-700"
+                                                    value="true"
+                                                    checked={deathCertificate === true}
+                                                    onChange={() => setDeathCertificate(true)}
+
+                                                />
+                                                <p className="font-brsemi text-sm text-[#636066]">Yes</p>
+                                            </div>
+
+                                            <div className={"flex items-center gap-2"}
+                                                onClick={() => setDeathCertificate(false)}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="deathCertificate"
+                                                    className="bg-ev-700"
+                                                    value="false"
+                                                    checked={deathCertificate === false}
+                                                    onChange={() => setDeathCertificate(false)}
+
+                                                />
+                                                <p className="font-brsemi text-sm text-[#636066]">No</p>
+                                            </div>
+                                        </div>
+
+                                        {touched.deceasedDetails?.deathCertificate && errors.deceasedDetails?.deathCertificate &&
+                                            <p>
+                                                <small className='text-xs text-red-500'>
+                                                    {errors.deceasedDetails?.deathCertificate}
+                                                </small>
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+
+
+                            </div>
+
                         </div>
-                        <div className="flex flex-col gap-6">
-                            <p className="text-xl font-brsemi text-[#181719]">Where is the location for the transport?</p>
-                            <div className="flex justify-between gap-6 max-lg:gap-3">
-                                <div className={country === 'Nigeria' ? "flex flex-col items-center w-[278px] h-[210px] py-8 px-6 gap-5 border-[1px] border-ev-700 bg-white rounded-xl " : "flex flex-col items-center w-[278px] h-[210px] py-8 px-6 gap-5 border-[1px] border-[#E4E3E5] bg-white rounded-xl "}
-                                    onClick={() => setCountry('Nigeria')}>
-                                    <input type="radio" name="country" className=" bg-ev-700  " value="Nigeria" checked={country === 'Nigeria'} onChange={() => setCountry('Nigeria')} />
-                                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M0 0H64V64H0V0Z" fill="white" />
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M42.6625 0H64V64H42.6625V0ZM0 0H21.3375V64H0V0Z" fill="#008753" />
-                                    </svg>
-                                    <p className="font-brsemi text-lg text-[#636066]">Nigeria</p>
-                                </div>
-                                <div className={country === 'Others' ? "flex flex-col items-center w-[278px] h-[210px] text-center py-8 px-6 gap-5 border-[1px] border-ev-700 bg-white rounded-xl " : "flex flex-col items-center w-[278px] text-center h-[210px] py-8 px-6 gap-5 border-[1px] border-[#E4E3E5] bg-white rounded-xl "}
-                                    onClick={() => setCountry('Others')}>
-                                    <input type="radio" className="" name="country" value="Others" checked={country === 'Others'} onChange={() => setCountry('Others')} />
-                                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clipPath="url(#clip0_1592_11949)">
-                                            <path d="M32 64C49.6731 64 64 49.6731 64 32C64 14.3269 49.6731 0 32 0C14.3269 0 0 14.3269 0 32C0 49.6731 14.3269 64 32 64Z" fill="#6D09F9" />
-                                            <path d="M57.43 12.59C51.33 4.59 42.06 0 32 0C21.94 0 12.67 4.59 6.57 12.59C2.27 18.21 0 24.92 0 32C0 39.08 2.27 45.79 6.56 51.41C12.67 59.41 21.94 64 32 64C42.06 64 51.33 59.41 57.44 51.41C61.73 45.8 64 39.09 64 32C64 24.91 61.73 18.2 57.43 12.59ZM19.85 47.07C23.38 46.23 27.06 45.76 30.84 45.68V60.48C30.17 60.45 29.51 60.41 28.86 60.34C25.1 58.55 21.85 53.63 19.85 47.07ZM28.85 3.66C29.51 3.59 30.17 3.55 30.83 3.52V18.32C27.05 18.24 23.36 17.77 19.84 16.93C21.85 10.36 25.1 5.45 28.85 3.66ZM30.84 20.64V30.84H17.72C17.8 26.69 18.34 22.73 19.23 19.17C22.95 20.06 26.85 20.55 30.84 20.64ZM30.84 33.16V43.36C26.85 43.44 22.95 43.93 19.23 44.83C18.34 41.27 17.81 37.31 17.72 33.16H30.84ZM35.15 60.34C34.49 60.41 33.83 60.45 33.16 60.48V45.68C36.94 45.76 40.63 46.23 44.15 47.07C42.15 53.63 38.9 58.55 35.15 60.34ZM33.16 43.36V33.16H46.28C46.2 37.31 45.66 41.27 44.77 44.83C41.05 43.94 37.15 43.45 33.16 43.36ZM33.16 30.84V20.64C37.15 20.56 41.05 20.07 44.77 19.17C45.66 22.73 46.19 26.69 46.28 30.84H33.16ZM33.16 18.31V3.52C33.83 3.55 34.49 3.59 35.15 3.66C38.91 5.46 42.15 10.37 44.16 16.93C40.63 17.77 36.94 18.23 33.16 18.31ZM40.35 4.72C45.51 6.29 50.14 9.31 53.72 13.53C51.42 14.65 48.99 15.58 46.46 16.32C45.02 11.48 42.91 7.48 40.35 4.72ZM23.65 4.72C21.1 7.48 18.99 11.48 17.54 16.32C15.01 15.59 12.58 14.65 10.28 13.53C13.86 9.31 18.49 6.29 23.65 4.72ZM8.82 15.41C11.38 16.69 14.1 17.74 16.93 18.56C16.02 22.29 15.48 26.44 15.4 30.84H3.51C3.73 25.25 5.55 19.95 8.82 15.41ZM15.4 33.16C15.48 37.56 16.02 41.71 16.93 45.44C14.1 46.26 11.38 47.31 8.82 48.59C5.56 44.04 3.73 38.75 3.51 33.16H15.4ZM17.54 47.68C18.99 52.52 21.09 56.53 23.65 59.28C18.49 57.71 13.86 54.69 10.28 50.47C12.58 49.35 15.01 48.41 17.54 47.68ZM40.35 59.28C42.9 56.52 45.01 52.52 46.46 47.68C48.99 48.41 51.42 49.35 53.72 50.47C50.14 54.69 45.52 57.71 40.35 59.28ZM55.18 48.59C52.62 47.31 49.9 46.26 47.07 45.44C47.98 41.71 48.52 37.56 48.6 33.16H60.49C60.27 38.76 58.45 44.05 55.18 48.59ZM48.6 30.84C48.52 26.43 47.98 22.29 47.07 18.56C49.9 17.74 52.62 16.69 55.18 15.41C58.44 19.95 60.27 25.25 60.49 30.84H48.6Z" fill="#ECE5FF" />
-                                            <path d="M36.75 12.6299C36.74 21.5499 46.6 30.9299 47.7 31.8999V1.81995C41.75 1.86995 36.75 6.66995 36.75 12.6299Z" fill="#F2BA34" />
-                                            <path d="M47.7002 1.81995V31.8999C48.7902 30.9399 58.6602 21.5499 58.6502 12.6299C58.6402 6.66995 53.6402 1.86995 47.7002 1.81995Z" fill="#DBA82F" />
-                                            <path d="M47.7 30.4499V31.8999C46.61 30.9399 36.74 21.5499 36.75 12.6299C36.75 12.3999 36.76 12.1599 36.77 11.9299C37.29 20.5899 46.63 29.5099 47.7 30.4499Z" fill="#E36308" />
-                                            <path d="M47.7003 1.81995V30.4499C46.6303 29.5099 37.2903 20.5999 36.7803 11.9299C37.1503 6.29995 41.9803 1.86995 47.7003 1.81995Z" fill="#FA8A3A" />
-                                            <path d="M58.6502 12.6299C58.6602 21.5499 48.8002 30.9399 47.7002 31.8999V30.4499C48.7702 29.5099 58.1102 20.5999 58.6202 11.9299C58.6402 12.1599 58.6502 12.3899 58.6502 12.6299Z" fill="#B14D06" />
-                                            <path d="M58.6202 11.9299C58.1002 20.5999 48.7602 29.5099 47.7002 30.4499V1.81995C53.4102 1.86995 58.2402 6.29995 58.6202 11.9299Z" fill="#E36308" />
-                                            <path d="M53.2002 12.5299C53.2002 15.5699 50.7402 18.0299 47.7002 18.0299C44.6602 18.0299 42.2002 15.5699 42.2002 12.5299C42.2002 9.48991 44.6602 7.02991 47.7002 7.02991C50.7302 7.02991 53.2002 9.48991 53.2002 12.5299Z" fill="#FDD2B3" />
-                                            <path d="M53.2002 12.5299C53.2002 15.5699 50.7402 18.0299 47.7002 18.0299C44.6602 18.0299 42.2002 15.5699 42.2002 12.5299C42.2002 12.3599 42.2102 12.1899 42.2202 12.0199C42.4802 14.8199 44.8402 17.0099 47.7002 17.0099C50.5602 17.0099 52.9202 14.8199 53.1702 12.0199C53.1902 12.1999 53.2002 12.3599 53.2002 12.5299Z" fill="#FB9D5A" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_1592_11949">
-                                                <rect width="64" height="64" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-                                    <p className="font-brsemi text-lg text-[#636066]">Other Countries</p>
-                                </div>
+                        <div className="w-[100%] mb-6">
+
+                            <h3 className="text-xl font-brsemi mb-3 text-[#181719]">Transport Details</h3>
+
+                            <div className="flex flex-col gap-[3px] py-[0.5rem]">
+                                <label htmlFor="pickUp" className="font-brsemi text-sm text-[#636066] mb-[10px]">Pickup Location</label>
+                                <input
+                                    type="text"
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                    placeholder="Enter Pickup Location"
+                                    name="transportDetails.pickUpLocation"
+                                    required
+                                    id="transportDetails.pickUpLocation"
+                                    value={values.transportDetails.pickUpLocation}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            {touched.transportDetails?.pickUpLocation && errors.transportDetails?.pickUpLocation &&
+                                <p>
+                                    <small className='text-xs text-red-500'>
+                                        {errors.transportDetails?.pickUpLocation}
+                                    </small>
+                                </p>
+                            }
+                            <div className="flex flex-col gap-[3px] py-[0.5rem]">
+                                <label htmlFor="dropOff" className="font-brsemi text-sm text-[#636066] mb-[10px]">Drop-Off Location</label>
+                                <input
+                                    type="text"
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                    placeholder="Enter Drop-off Location"
+                                    name="transportDetails.dropOffLocation"
+                                    required
+                                    id="transportDetails.dropOffLocation"
+                                    value={values.transportDetails.dropOffLocation}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            {touched.transportDetails?.dropOffLocation && errors.transportDetails?.dropOffLocation &&
+                                <p>
+                                    <small className='text-xs text-red-500'>
+                                        {errors.transportDetails?.dropOffLocation}
+                                    </small>
+                                </p>
+                            }
+                        </div>
+                        <div className="py-[0.5rem] flex justify-between w-[100%] gap-3">
+                            <div className="flex flex-col gap-[3px] w-1/2">
+                                <label htmlFor="pickupDate" className="font-brsemi text-sm text-[#636066] mb-[10px]">Pickup Date</label>
+                                <input
+                                    type="date"
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm py-4 px-2 font-brreg  placeholder:text-[#9C9A9E] outline-none bg-transparent "
+                                    placeholder="Select Date(Calender)"
+                                    name="transportDetails.pickUpDate"
+                                    required
+                                    id="transportDetails.pickUpDate"
+                                    value={values.transportDetails.pickUpDate}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                                {touched.transportDetails?.pickUpDate && errors.transportDetails?.pickUpDate &&
+                                    <p>
+                                        <small className='text-xs text-red-500'>
+                                            {errors.transportDetails?.pickUpDate}
+                                        </small>
+                                    </p>
+                                }
+                            </div>
+                            <div className="flex flex-col gap-[3px] w-1/2">
+                                <label htmlFor="pickupTime" className="font-brsemi text-sm text-[#636066] mb-[10px]">Pickup Time</label>
+                                <input
+                                    type="time"
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm py-4 px-2 font-brreg  placeholder:text-[#9C9A9E] outline-none bg-transparent"
+                                    name="transportDetails.pickUpTime"
+                                    required
+                                    id="transportDetails.pickUpTime"
+                                    value={values.transportDetails.pickUpTime}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    style={{
+
+                                    }}
+                                />
+                                {touched.transportDetails?.pickUpTime && errors.transportDetails?.pickUpTime &&
+                                    <p>
+                                        <small className='text-xs text-red-500'>
+                                            {errors.transportDetails?.pickUpTime}
+                                        </small>
+                                    </p>
+                                }
                             </div>
                         </div>
-                        <button className="bg-ev-700 rounded-mm py-3 text-white flex justify-center gap-1 items-center">Proceed
-                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M10.1201 3.95337L14.1668 8.00004L10.1201 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M2.8335 8H14.0535" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </button>
+                        <div className="w-[100%] my-6">
+                            <h3 className="text-xl font-brsemi mb-3 text-[#181719]">Contact Details</h3>
+                            <div className="flex flex-col gap-[3px] w-[100%]  py-[0.5rem]">
+                                <label htmlFor="callerDetails.fullName" className="font-brsemi text-sm text-[#636066] mb-[10px]">Full Name</label>
+                                <input
+                                    type="text"
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                    placeholder="Enter Full Name"
+                                    name="callerDetails.fullName"
+                                    required
+                                    id="callerDetails.fullName"
+                                    value={values.callerDetails.fullName}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                                {touched.callerDetails?.fullName && errors.callerDetails?.fullName &&
+                                    <p>
+                                        <small className='text-xs text-red-500'>
+                                            {errors.callerDetails?.fullName}
+                                        </small>
+                                    </p>
+                                }
+                            </div>
+                            <div className="py-[0.5rem] flex flex-col">
+                                <label htmlFor="callerDetails.email" className="font-brsemi text-sm text-[#636066] mb-[10px]">Email Address</label>
+                                <input
+                                    type="email"
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                    placeholder="Enter Email Address"
+                                    name="callerDetails.email"
+                                    autoComplete="email"
+                                    required
+                                    id="callerDetails.email"
+                                    value={values.callerDetails.email}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            {touched.callerDetails?.email && errors.callerDetails?.email &&
+                                <p>
+                                    <small className='text-xs text-red-500'>
+                                        {errors.callerDetails?.email}
+                                    </small>
+                                </p>
+                            }
+                            <div className="py-[0.5rem] flex flex-col">
+                                <label htmlFor="phone" className="font-brsemi text-sm text-[#636066] mb-[10px]">Phone Number</label>
+
+                                <div
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-3 outline-none"
+                                >
+                                    <PhoneInput
+                                        defaultCountry="ng"
+                                        value={phone}
+                                        onChange={(phone) => setPhone(phone.trim())}
+                                        hideDropdown="true"
+                                        style={{
+                                            "--react-international-phone-border-color": "none",
+                                            "--react-international-phone-border-radius": "none",
+                                            "--react-international-phone-outline": 0,
+                                        }}
+                                        inputStyle={{}}
+                                        className={{}}
+                                        inputClassName=""
+                                        forceDialCode="true"
+                                        inputProps={
+                                            {
+                                                required: true,
+                                                className: "font-brreg w-full pl-3 !outline-none",
+
+                                            }
+                                        }
+
+                                    />
+                                </div>
+
+                                {!isValid &&
+                                    <p>
+                                        <small style={{ color: 'red' }}>
+                                            Phone Number is not valid
+                                        </small>
+                                    </p>
+                                }
+                            </div>
+
+                            <div className="flex flex-col gap-[3px] w-[100%]  py-[0.5rem]">
+                                <label htmlFor="callerDetails.fullName" className="font-brsemi text-sm text-[#636066] mb-[10px]">Relationship with Deseased</label>
+                                <input
+                                    type="text"
+                                    className="border-[1px] border-[#E4E3E5] w-full rounded-mm p-4 font-brreg  placeholder:text-[#9C9A9E] outline-none "
+                                    placeholder="Relationship with deceased"
+                                    name="callerDetails.company"
+                                    required
+                                    id="callerDetails.company"
+                                    value={values.callerDetails.company}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                                {touched.callerDetails?.company && errors.callerDetails?.company &&
+                                    <p>
+                                        <small className='text-xs text-red-500'>
+                                            {errors.callerDetails?.company}
+                                        </small>
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                        <div className="py-[0.5rem] w-[100%]">
+                            <button
+                                className={`${!dirty ? 'bg-ev-500' : 'bg-ev-700'} w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]`}
+                                type="submit"
+                                disabled={!dirty || isSubmitting || !isValid}
+                            >
+                                Send Request
+                                {
+                                    isPending ?
+                                        <BeatLoader size={4} color="#ffffff" /> :
+                                        <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M10.1201 3.95337L14.1668 8.00004L10.1201 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M2.83301 8H14.053" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                }
+                            </button>
+                        </div>
                     </form>
                 </div>
+                <div
+                    style={{ '--image-url': `url(${line})` }}
+                    className="md:h-full  md:flex-start bg-[image:var(--image-url)] text-white py-6 px-6 rounded-[1rem] hidden md:flex md:flex-col w-fit"
+                >
+                    <h3 className="font-brsemi text-[25px]">Contact Us Via</h3>
+                    <ul className="my-3 font-brlight">
+                        <li className="flex items-center gap-2">
+                            <img src={email} alt="email icon" className="size-[15px]" />
+                            <span>hello@8medical.co</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <img src={call} alt="phone icon" className="size-[15px]" />
+                            <span>+2348098888763, +2347071534107</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <img src={whatsapp} alt="whatsapp icon" className="size-[15px]" />
+                            <span>+2348098888763</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <img src={location} alt="phone icon" className="size-[15px]" />
+                            <span>13 Odiyan Street, Ikate, Lagos, Nigeria</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
+            <div>
+                <Subscribed isModalOpen={modalOpen} isModalClosed={() => setModalOpen(false)} img={success} title={successData.title} body={successData.body} bg={bg} />
+            </div>
+            <Footer />
         </div>
     )
 }
