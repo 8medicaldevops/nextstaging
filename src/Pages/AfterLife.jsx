@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
-
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import Subscribed from "@/components/Suscribed";
@@ -168,8 +167,6 @@ export default function AfterLife() {
                     appearance: 'error',
                 });
             }
-            //console.log(error)
-            //console.log(values);
         })
     }
 
