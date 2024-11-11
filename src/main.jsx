@@ -37,12 +37,8 @@ import ForgotPassword from './Pages/userOnboarding/ForgotPassword';
 import ChangePassword from './Pages/userOnboarding/ChangePassword';
 import AmbulanceTp from './Pages/AmbulanceTp';
 import AfterLife from './Pages/AfterLife';
-import AfterLifeNigera from './Pages/AfterLifeNigeria';
-import AfterlifeOtherCountries from './Pages/AfterlifeOtherCountries';
-import AfterLifeNigeriaConfirm from './Pages/AfterLifeNigeriaConfirm';
-import AfterLifeNigeriaRoute from './Pages/AfterLifeNigeriaRoute';
-import { ToastProvider } from 'react-toast-notifications';
 
+import { ToastProvider } from 'react-toast-notifications';
 
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV === 'production') clarity.init("nvd25h7exz");
@@ -186,27 +182,8 @@ const router = createBrowserRouter([
   {
     path: "/AfterLife",
     element: <AfterLife />,
-  },
-  {
-    path: "/AfterLife/Others",
-    element: <AfterlifeOtherCountries />,
-  },
-  {
-    path: "/AfterLife/Nigeria",
-    element: <AfterLifeNigera />,
-  },
-  {
-    path: "/AfterLife/Nigeria/Route",
-    element: <AfterLifeNigeriaRoute />,
-  },
-  {
-    path: "/AfterLife/Nigeria/Confirm",
-    element: <AfterLifeNigeriaConfirm />,
-  },
+  }
 ]);
-
-
-
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
