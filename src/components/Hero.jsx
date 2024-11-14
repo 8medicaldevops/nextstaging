@@ -164,7 +164,7 @@ export default function Hero() {
     const getServiceContent = () => {
         switch (activeService) {
             case 'standby':
-                return <div className="px-12  py-12 rounded-3xl bg-white  ">
+                return <div className="px-12  py-12 rounded-3xl bg-white ">
                     <p className="font-brmedium text-ev-700 mb-2">Ambulance Standby</p>
                     <div className="flex justify-between gap-32 max-lg:flex-col max-lg:gap-4 ">
 
@@ -309,6 +309,7 @@ export default function Hero() {
                     </div>
                 </div>
                 <div className="lg:hidden">
+                    <p className="font-brsemi text-2xl pb-6">Choose a Service</p>
                     <Select onValueChange={handleSelectChange}>
                         <SelectTrigger className="w-[240px] rounded-mm border-[1px] border-[#E4E3E5] font-brmedium text-[#181719] ">
                             <SelectValue placeholder={<div className="flex gap-2 items-center">{blackTpEmoji}Ambulance Standby</div>} />
@@ -464,7 +465,7 @@ export default function Hero() {
     )
 }
 
-/// counter 
+// Counter 
 
 const Counter = ({ targetNumber, duration }) => {
     const [count, setCount] = useState(0);
@@ -506,8 +507,7 @@ export function SkeletonCard() {
     )
 }
 
-
-// service card 
+// Service card 
 
 const serviceContents = [
     {
@@ -661,7 +661,6 @@ export function ScrollImage() {
         </div>
     );
 }
-
 
 
 // Testimonial carousel 
