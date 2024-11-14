@@ -1,13 +1,11 @@
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
-import air from "../assets/images/airtransport.png";
-import emergency from "../assets/images/playersemergency.png";
+import air from "@/assets/images/airtransport.png";
+import emergency from "@/assets/images/playersemergency.png";
 import { Link } from "react-router-dom";
 import BookServiceModal from "@/components/BookServiceModal";
 import { useState, useEffect } from "react";
 import ReactGA from "react-ga4";
-//import air from "../../public/air.png"
-
 
 export default function ServicesAgt() {
 
@@ -45,13 +43,15 @@ export default function ServicesAgt() {
                                 </defs>
                             </svg>
 
-                            <p className="text-[40px] w-[448px] text-[#2E0469] font-brbold max-lg:flex max-lg:justify-center max-lg:text-center max-lg:w-full max-lg:text-4xl">Air and Ground Ambulance Transport</p>
+                            <p className="text-[40px] w-[448px] text-[#2E0469] font-brbold max-lg:flex max-lg:justify-center max-lg:text-center max-lg:w-full max-lg:text-4xl">Ambulance Transport (Air and Ground)</p>
                             <p className="w-[448px] text-[#666666] font-brreg max-lg:flex max-lg:text-center text-lg max-lg:w-full ">For both ground and air Transport, we provide bed-to-bed transfers of patients from both homes and hospitals. Experience peace of mind with our accomplished medical professionals and cutting-edge ambulances, ensuring seamless patient transport for any health condition.
                                 In partnership with trusted allies featuring emergency-ready jets and helicopters, our team of dedicated doctors and paramedics guarantees safe and expert air transportation.</p>
                         </div>
                         <div className="max-lg:flex max-lg:justify-center">
-                            <button onClick={() => setBookingModal(true)} className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
-                                Book Now
+                            <button className="font-brbold text-white text-lg py-3 px-5 bg-ev-700 flex items-center gap-1 rounded-mm  ">
+                                <Link to="/AmbulanceTp">
+                                    Book Now
+                                </Link>
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M9.61914 3.95337L13.6658 8.00004L9.61914 12.0467" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                                     <path d="M2.33398 8H13.554" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
@@ -103,9 +103,13 @@ export default function ServicesAgt() {
                     <span className="py-12 px-16 max-sm:px-4 flex flex-col gap-6 justify-center bg-[url(./assets/images/line.png)] bg-no-repeat bg-cover bg-ev-700 rounded-3xl items-center">
                         <div className="flex flex-col gap-1 ">
                             <p className="font-brbold text-4xl text-white max-lg:text-center max-lg:text-2xl">Book our Ambulance Transport Service Today</p>
-                            {/* <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
+                            {/*<p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p> */}
                         </div>
-                        <button onClick={() => setBookingModal(true)} className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">Book Ambulance Transport</button>
+                        <button className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">
+                            <Link to="/AmbulanceTp">
+                                Book Ambulance Transport
+                            </Link>
+                        </button>
                     </span>
                 </section>
 
