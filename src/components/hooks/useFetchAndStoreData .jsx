@@ -100,21 +100,36 @@ const fetchData = async (page = currentPage) => {
     setTotalDocs(totalDocs);
 
     const mappedData = docs.map((doc) => {
-      // Extract ambulances and ensure it is always an array
-      const ambulances = Array.isArray(doc.ambulances) ? doc.ambulances : [];
-      
-      // Extract standby details from the first event of the first ambulance (if available)
+      // Handle conditional structure for ambulances
+      const isOriginalStructure = Array.isArray(doc.ambulances);
+
+      const ambulances = isOriginalStructure
+        ? doc.ambulances
+        : doc.ambulances
+        ? [doc.ambulances]
+        : []; // Normalize to an array for mapping
+
       const standbyDetails = ambulances.map((ambulance) => {
-        const firstEvent = Array.isArray(ambulance.events) ? ambulance.events[0] : ambulance;
+        // Handle different structures for events
+        const firstEvent = isOriginalStructure
+          ? Array.isArray(ambulance.events) && ambulance.events[0]
+          : ambulance;
+
         return {
-          standbyDateAndTime: firstEvent.startDate && firstEvent.startTime
-            ? `${format(parseISO(firstEvent.startDate), "do MMMM, yyyy")} ${formatTimeToAMPM(firstEvent.startTime)}`
-            : "N/A",
+          standbyDateAndTime:
+            firstEvent && firstEvent.startDate && firstEvent.startTime
+              ? `${format(parseISO(firstEvent.startDate), "do MMMM, yyyy")} ${formatTimeToAMPM(firstEvent.startTime)}`
+              : "N/A",
           standbyVenue: ambulance.eventLocationName || "N/A",
         };
       });
-    
-      // Return mapped data with fallback values and adjustments
+
+      // Calculate amount conditionally
+      const amount = doc.price
+        ? doc.price
+        : doc.smallAmbulanceCost + doc.largeAmbulanceCost + doc.medicCost || 0;
+
+      // Return the mapped data
       return {
         id: doc._id,
         contactName: doc.callerDetails?.fullName || "N/A",
@@ -122,14 +137,12 @@ const fetchData = async (page = currentPage) => {
         dateBooked: doc.dateBooked
           ? format(parseISO(doc.dateBooked), "do MMMM, yyyy")
           : "N/A",
-        standbyDateAndTime: standbyDetails[0]?.standbyDateAndTime || "N/A", // Use first ambulance's standby details
+        standbyDateAndTime: standbyDetails[0]?.standbyDateAndTime || "N/A",
         standbyVenue: standbyDetails[0]?.standbyVenue || "N/A",
-        amount: doc.price || doc.smallAmbulanceCost + doc.largeAmbulanceCost + doc.medicCost || 0, // Default to price or calculated total
+        amount: amount,
         status: doc.orderStatus || "Pending",
       };
     });
-    
-    
 
     const storedData = localStorage.getItem(storageKey);
     const newData = JSON.stringify(mappedData);
@@ -152,6 +165,7 @@ const fetchData = async (page = currentPage) => {
     setIsLoading(false);
   }
 };
+
 
 
 
