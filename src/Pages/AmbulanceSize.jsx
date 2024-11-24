@@ -108,10 +108,6 @@ const stripAmPmSuffix = (time) => {
 };
 
 
-  const stripAmPmSuffix = (time12) => {
-    return time12.replace(/ (AM|PM)/, '');
-  };
-
   useEffect(() => {
 
     const calculateTotalFee = () => {
