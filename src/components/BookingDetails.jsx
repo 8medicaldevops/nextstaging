@@ -70,12 +70,17 @@ export default function BookingDetails (props) {
     
 
     useEffect(() => {
-      if (bookingData && bookingData.ambulances) {
-        const ambulances = Array.isArray(bookingData.ambulances) ? bookingData.ambulances : [bookingData.ambulances];
-        const firstAmbulance = ambulances[0] || null;
-        setAmbulance(firstAmbulance);
+      if (bookingData) {
+        // Normalize ambulances to an array
+        const ambulances = Array.isArray(bookingData.ambulances)
+          ? bookingData.ambulances
+          : bookingData.ambulances
+          ? [bookingData.ambulances]
+          : [];
     
-        // Map and set the caller data
+        const firstAmbulance = ambulances[0] || null;
+    
+        // Set caller data
         setCallerData({
           fullName: bookingData.callerDetails?.fullName || '',
           emailAddress: bookingData.callerDetails?.email || '',
@@ -83,34 +88,53 @@ export default function BookingDetails (props) {
           companyName: bookingData.callerDetails?.company || '',
         });
     
+        // Set event data
         setEventData({
-          venueName: firstAmbulance.eventLocationName || '',
-          venueAddress: firstAmbulance.eventAddress || '',
-          guests: firstAmbulance.estimatedNumberOfGuests || 0,
-          eventType: firstAmbulance.eventType || '',
-          description: firstAmbulance.description || '',
+          venueName: firstAmbulance?.eventLocationName || '',
+          venueAddress: firstAmbulance?.eventAddress || '',
+          guests: firstAmbulance?.estimatedNumberOfGuests || 0,
+          eventType: firstAmbulance?.eventType || '',
+          description: firstAmbulance?.description || '',
         });
     
-        // Map schedule data from the first event in the first ambulance
-        const firstEvent = Array.isArray(firstAmbulance.events) ? firstAmbulance.events[0] : {};
-        setSchedule({
-          startDate: firstEvent.startDate || '',
-          endDate: firstEvent.endDate || '',
-          eventEndsSameDay: firstEvent.eventEndsSameDay || false,
-          startTime: firstEvent.startTime || '',
-          endTime: firstEvent.endTime || '',
-        });
-
+        // Handle events or event directly from ambulances
+        const eventSchedule = firstAmbulance?.startDate && firstAmbulance?.startTime 
+          ? [{
+              startDate: firstAmbulance.startDate || '',
+              endDate: firstAmbulance.endDate || '',
+              eventEndsSameDay: firstAmbulance.eventEndOnTheSameDay ?? false,
+              startTime: firstAmbulance.startTime || '',
+              endTime: firstAmbulance.endTime || '',
+              hours: { totalHours: 0, totalMinutes: 0 },  // Adjust as needed
+          }]
+          : [];
+    
+        // If there are events (array) from the ambulance data
+        const events = Array.isArray(firstAmbulance?.events) ? firstAmbulance.events : [];
+        const eventDetails = events.map((event) => ({
+          startDate: event?.startDate || '',
+          endDate: event?.endDate || '',
+          eventEndsSameDay: event?.eventEndsSameDay ?? false,
+          startTime: event?.startTime || '',
+          endTime: event?.endTime || '',
+          hours: event?.hours || { totalHours: 0, totalMinutes: 0 },
+        }));
+    
+        setSchedule([...eventSchedule, ...eventDetails]);
     
         // Ambulance and medic counts
         setAmbulanceData({
-          smallAmbulanceCount: firstAmbulance.smallAmbulance || 0,
-          largeAmbulanceCount: firstAmbulance.largeAmbulance || 0,
-          medicsCount: firstAmbulance.noOfMedic || 0,
+          smallAmbulanceCount: firstAmbulance?.smallAmbulance || 0,
+          largeAmbulanceCount: firstAmbulance?.largeAmbulance || 0,
+          medicsCount: firstAmbulance?.noOfMedic || 0,
           estimatedFee: bookingData.price || 0,
         });
       }
     }, [bookingData, editAmbulanceDetails, editContactDetails, editScheduleDetails, editEventDetails]);
+    
+    
+    
+    
     
     
   
@@ -301,41 +325,60 @@ export default function BookingDetails (props) {
                         
                         
                     </span>
-                    <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
+                   
+                  
+                    <div className="events-container">
+                    {schedule.map((event, index) => {
+                      // Convert startDate and endDate to human-readable format
+                      const formattedStartDate = new Date(event.startDate).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      });
+
+                      const formattedEndDate = new Date(event.endDate).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      });
+
+                      // Convert startTime and endTime to time format
+                      const formattedStartTime = new Date(`1970-01-01T${event.startTime}:00Z`).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      });
+
+                      const formattedEndTime = new Date(`1970-01-01T${event.endTime}:00Z`).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      });
+
+                      // Check if startDate and endDate are the same day
+                      const isSameDay = formattedStartDate === formattedEndDate;
+
+                      return (
+                        <div key={index} className="event-card flex flex-col gap-4">
+                          <div className="event-date mt-4">
+                          <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
                         <p className=" font-brmedium text-[#181719] ">Date</p>
-                        <p className="font-semibold text-[#181719]">{formattedDateRange}</p>
-                    </span>
-                    <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
+                        <p className="font-semibold text-[#181719]">{formattedStartDate} {!isSameDay && ` - ${formattedEndDate}`}</p>
+                        </span>
+                          </div>
+                          <div className="event-time">
+                          <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
                         <p className=" font-brmedium text-[#181719]">Time</p>
-                        <p className=" font-brmedium text-[#181719]">{formattedTimeRange}</p>
-                    </span>
-                    {ambulance && Array.isArray(ambulance.events) && ambulance.events.length > 0 ? (
-                    ambulance.events.map((event, eventIndex) => (
-                      <div
-                        key={eventIndex}
-                        className="py-3 px-5 rounded-xl bg-[#F9F9FA] my-2"
-                      >
-                        <p className="font-brmedium text-[#181719]">
-                          <strong>Date Range:</strong>{" "}
-                          {event.startDate || "N/A"} - {event.endDate || "N/A"}
-                        </p>
-                        <p className="font-brmedium text-[#181719]">
-                          <strong>Time Range:</strong>{" "}
-                          {event.startTime || "N/A"} - {event.endTime || "N/A"}
-                        </p>
-                        <p className="font-brmedium text-[#181719]">
-                          <strong>Total Hours:</strong>{" "}
-                          {event.hours?.totalHours || 0} hours
-                        </p>
-                        <p className="font-brmedium text-[#181719]">
-                          <strong>Total Minutes:</strong>{" "}
-                          {event.hours?.totalMinutes || 0} minutes
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="font-brmedium text-[#6D6D6D]">No events scheduled.</p>
-                  )}
+                        <p className=" font-brmedium text-[#181719]">{formattedStartTime} - {formattedEndTime}</p>
+                        </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+
+
 
                   </section>
 
