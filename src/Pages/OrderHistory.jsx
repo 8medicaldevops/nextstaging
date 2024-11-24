@@ -883,6 +883,7 @@ export default function OrderHistory () {
                             <OrderBox 
                             key={index}
                             id={order._id}
+
                             eventLocationName={order.ambulances?.[0]?.eventLocationName || 'N/A'}
                             startDate={
                                 Array.isArray(order.ambulances) 
@@ -908,6 +909,7 @@ export default function OrderHistory () {
                             largeAmbulance={order.ambulances?.[0]?.largeAmbulance || 0}
                             noOfMedic={order.ambulances?.[0]?.noOfMedic || 0}
                             smallAmbulanceCost={order.smallAmbulanceCost || 0}
+
                             token={token}
                             pendingOrder={true}
                             iaFlag={iaFlag}

@@ -51,6 +51,7 @@ export default function Schedule() {
 
   useEffect(() => {
     const { startDate, eventEndsSameDay } = schedule;
+
   
     if (startDate) {
       const start = new Date(startDate);
@@ -63,6 +64,7 @@ export default function Schedule() {
         ...prevSchedule,
         endDate,
       }));
+
     }
   }, [schedule.startDate, schedule.eventEndsSameDay]);
   
@@ -200,6 +202,7 @@ const generateTimeOptions = (startTime, isStartTime, selectedDate) => {
         if (h < currentHours || (h === currentHours && m < currentMinutes)) {
           continue; // Skip earlier times
         }
+
       }
 
       // If eventEndsSameDay is true and we're generating end time options,
@@ -215,6 +218,7 @@ const generateTimeOptions = (startTime, isStartTime, selectedDate) => {
       times.push({ time24, time12 });
     }
   }
+
 
   return times;
 };
@@ -351,6 +355,7 @@ useEffect(() => {
 
 
 
+
 // Calculate the number of days (accounting for overnight bookings)
 const getNumberOfDays = () => {
   const start = new Date(schedule.startDate);
@@ -366,7 +371,9 @@ const getNumberOfDays = () => {
     const startDateTime = parse(strippedStartTime, 'HH:mm', new Date());
     const endDateTime = parse(strippedEndTime, 'HH:mm', new Date());
 
+
     if (endDateTime < startDateTime && schedule.eventEndsSameDay) {
+
       return 2; // Crosses midnight, so count as 2 days
     }
   }
@@ -667,8 +674,10 @@ const daysDiff = getNumberOfDays();
                 <span className="flex justify-between py-3 px-5 rounded-xl bg-[#F9F9FA]">
                   <p className="font-brsemi text-[#181719]">Cummulative Duration:</p>
                   <span className="flex items-center gap-1">
+
                     {/* <p className="font-brsemi text-xl text-[#6D09F9]">{hours}:{minutes}hrs</p> */}
                     <p className="font-brsemi text-xl text-[#6D09F9]">{totalHours}:{totalMinutes}hrs</p>
+
                     {/* {daysDiff > 1 &&
                       <p className="font-brsemi text-xl text-[#6D09F9]">|{daysDiff}Days</p>
                     } */}

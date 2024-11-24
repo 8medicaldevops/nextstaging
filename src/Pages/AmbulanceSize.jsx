@@ -108,7 +108,12 @@ const stripAmPmSuffix = (time) => {
 };
 
 
+  const stripAmPmSuffix = (time12) => {
+    return time12.replace(/ (AM|PM)/, '');
+  };
+
   useEffect(() => {
+
     const calculateTotalFee = () => {
       let accumulatedCost = 0;
   
@@ -158,6 +163,7 @@ const stripAmPmSuffix = (time) => {
   
     if (storedScheduleData && storedScheduleData.length > 0) {
       calculateTotalFee();
+
     }
   }, [
     storedScheduleData,
@@ -166,7 +172,7 @@ const stripAmPmSuffix = (time) => {
     medicsCount
   ]);
   
- 
+
 
   const navigate = useNavigate();
   const handleSubmit = (e) => {

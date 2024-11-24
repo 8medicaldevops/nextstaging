@@ -134,8 +134,10 @@ const fetchData = async (page = currentPage) => {
     const storedData = localStorage.getItem(storageKey);
     const newData = JSON.stringify(mappedData);
 
+
     if (storedData !== newData) {
       localStorage.setItem(storageKey, newData);
+
     }
 
     setData(mappedData);
