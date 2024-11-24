@@ -344,15 +344,17 @@ export default function BookingDetails (props) {
                         day: 'numeric',
                       });
 
-                      // Convert startTime and endTime to time format
+                      // Convert startTime and endTime to time format without timezone conversion
                       const formattedStartTime = new Date(`1970-01-01T${event.startTime}:00Z`).toLocaleTimeString('en-US', {
                         hour: '2-digit',
                         minute: '2-digit',
+                        timeZone: 'UTC',  // Ensure the time is treated as UTC
                       });
 
                       const formattedEndTime = new Date(`1970-01-01T${event.endTime}:00Z`).toLocaleTimeString('en-US', {
                         hour: '2-digit',
                         minute: '2-digit',
+                        timeZone: 'UTC',  // Ensure the time is treated as UTC
                       });
 
                       // Check if startDate and endDate are the same day
@@ -361,21 +363,24 @@ export default function BookingDetails (props) {
                       return (
                         <div key={index} className="event-card flex flex-col gap-4">
                           <div className="event-date mt-4">
-                          <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
-                        <p className=" font-brmedium text-[#181719] ">Date</p>
-                        <p className="font-semibold text-[#181719]">{formattedStartDate} {!isSameDay && ` - ${formattedEndDate}`}</p>
-                        </span>
+                            <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
+                              <p className="font-brmedium text-[#181719]">Date</p>
+                              <p className="font-semibold text-[#181719]">
+                                {formattedStartDate} {!isSameDay && ` - ${formattedEndDate}`}
+                              </p>
+                            </span>
                           </div>
                           <div className="event-time">
-                          <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
-                        <p className=" font-brmedium text-[#181719]">Time</p>
-                        <p className=" font-brmedium text-[#181719]">{formattedStartTime} - {formattedEndTime}</p>
-                        </span>
+                            <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
+                              <p className="font-brmedium text-[#181719]">Time</p>
+                              <p className="font-brmedium text-[#181719]">{formattedStartTime} - {formattedEndTime}</p>
+                            </span>
                           </div>
                         </div>
                       );
                     })}
                   </div>
+
 
 
 
