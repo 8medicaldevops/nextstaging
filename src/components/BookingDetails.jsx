@@ -26,8 +26,9 @@ export default function BookingDetails (props) {
     const [editScheduleDetails, setEditScheduleDetails] = useState(false);
     const [editEventDetails, setEditEventDetails] = useState(false);
     const [editAmbulanceDetails, setEditAmbulanceDetails] = useState(false);
+    const [ambulance, setAmbulance] = useState(null);
 
-    // console.log(bookingData)
+     console.log(bookingData)
       
    
 
@@ -68,39 +69,50 @@ export default function BookingDetails (props) {
     }, [props.id,editContactDetails,editAmbulanceDetails,editEventDetails,editScheduleDetails]);
     
 
- useEffect(() => {
-    if (bookingData && bookingData.ambulances) {
-      setCallerData({
-        fullName: bookingData.callerDetails?.fullName || '',
-        emailAddress: bookingData.callerDetails?.email || '',
-        phoneNumber: bookingData.callerDetails?.phone || '',
-        companyName: bookingData.callerDetails?.company || '',
-      });
-  
-      setEventData({
-        venueName: bookingData.ambulances?.eventLocationName || '',
-        venueAddress: bookingData.ambulances?.eventAddress || '',
-        guests: bookingData.ambulances?.estimatedNumberOfGuests || 0,
-        eventType: bookingData.ambulances?.eventType || '',
-        description: bookingData.ambulances?.description || '',
-      });
-  
-      setSchedule({
-        startDate: bookingData.ambulances?.startDate || '',
-        endDate: bookingData.ambulances?.endDate || '',
-        eventEndsSameDay: bookingData.ambulances?.eventEndOnTheSameDay || false,
-        startTime: bookingData.ambulances?.startTime || '',
-        endTime: bookingData.ambulances?.endTime || '',
-      });
-  
-      setAmbulanceData({
-        smallAmbulanceCount: bookingData.ambulances?.smallAmbulance || 0,
-        largeAmbulanceCount: bookingData.ambulances?.largeAmbulance || 0,
-        medicsCount: bookingData.ambulances?.noOfMedic || 0,
-        estimatedFee: bookingData.price || 0,
-      });
-    }
-  }, [bookingData, editAmbulanceDetails,editContactDetails, editScheduleDetails, editEventDetails]);
+    useEffect(() => {
+      if (bookingData && bookingData.ambulances) {
+        const ambulances = Array.isArray(bookingData.ambulances) ? bookingData.ambulances : [bookingData.ambulances];
+        const firstAmbulance = ambulances[0] || null;
+        setAmbulance(firstAmbulance);
+    
+        // Map and set the caller data
+        setCallerData({
+          fullName: bookingData.callerDetails?.fullName || '',
+          emailAddress: bookingData.callerDetails?.email || '',
+          phoneNumber: bookingData.callerDetails?.phone || '',
+          companyName: bookingData.callerDetails?.company || '',
+        });
+    
+        setEventData({
+          venueName: firstAmbulance.eventLocationName || '',
+          venueAddress: firstAmbulance.eventAddress || '',
+          guests: firstAmbulance.estimatedNumberOfGuests || 0,
+          eventType: firstAmbulance.eventType || '',
+          description: firstAmbulance.description || '',
+        });
+    
+        // Map schedule data from the first event in the first ambulance
+        const firstEvent = Array.isArray(firstAmbulance.events) ? firstAmbulance.events[0] : {};
+        setSchedule({
+          startDate: firstEvent.startDate || '',
+          endDate: firstEvent.endDate || '',
+          eventEndsSameDay: firstEvent.eventEndsSameDay || false,
+          startTime: firstEvent.startTime || '',
+          endTime: firstEvent.endTime || '',
+        });
+
+    
+        // Ambulance and medic counts
+        setAmbulanceData({
+          smallAmbulanceCount: firstAmbulance.smallAmbulance || 0,
+          largeAmbulanceCount: firstAmbulance.largeAmbulance || 0,
+          medicsCount: firstAmbulance.noOfMedic || 0,
+          estimatedFee: bookingData.price || 0,
+        });
+      }
+    }, [bookingData, editAmbulanceDetails, editContactDetails, editScheduleDetails, editEventDetails]);
+    
+    
   
   const storedCallerData = callerData;
   //console.log(storedCallerData);
@@ -138,28 +150,28 @@ export default function BookingDetails (props) {
   const formattedTimeRange = startTime && endTime ? `${formattedStartTime} - ${formattedEndTime}` : 'Invalid time range';
 
   const renderContent = () => {
-    switch (bookingData.missionStatus) {
-      case "PENDING":
-            return (
-                <div className="bg-[#864df1] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
-                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <p className="text-sm font-brmedium text-[#FAFAFA]">Pending</p>
-                </div>
-            );
-      case "ASSIGNED":
+    switch (bookingData.paymentStatus) {
+      // case "PAID":
+      //       return (
+      //           <div className="bg-[#864df1] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
+      //           <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+      //           <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //           <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#FAFAFA" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //           </svg>
+      //           <p className="text-sm font-brmedium text-[#FAFAFA]">Pending</p>
+      //           </div>
+      //       );
+      case "UNPAID":
         return (
             <div className="bg-[#FEF0E6] w-[120px]  gap-2 m-0 flex items-center p-2 rounded">
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16.7856 9.5C16.7856 13.64 13.4256 17 9.28564 17C5.14564 17 1.78564 13.64 1.78564 9.5C1.78564 5.36 5.14564 2 9.28564 2C13.4256 2 16.7856 5.36 16.7856 9.5Z" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M12.0678 11.8853L9.74281 10.4978C9.33781 10.2578 9.00781 9.68031 9.00781 9.20781V6.13281" stroke="#F96D09" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <p className="text-sm font-brmedium text-[#F96D09]">Upcoming</p>
+            <p className="text-sm font-brmedium text-[#F96D09]">UNPAiD</p>
             </div>
         );
-      case "COMPLETED":
+      case "PAID":
         return (
             <div className="bg-[#ECFBF2] w-[120px]  gap-2 flex items-center p-2 rounded">
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -167,23 +179,23 @@ export default function BookingDetails (props) {
         <path d="M6.09814 9.49945L8.22064 11.622L12.4731 7.37695" stroke="#39C574" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
         <p className="text-sm font-brmedium text-[#181719]">
-        Completed
+        PAID
         </p>
         </div>
         );
-      case "CANCELLED":
-        return (
-            <div className="bg-[#FEE6E8] w-[120px] gap-2 flex items-center p-2 rounded">
-        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9.28564 17C13.4106 17 16.7856 13.625 16.7856 9.5C16.7856 5.375 13.4106 2 9.28564 2C5.16064 2 1.78564 5.375 1.78564 9.5C1.78564 13.625 5.16064 17 9.28564 17Z" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M7.16455 11.622L11.4096 7.37695" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M11.4096 11.622L7.16455 7.37695" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        <p className="text-sm font-brmedium text-[#F9091D]">
-        Canceled
-        </p>
-        </div>
-        );
+      // case "CANCELLED":
+      //   return (
+      //       <div className="bg-[#FEE6E8] w-[120px] gap-2 flex items-center p-2 rounded">
+      //   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+      //   <path d="M9.28564 17C13.4106 17 16.7856 13.625 16.7856 9.5C16.7856 5.375 13.4106 2 9.28564 2C5.16064 2 1.78564 5.375 1.78564 9.5C1.78564 13.625 5.16064 17 9.28564 17Z" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //   <path d="M7.16455 11.622L11.4096 7.37695" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //   <path d="M11.4096 11.622L7.16455 7.37695" stroke="#F9091D" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
+      //   </svg>
+      //   <p className="text-sm font-brmedium text-[#F9091D]">
+      //   Canceled
+      //   </p>
+      //   </div>
+      //   );
       default:
         return null;
     }
@@ -245,7 +257,7 @@ export default function BookingDetails (props) {
                     </span>
                     }
                      <span className="flex flex-col justify-between w-[278px]  py-3  rounded-xl  max-lg:w-full ">
-                        <p className=" font-brmedium text-[#181719] ">Booking Status</p>
+                        <p className=" font-brmedium text-[#181719] ">Payment Status</p>
                         <div className="font-brreg  w-[160px]">
                           {/* <Status id={props.id}  row={bookingData.missionStatus}/> */}
                         <span>
@@ -297,6 +309,34 @@ export default function BookingDetails (props) {
                         <p className=" font-brmedium text-[#181719]">Time</p>
                         <p className=" font-brmedium text-[#181719]">{formattedTimeRange}</p>
                     </span>
+                    {ambulance && Array.isArray(ambulance.events) && ambulance.events.length > 0 ? (
+                    ambulance.events.map((event, eventIndex) => (
+                      <div
+                        key={eventIndex}
+                        className="py-3 px-5 rounded-xl bg-[#F9F9FA] my-2"
+                      >
+                        <p className="font-brmedium text-[#181719]">
+                          <strong>Date Range:</strong>{" "}
+                          {event.startDate || "N/A"} - {event.endDate || "N/A"}
+                        </p>
+                        <p className="font-brmedium text-[#181719]">
+                          <strong>Time Range:</strong>{" "}
+                          {event.startTime || "N/A"} - {event.endTime || "N/A"}
+                        </p>
+                        <p className="font-brmedium text-[#181719]">
+                          <strong>Total Hours:</strong>{" "}
+                          {event.hours?.totalHours || 0} hours
+                        </p>
+                        <p className="font-brmedium text-[#181719]">
+                          <strong>Total Minutes:</strong>{" "}
+                          {event.hours?.totalMinutes || 0} minutes
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="font-brmedium text-[#6D6D6D]">No events scheduled.</p>
+                  )}
+
                   </section>
 
                   <section className="flex flex-col gap-4">
@@ -382,7 +422,7 @@ export default function BookingDetails (props) {
             <EditVenue open={editEventDetails} id={props.id} bookingData={bookingData} close={()=>setEditEventDetails(false)} />
             <EditAmbulance open={editAmbulanceDetails} id={props.id} bookingData={bookingData} close={()=>setEditAmbulanceDetails(false)} />
   </SheetContent>
-</Sheet>
+        </Sheet>
         
     )
 }
