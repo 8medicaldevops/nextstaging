@@ -80,7 +80,7 @@ export default function SignIn() {
     return (
         <div>
             <NavBar />
-            <div className="h-full md:mt-1/2 flex gap-6 md:gap-12 flex-col md:flex-row md:justify-center md:items-center md:w-[100%]  md:-px-auto md:-py-auto p-[2rem]">
+            <div className="h-full md:mt-1/2 flex gap-6 md:gap-16 flex-col md:flex-row md:justify-center md:items-center md:w-[100%]  md:-px-auto md:-py-auto p-[2rem]">
                 <div className="h-full md:w-[40%] md:self-center">
 
                     <img src={signin} alt="" className="object-fill hidden md:flex mx-auto rounded-[1rem]" />

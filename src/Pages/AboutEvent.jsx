@@ -8,7 +8,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import './../index.css';
 import ReactGA from "react-ga4";
@@ -307,7 +307,7 @@ export default function AboutEvent() {
                             <div>
                                 <p className="font-brsemi text-lg text-[#181719]">About Event</p>
                                 <span>
-                                    <label htmlFor="" className="font-brsemi text-sm text-[#636066] "  >Event Type</label>
+                                    <label htmlFor="" className="font-brsemi text-sm text-[#636066]">Event Type</label>
                                     <Select onValueChange={(value) => handleSelectChange('eventType', value)}>
                                         <SelectTrigger className=" border-[1px] border-[#E4E3E5] text-base w-[568px] h-12 text-[#232323] rounded-mm p-4 font-brreg max-lg:w-full">
                                             <SelectValue className=" text-6xl " placeholder={eventData.eventType || "Select event type"} />

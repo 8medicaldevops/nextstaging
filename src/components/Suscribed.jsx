@@ -9,6 +9,9 @@ import {
 
 
 export default function Subscribed(props) {
+    
+    const defaultBg = "#181719";
+
     return (
         <div>
             <Dialog open={props.isModalOpen}>
@@ -29,7 +32,7 @@ export default function Subscribed(props) {
                             <div className="flex flex-col gap-6 items-center">
                                 <p className="font-brbold max-md:w-full  max-md:text-3xl text-[32px] text-[#181719] text-center">{props.title}</p>
                                 <p className="font-brreg text-lg text-[#636066] text-center">{props.body}</p>
-                                <button onClick={props.isModalClosed} className="flex items-center gap-1 py-3 px-6 font-brbold text-lg rounded-mm text-white bg-[#181719]">Close</button>
+                                <button onClick={props.isModalClosed} className={`flex items-center gap-1 py-3 px-6 font-brbold text-lg rounded-mm text-white bg-[${props.bg}]`}>Close</button>
                             </div>
                         </DialogDescription>
                     </DialogHeader>

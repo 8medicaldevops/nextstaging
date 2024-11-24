@@ -59,24 +59,28 @@ export default function NavBar() {
                   <NavigationMenuTrigger className={`cursor-pointer p-0 ${isActive('/ServiceEr') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Services</NavigationMenuTrigger>
                   <NavigationMenuContent className="bg-white rounded-[15px] gap-4 flex flex-col py-[40px] px-4">
                     <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                      <Link to="/ServiceAmb">
-                        Ambulance Standby
-                      </Link>
-                    </NavigationMenuLink>
-
-                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                      <Link to="/ServiceAgt">
-                        Air and Ground Transport
-                      </Link>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
                       <Link to="/ServiceEr">
                         Emergency Response
                       </Link>
                     </NavigationMenuLink>
                     <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
+                      <Link to="/ServiceAmb">
+                        Ambulance Standby
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
+                      <Link to="/ServiceAgt">
+                        Ambulance Transport
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
                       <Link to="/ServiceUg">
                         Urgent care
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
+                      <Link to="/ServiceAfterLife">
+                        AfterLife Transport
                       </Link>
                     </NavigationMenuLink>
                   </NavigationMenuContent>
@@ -243,25 +247,29 @@ export default function NavBar() {
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="font-brreg text-lg p-0 text-[#636066]">Services</NavigationMenuTrigger>
                       <NavigationMenuContent className="bg-white rounded-[15px] gap-4 flex flex-col  fixed   text-right ease-in-out  top-[200px]  py-[40px] px-4">
-                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                          <Link to="/ServiceAmb">
-                            Ambulance Standby
-                          </Link>
-                        </NavigationMenuLink>
-
-                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                          <Link to="/ServiceAgt">
-                            Air and Ground Transport
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
+                      <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
                           <Link to="/ServiceEr">
                             Emergency Response
                           </Link>
                         </NavigationMenuLink>
                         <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
+                          <Link to="/ServiceAmb">
+                            Ambulance Standby
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
+                          <Link to="/ServiceAgt">
+                            Ambulance Transport
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
                           <Link to="/ServiceUg">
                             Urgent care
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
+                          <Link to="/ServiceAfterLife">
+                            AfterLife Transport
                           </Link>
                         </NavigationMenuLink>
                       </NavigationMenuContent>

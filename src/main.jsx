@@ -23,6 +23,7 @@ import ServicesEr from './Pages/ServicesEr.jsx';
 import ServicesAgt from './Pages/ServicesAgt.jsx';
 import ServicesAmb from './Pages/ServicesAmb.jsx';
 import ServicesUg from './Pages/ServicesUg.jsx';
+import ServicesAfterLife from './Pages/ServicesAfterLife';
 import Impact from './Pages/Impact.jsx';
 import OtherBookings from './Pages/OtherBookings.jsx';
 import BookingError from './Pages/BookingError.jsx';
@@ -34,8 +35,10 @@ import SignIn from './Pages/userOnboarding/SignIn';
 import CreateAccount from './Pages/userOnboarding/CreateAccount';
 import ForgotPassword from './Pages/userOnboarding/ForgotPassword';
 import ChangePassword from './Pages/userOnboarding/ChangePassword';
-import { ToastProvider } from 'react-toast-notifications';
+import AmbulanceTp from './Pages/AmbulanceTp';
+import AfterLife from './Pages/AfterLife';
 
+import { ToastProvider } from 'react-toast-notifications';
 
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV === 'production') clarity.init("nvd25h7exz");
@@ -53,17 +56,18 @@ const router = createBrowserRouter([
   {
     path: "/AboutUs",
     element: <AboutUs />,
-
   },
   {
     path: "/ServiceEr",
     element: <ServicesEr />,
-
   },
   {
     path: "/ServiceAgt",
     element: <ServicesAgt />,
-
+  },
+  {
+    path: "/ServiceAfterLife",
+    element: <ServicesAfterLife />,
   },
   {
     path: "/ServiceAmb",
@@ -82,13 +86,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/OtherBookings",
-    element: <OtherBookings />, 
-     
+    element: <OtherBookings />,
+
   },
   {
     path: "/OrderHistory",
-    element: <OrderHistory />, 
-     
+    element: <OrderHistory />,
+
   },
 
   {
@@ -119,6 +123,11 @@ const router = createBrowserRouter([
   {
     path: "/ChangePassword",
     element: <ChangePassword />,
+
+  },
+  {
+    path: "/AmbulanceTp",
+    element: <AmbulanceTp />,
 
   },
   {
@@ -167,6 +176,13 @@ const router = createBrowserRouter([
     element: <BookingError />,
 
   },
+
+  // Afterlife Booking Paths
+
+  {
+    path: "/AfterLife",
+    element: <AfterLife />,
+  }
 ]);
 
 

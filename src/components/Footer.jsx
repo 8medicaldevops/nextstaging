@@ -68,11 +68,9 @@ export default function Footer() {
                     <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M10.5 2.4165C5.90829 2.4165 2.16663 6.15817 2.16663 10.7498C2.16663 15.3415 5.90829 19.0832 10.5 19.0832C15.0916 19.0832 18.8333 15.3415 18.8333 10.7498C18.8333 6.15817 15.0916 2.4165 10.5 2.4165ZM14.125 13.7248C14.0083 13.9248 13.8 14.0332 13.5833 14.0332C13.475 14.0332 13.3666 14.0082 13.2666 13.9415L10.6833 12.3998C10.0416 12.0165 9.56663 11.1748 9.56663 10.4332V7.0165C9.56663 6.67484 9.84996 6.3915 10.1916 6.3915C10.5333 6.3915 10.8166 6.67484 10.8166 7.0165V10.4332C10.8166 10.7332 11.0666 11.1748 11.325 11.3248L13.9083 12.8665C14.2083 13.0415 14.3083 13.4248 14.125 13.7248Z" fill="#8540FF" />
                     </svg>
-
                     <p>24 Hours Everyday</p>
                 </div>
             </span>
-            
             <span className="flex gap-9 font-brreg text-[#B3B3C3] max-lg:flex-col max-lg:items-center">
                 <Link to="/ServiceEr" >
                     <p>Emergency Response</p>
@@ -85,6 +83,9 @@ export default function Footer() {
                 </Link>
                 <Link to="/ServiceUg" >
                     <p>Urgent Care</p>
+                </Link>
+                <Link to="/ServiceAfterLife" >
+                    <p>AfterLife Transport</p>
                 </Link>
             </span>
             <span className="flex gap-6 max-lg:flex-col max-lg:items-center lg:hidden">

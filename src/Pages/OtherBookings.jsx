@@ -74,9 +74,9 @@ export default function OtherBookings() {
                         <Link to="/" >
                             <button className="bg-ev-700 w-full font-brsemi text-lg rounded-mm py-3 text-white flex justify-center gap-1 items-center">Go Home</button>
                         </Link>
-                        {/* <Link to="/StandBy" >
-                    <button className="bg-white w-full font-brsemi text-lg rounded-mm py-3 text-[#181719] flex justify-center gap-1 items-center">Change Location</button>
-                    </Link> */}
+                        <Link to="/StandBy" >
+                            <button className="bg-white w-full font-brsemi text-lg rounded-mm py-3 text-[#181719] flex justify-center gap-1 items-center">Change Location</button>
+                        </Link>
                     </div>
                 </div>
             </div>
