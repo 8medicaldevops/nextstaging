@@ -98,25 +98,26 @@ export default function Schedule() {
 
 // Handle checkbox for 'eventEndsSameDay'
 const handleCheckboxChange = (index, checked) => {
-  // Determine if the event ends on the same day
-  const isSameDay = checked;
-
-  // Calculate the new endDate based on the same-day checkbox state
-  const endDate = isSameDay 
-    ? schedule[index].startDate // Use the start date if same-day
-    : format(new Date(new Date(schedule[index].startDate).setDate(new Date(schedule[index].startDate).getDate() + 1)), 'yyyy-MM-dd'); // Add one day if not
-
-  // Update the specific schedule item
   setSchedule((prevSchedule) => {
     const updatedSchedule = [...prevSchedule];
-    updatedSchedule[index] = {
-      ...updatedSchedule[index], // Keep existing properties
-      eventEndsSameDay: isSameDay,
-      endDate: endDate,
-    };
-    return updatedSchedule; // Return the updated schedule
+    const currentItem = updatedSchedule[index];
+
+    // Update the checkbox state
+    currentItem.eventEndsSameDay = checked;
+
+    // Calculate and set the end date
+    if (checked) {
+      const nextDay = new Date(currentItem.startDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      currentItem.endDate = format(nextDay, 'yyyy-MM-dd'); // Set to the next day
+    } else {
+      currentItem.endDate = currentItem.startDate; // Set to the same day
+    }
+
+    return updatedSchedule;
   });
 };
+
 
 const stripAmPmSuffix = (time12) => {
   return time12.replace(/ (AM|PM)/, '');
@@ -608,7 +609,7 @@ const daysDiff = getNumberOfDays();
                 <input
                   type="checkbox"
                   className="indeterminate:bg-[#A7A8A9] checked:bg-blue-500"
-                  checked={day.eventEndsSameDay}
+                  checked={schedule[index]?.eventEndsSameDay || false}
                   onChange={(e) => handleCheckboxChange(index, e.target.checked)}
                 />
                 <p className="font-brmedium text-[#212121]">Overnight</p>
