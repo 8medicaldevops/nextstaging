@@ -568,9 +568,10 @@ export default function AfterLife() {
                         </div>
                         <div className="py-[0.5rem] w-[100%]">
                             <button
-                                className={`${!dirty ? 'bg-ev-500' : 'bg-ev-700'} w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]`}
+                                className={`bg-ev-500 w-full font-brsemi text-lg rounded-mm py-2 text-white flex justify-center gap-1 items-center py-[0.8rem] my-[0.5rem]`}
                                 type="submit"
-                                disabled={!dirty || isSubmitting || !isValid}
+                                disabled
+                                //disabled={!dirty || isSubmitting || !isValid}  ${!dirty ? 'bg-ev-500' : 'bg-ev-700'}
                             >
                                 Send Request
                                 {
