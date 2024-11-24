@@ -26,8 +26,9 @@ export default function BookingDetails (props) {
     const [editScheduleDetails, setEditScheduleDetails] = useState(false);
     const [editEventDetails, setEditEventDetails] = useState(false);
     const [editAmbulanceDetails, setEditAmbulanceDetails] = useState(false);
+    const [ambulance, setAmbulance] = useState(null);
 
-    // console.log(bookingData)
+     console.log(bookingData)
       
    
 
@@ -68,39 +69,50 @@ export default function BookingDetails (props) {
     }, [props.id,editContactDetails,editAmbulanceDetails,editEventDetails,editScheduleDetails]);
     
 
- useEffect(() => {
-    if (bookingData && bookingData.ambulances) {
-      setCallerData({
-        fullName: bookingData.callerDetails?.fullName || '',
-        emailAddress: bookingData.callerDetails?.email || '',
-        phoneNumber: bookingData.callerDetails?.phone || '',
-        companyName: bookingData.callerDetails?.company || '',
-      });
-  
-      setEventData({
-        venueName: bookingData.ambulances?.eventLocationName || '',
-        venueAddress: bookingData.ambulances?.eventAddress || '',
-        guests: bookingData.ambulances?.estimatedNumberOfGuests || 0,
-        eventType: bookingData.ambulances?.eventType || '',
-        description: bookingData.ambulances?.description || '',
-      });
-  
-      setSchedule({
-        startDate: bookingData.ambulances?.startDate || '',
-        endDate: bookingData.ambulances?.endDate || '',
-        eventEndsSameDay: bookingData.ambulances?.eventEndOnTheSameDay || false,
-        startTime: bookingData.ambulances?.startTime || '',
-        endTime: bookingData.ambulances?.endTime || '',
-      });
-  
-      setAmbulanceData({
-        smallAmbulanceCount: bookingData.ambulances?.smallAmbulance || 0,
-        largeAmbulanceCount: bookingData.ambulances?.largeAmbulance || 0,
-        medicsCount: bookingData.ambulances?.noOfMedic || 0,
-        estimatedFee: bookingData.price || 0,
-      });
-    }
-  }, [bookingData, editAmbulanceDetails,editContactDetails, editScheduleDetails, editEventDetails]);
+    useEffect(() => {
+      if (bookingData && bookingData.ambulances) {
+        const ambulances = Array.isArray(bookingData.ambulances) ? bookingData.ambulances : [bookingData.ambulances];
+        const firstAmbulance = ambulances[0] || null;
+        setAmbulance(firstAmbulance);
+    
+        // Map and set the caller data
+        setCallerData({
+          fullName: bookingData.callerDetails?.fullName || '',
+          emailAddress: bookingData.callerDetails?.email || '',
+          phoneNumber: bookingData.callerDetails?.phone || '',
+          companyName: bookingData.callerDetails?.company || '',
+        });
+    
+        setEventData({
+          venueName: firstAmbulance.eventLocationName || '',
+          venueAddress: firstAmbulance.eventAddress || '',
+          guests: firstAmbulance.estimatedNumberOfGuests || 0,
+          eventType: firstAmbulance.eventType || '',
+          description: firstAmbulance.description || '',
+        });
+    
+        // Map schedule data from the first event in the first ambulance
+        const firstEvent = Array.isArray(firstAmbulance.events) ? firstAmbulance.events[0] : {};
+        setSchedule({
+          startDate: firstEvent.startDate || '',
+          endDate: firstEvent.endDate || '',
+          eventEndsSameDay: firstEvent.eventEndsSameDay || false,
+          startTime: firstEvent.startTime || '',
+          endTime: firstEvent.endTime || '',
+        });
+
+    
+        // Ambulance and medic counts
+        setAmbulanceData({
+          smallAmbulanceCount: firstAmbulance.smallAmbulance || 0,
+          largeAmbulanceCount: firstAmbulance.largeAmbulance || 0,
+          medicsCount: firstAmbulance.noOfMedic || 0,
+          estimatedFee: bookingData.price || 0,
+        });
+      }
+    }, [bookingData, editAmbulanceDetails, editContactDetails, editScheduleDetails, editEventDetails]);
+    
+    
   
   const storedCallerData = callerData;
   //console.log(storedCallerData);
@@ -297,6 +309,34 @@ export default function BookingDetails (props) {
                         <p className=" font-brmedium text-[#181719]">Time</p>
                         <p className=" font-brmedium text-[#181719]">{formattedTimeRange}</p>
                     </span>
+                    {ambulance && Array.isArray(ambulance.events) && ambulance.events.length > 0 ? (
+                    ambulance.events.map((event, eventIndex) => (
+                      <div
+                        key={eventIndex}
+                        className="py-3 px-5 rounded-xl bg-[#F9F9FA] my-2"
+                      >
+                        <p className="font-brmedium text-[#181719]">
+                          <strong>Date Range:</strong>{" "}
+                          {event.startDate || "N/A"} - {event.endDate || "N/A"}
+                        </p>
+                        <p className="font-brmedium text-[#181719]">
+                          <strong>Time Range:</strong>{" "}
+                          {event.startTime || "N/A"} - {event.endTime || "N/A"}
+                        </p>
+                        <p className="font-brmedium text-[#181719]">
+                          <strong>Total Hours:</strong>{" "}
+                          {event.hours?.totalHours || 0} hours
+                        </p>
+                        <p className="font-brmedium text-[#181719]">
+                          <strong>Total Minutes:</strong>{" "}
+                          {event.hours?.totalMinutes || 0} minutes
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="font-brmedium text-[#6D6D6D]">No events scheduled.</p>
+                  )}
+
                   </section>
 
                   <section className="flex flex-col gap-4">
@@ -382,7 +422,7 @@ export default function BookingDetails (props) {
             <EditVenue open={editEventDetails} id={props.id} bookingData={bookingData} close={()=>setEditEventDetails(false)} />
             <EditAmbulance open={editAmbulanceDetails} id={props.id} bookingData={bookingData} close={()=>setEditAmbulanceDetails(false)} />
   </SheetContent>
-</Sheet>
+        </Sheet>
         
     )
 }

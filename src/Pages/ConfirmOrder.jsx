@@ -79,8 +79,8 @@ export default function ConfirmOrder() {
         // Parse start and end dates
         const startDate = parseISO(schedule.startDate);
         const endDate = parseISO(schedule.endDate);
-        const formattedBackendStartDate = format(startDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
-        const formattedBackendEndDate = format(endDate, 'yyyy-MM-dd'); // Format date to "YYYY-MM-DD"
+        const formattedBackendStartDate = format(startDate, 'yyyy-MM-dd') || 'N/A'; // Format date to "YYYY-MM-DD"
+        const formattedBackendEndDate = format(endDate, 'yyyy-MM-dd') || 'N/A'; // Format date to "YYYY-MM-DD"
 
         // Format dates to desired string format
         const formattedStartDate = format(startDate, "do");
@@ -90,13 +90,13 @@ export default function ConfirmOrder() {
 
 
         // Parse start and end times
-        const startTime = parseTime(schedule.startTime);
-        const endTime = parseTime(schedule.endTime);
+        const startTime = parseTime(schedule.startTime) || 'N/A';
+        const endTime = parseTime(schedule.endTime) || 'N/A';
 
         // Format times to desired string format
-        const formattedStartTime = format(startTime, 'h:mm a');
-        const formattedEndTime = format(endTime, 'h:mm a');
-        const formattedTimeRange = `${formattedStartTime} - ${formattedEndTime}`;
+        const formattedStartTime = format(startTime, 'h:mm a')|| 'N/A';
+        const formattedEndTime = format(endTime, 'h:mm a') || 'N/A';
+        const formattedTimeRange = `${formattedStartTime} - ${formattedEndTime}` || 'N/A';
 
         // Return all formatted data for each schedule entry
         return {
@@ -107,7 +107,7 @@ export default function ConfirmOrder() {
         };
     });
 
-    console.log(formattedScheduleData);
+   // console.log(formattedScheduleData);
 
      
     
@@ -193,11 +193,7 @@ export default function ConfirmOrder() {
                 estimatedNumberOfGuests: storedEventData.guests,
                 eventType: storedEventData.eventType,
                 description: storedEventData.description,
-                eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
-                startDate: formattedBackendStartDate,
-                endDate: formattedBackendEndDate,
-                startTime: storedScheduleData.startTime,
-                endTime: storedScheduleData.endTime,
+                events:storedScheduleData,
                 smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
                 largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
                 noOfMedic: storedAmbulanceData.medicsCount,
@@ -246,96 +242,98 @@ export default function ConfirmOrder() {
       
     // axios post request to generate invoice
       const generateInvoice = async() => {
-        // setLoading(!loading)
-        // // create fresh booking/order
-        // const data = {
-        //     callerDetails: {
-        //         fullName: storedCallerData.fullName,
-        //         email: storedCallerData.emailAddress,
-        //         phone: storedCallerData.phoneNumber,
-        //         company: storedCallerData.companyName,
-        //     },
-        //     ambulances: {
-        //         eventLocationName: storedEventData.venueName,
-        //         eventAddress: storedEventData.venueAddress,
-        //         estimatedNumberOfGuests: storedEventData.guests,
-        //         eventType: storedEventData.eventType,
-        //         description: storedEventData.description,
-        //         eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
-        //         startDate: formattedBackendStartDate,
-        //         endDate: formattedBackendEndDate,
-        //         startTime: storedScheduleData.startTime,
-        //         endTime: storedScheduleData.endTime,
-        //         smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
-        //         largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
-        //         noOfMedic: storedAmbulanceData.medicsCount,
-        //     },
-        //     country: "NG",
-        //     orderId: invId || "",
-        //     userId:userId || "",
-        // };
-        // // patch/update data for already existing invoice/order
-        // const patchData = {
-        //     callerDetails: {
-        //         fullName: storedCallerData.fullName,
-        //         email: storedCallerData.emailAddress,
-        //         phone: storedCallerData.phoneNumber,
-        //         company: storedCallerData.companyName,
-        //     },
-        //     ambulances: {
-        //         smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
-        //         largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
-        //         noOfMedic: storedAmbulanceData.medicsCount,
-        //     },
-        //     eventDetails: {
-        //             eventLocationName: storedEventData.venueName,
-        //             eventAddress: storedEventData.venueAddress,
-        //             estimatedNumberOfGuests: storedEventData.guests,
-        //             eventType: storedEventData.eventType,
-        //             description: storedEventData.description,
-        //     },
-        //     scheduleEvent: {
-        //             startDate: formattedBackendStartDate,
-        //             endDate: formattedBackendEndDate,
-        //             startTime: storedScheduleData.startTime,
-        //             endTime: storedScheduleData.endTime,
-        //     }   
-        // }
-        // // condition for internal admin/customer to either create or patch order
-        // const requestData = invId && iaFlag == "ADMIN" ? patchData : data;
-        // try {
-        //     const apiUrl = iaFlag !== "ADMIN" 
-        //     ? (invId ?
-        //         `${import.meta.env.VITE_UPDATE_INVOICE}${invId}`
-        //         :
-        //         import.meta.env.VITE_GENERATE_INVOICE )
+        setLoading(!loading)
+        // create fresh booking/order
+        const data = {
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                eventLocationName: storedEventData.venueName,
+                eventAddress: storedEventData.venueAddress,
+                estimatedNumberOfGuests: storedEventData.guests,
+                eventType: storedEventData.eventType,
+                description: storedEventData.description,
+                // eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
+                // startDate: formattedBackendStartDate,
+                // endDate: formattedBackendEndDate,
+                // startTime: storedScheduleData.startTime,
+                // endTime: storedScheduleData.endTime,
+                events:storedScheduleData,
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+            country: "NG",
+            orderId: invId || "",
+            userId:userId || "",
+        };
+        // patch/update data for already existing invoice/order
+        const patchData = {
+            callerDetails: {
+                fullName: storedCallerData.fullName,
+                email: storedCallerData.emailAddress,
+                phone: storedCallerData.phoneNumber,
+                company: storedCallerData.companyName,
+            },
+            ambulances: {
+                smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
+                largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
+                noOfMedic: storedAmbulanceData.medicsCount,
+            },
+            eventDetails: {
+                    eventLocationName: storedEventData.venueName,
+                    eventAddress: storedEventData.venueAddress,
+                    estimatedNumberOfGuests: storedEventData.guests,
+                    eventType: storedEventData.eventType,
+                    description: storedEventData.description,
+            },
+             scheduleEvent: storedScheduleData,
+            //{
+            //         startDate: formattedBackendStartDate,
+            //         endDate: formattedBackendEndDate,
+            //         startTime: storedScheduleData.startTime,
+            //         endTime: storedScheduleData.endTime,
+            // }   
+        }
+        // condition for internal admin/customer to either create or patch order
+        const requestData = invId && iaFlag == "ADMIN" ? patchData : data;
+        try {
+            const apiUrl = iaFlag !== "ADMIN" 
+            ? (invId ?
+                `${import.meta.env.VITE_UPDATE_INVOICE}${invId}`
+                :
+                import.meta.env.VITE_GENERATE_INVOICE )
 
-        //     : (
-        //         invId 
-        //         ? `${import.meta.env.VITE_ORDER_API}${invId}` 
-        //         : import.meta.env.VITE_GENERATE_PAYMENT_LINK
-        //       );
+            : (
+                invId 
+                ? `${import.meta.env.VITE_ORDER_API}${invId}` 
+                : import.meta.env.VITE_GENERATE_PAYMENT_LINK
+              );
     
-        // const method = invId? 'patch' : 'post'; // Choose 'patch' if  invId available, otherwise 'post'
-        // // await function 
-        // const response = await axios[method](
-        //     apiUrl, 
-        //     requestData,
-        //     {
-        //         headers: {
-        //             Authorization: `Bearer ${token}`, 
-        //         },
-        //     }
-        //     );
-        //     console.log("Response:", response.data.data.id);
-        //     localStorage.setItem('bookingid', JSON.stringify(response.data.data.id));
+        const method = invId? 'patch' : 'post'; // Choose 'patch' if  invId available, otherwise 'post'
+        // await function 
+        const response = await axios[method](
+            apiUrl, 
+            requestData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, 
+                },
+            }
+            );
+            console.log("Response:", response.data.data.id);
+            localStorage.setItem('bookingid', JSON.stringify(response.data.data.id));
 
-        // } catch (error) {
-        //     //console.error("You are not logged in:", error);
-        //     //navigate("/BookingError");
-        // } finally {
-        //     setLoading(false);
-        // }
+        } catch (error) {
+            //console.error("You are not logged in:", error);
+            //navigate("/BookingError");
+        } finally {
+            setLoading(false);
+        }
         setIsOpen(true);
       }
       /// generate payment link for internal admins
@@ -354,11 +352,7 @@ export default function ConfirmOrder() {
                 estimatedNumberOfGuests: storedEventData.guests,
                 eventType: storedEventData.eventType,
                 description: storedEventData.description,
-                eventEndOnTheSameDay: storedScheduleData.eventEndsSameDay,
-                startDate: formattedBackendStartDate,
-                endDate: formattedBackendEndDate,
-                startTime: storedScheduleData.startTime,
-                endTime: storedScheduleData.endTime,
+                events:storedScheduleData,
                 smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
                 largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
                 noOfMedic: storedAmbulanceData.medicsCount,
@@ -387,12 +381,13 @@ export default function ConfirmOrder() {
                     eventType: storedEventData.eventType,
                     description: storedEventData.description,
                 },
-                scheduleEvent: {
-                    startDate: formattedBackendStartDate,
-                    endDate: formattedBackendEndDate,
-                    startTime: storedScheduleData.startTime,
-                    endTime: storedScheduleData.endTime,
-                }
+                scheduleEvent: storedScheduleData,
+                // {
+                //     startDate: formattedBackendStartDate,
+                //     endDate: formattedBackendEndDate,
+                //     startTime: storedScheduleData.startTime,
+                //     endTime: storedScheduleData.endTime,
+                // }
               
         }
         const requestData = invId ? patchData : data;

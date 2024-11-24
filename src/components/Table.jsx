@@ -34,31 +34,11 @@ import {
 import Status from "./Status";
 import BookingDetails from "./BookingDetails";
 import { Skeleton } from "./ui/skeleton";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-//import * as React from "react"
-import { addDays, format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-//import { DateRange } from "react-day-picker"
-import { cn } from "@/lib/utils"
-// import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 
 
 
- 
-//const data = JSON.parse(localStorage.getItem('tabledata'));
+
 const formatPhoneNumber = (phoneNumber) => {
   // Check if phoneNumber is undefined or null
   if (!phoneNumber) {
@@ -75,10 +55,10 @@ const formatPhoneNumber = (phoneNumber) => {
 
 export const columns = (setViewBooking,setBookingId)=> [
   {
-    accessorKey: "ContactName",
+    accessorKey: "contactName",
     header: <div className="font-brmedium text-sm text-[#4A464E] ">Contact Name</div>,
     cell: ({ row }) => (
-      <div className="capitalize font-brsemi text-sm text-[#4A464E]">{row.getValue("ContactName")}</div>
+      <div className="capitalize font-brsemi text-sm text-[#4A464E]">{row.getValue("contactName")}</div>
     ),
   },
   {
@@ -121,6 +101,8 @@ export const columns = (setViewBooking,setBookingId)=> [
         </span>
     ),
 },
+
+
 
 
   {
@@ -290,6 +272,7 @@ export function DataTableDemo({data,
     },
   });
   const pageButtons = [];
+  console.log(data)
 
   for (let i = 1; i <= totalPages; i++) {
     pageButtons.push(

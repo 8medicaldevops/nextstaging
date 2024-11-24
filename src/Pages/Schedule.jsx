@@ -124,13 +124,21 @@ const stripAmPmSuffix = (time12) => {
 
 // function to add new schedule
 const addDay = () => {
-  setSchedule([...schedule, 
-    { startDate: null,
-    endDate: null,
-    eventEndsSameDay: false,
-    startTime: '',
-    endTime: '',}])
-}
+  setSchedule(prevSchedule => {
+    const normalizedSchedule = Array.isArray(prevSchedule) ? prevSchedule : [prevSchedule];
+    return [
+      ...normalizedSchedule,
+      { 
+        startDate: null,
+        endDate: null,
+        eventEndsSameDay: false,
+        startTime: '',
+        endTime: '',
+      }
+    ];
+  });
+};
+
 
 // Handle time change for startTime and endTime
 const handleTimeChange = (index, field, value) => {
@@ -260,6 +268,11 @@ const calculateHoursAndMinutes = (startTime, endTime, startDate, endDate, eventE
 
 ///calculate total
 const calculateTotalHoursAndMinutes = () => {
+  if (!Array.isArray(schedule)) {
+    console.error('schedule is not an array:', schedule);
+    return { totalHours: 0, totalMinutes: 0 };
+  }
+
   let totalHours = 0;
   let totalMinutes = 0;
 
@@ -276,49 +289,58 @@ const calculateTotalHoursAndMinutes = () => {
     totalMinutes += minutes;
   });
 
-  // Convert total minutes to hours and minutes
+  // Convert excess minutes into hours
   totalHours += Math.floor(totalMinutes / 60);
   totalMinutes = totalMinutes % 60;
 
   return { totalHours, totalMinutes };
 };
 
+
 const { totalHours, totalMinutes } = calculateTotalHoursAndMinutes();
 
 
 useEffect(() => {
-  const isFormValid = schedule.every(day => {
+  const isFormValid = (Array.isArray(schedule) ? schedule : [schedule]).every(day => {
     const { startDate, startTime, endTime, endDate, eventEndsSameDay } = day;
-
+  
     // Parse the start and end dates to validate
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(endDate);
-
+  
     // Validate start date, end date, start time, and end time
     const isStartDateValid = !isNaN(startDateObj.getTime());
     const isEndDateValid = !isNaN(endDateObj.getTime());
     const isStartTimeValid = startTime !== '';
     const isEndTimeValid = endTime !== '';
-
+  
     // Check if end date is earlier than start date
     const isEndAfterStart = isEndDateValid && endDateObj >= startDateObj;
-
+  
     // Calculate hours for the current day
-    const { hours } = calculateHoursAndMinutes(startTime, endTime, startDate, endDate, eventEndsSameDay);
-
+    const { hours } = calculateHoursAndMinutes(
+      startTime,
+      endTime,
+      startDate,
+      endDate,
+      eventEndsSameDay
+    );
+  
     // Ensure hours is a number and check for negative value
     const isHoursValid = typeof hours === 'number' && hours >= 0;
-
+  
     // Form validation check for this day
     return isStartDateValid && isStartTimeValid && isEndTimeValid && isEndAfterStart && isHoursValid;
   });
+  
 
   // If all days are valid, check if the total hours across all days is valid
-  const totalHours = schedule.reduce((acc, day) => {
+  const totalHours = (Array.isArray(schedule) ? schedule : [schedule]).reduce((acc, day) => {
     const { startTime, endTime, startDate, endDate, eventEndsSameDay } = day;
     const { hours } = calculateHoursAndMinutes(startTime, endTime, startDate, endDate, eventEndsSameDay);
     return acc + hours;
-  }, 0);
+  }, 0) || 0; //Default to 0 if schedule is invalid
+  
 
   // Check if total hours is valid (non-negative)
   const isTotalHoursValid = totalHours >= 0;
@@ -540,7 +562,7 @@ const daysDiff = getNumberOfDays();
 
           </div>
         <div className="flex flex-col gap-6">
-          {schedule.map((day, index) => {
+        {(Array.isArray(schedule) ? schedule : [schedule]).map((day, index) => {
         // Calculate hours and minutes for the current day
         const { hours, minutes } = calculateHoursAndMinutes(
           day.startTime,
@@ -562,8 +584,8 @@ const daysDiff = getNumberOfDays();
                 { index >= 1 ? 
                   <button onClick={() => removeDay(index)}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.9199 22C17.4199 22 21.9199 17.5 21.9199 12C21.9199 6.5 17.4199 2 11.9199 2C6.41992 2 1.91992 6.5 1.91992 12C1.91992 17.5 6.41992 22 11.9199 22Z" stroke="#F9091D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M7.91992 12H15.9199" stroke="#F9091D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M11.9199 22C17.4199 22 21.9199 17.5 21.9199 12C21.9199 6.5 17.4199 2 11.9199 2C6.41992 2 1.91992 6.5 1.91992 12C1.91992 17.5 6.41992 22 11.9199 22Z" stroke="#F9091D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M7.91992 12H15.9199" stroke="#F9091D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 </button>
                 :
@@ -634,8 +656,8 @@ const daysDiff = getNumberOfDays();
             <span>
                 <button onClick={addDay} className="w-full justify-center flex items-center gap-1 text-lg font-brsemi text-ev-700 bg-white border-2 border-ev-700 rounded-mm py-3 px-5 transition-transform transform duration-500 ease-in-out hover:scale-105">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 8H12" stroke="#6D09F9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M8 12V4" stroke="#6D09F9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4 8H12" stroke="#6D09F9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 12V4" stroke="#6D09F9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                   Add Another Day
                 </button>
