@@ -39,7 +39,7 @@ export default function OrderBox({
     };
 
     const [orderData, setOrderData] = useState({});
-    console.log(orderData)
+    //console.log(orderData)
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [checkoutLink, setCheckoutLink] = useState('');
@@ -230,7 +230,7 @@ export default function OrderBox({
               data.largeAmbulanceCost?.toString()
             );
             localStorage.setItem("medicsTotal", data.medicCost?.toString());
-            localStorage.setItem("bookingid", JSON.stringify(orderId));
+            localStorage.setItem("bookingid", JSON.stringify(id));
         }
 
         if (!pendingOrder) {
