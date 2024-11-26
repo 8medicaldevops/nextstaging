@@ -365,7 +365,7 @@ export default function BookingDetails (props) {
                           <div className="event-date mt-4">
                             <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
                               <p className="font-brmedium text-[#181719]">Date</p>
-                              <p className="font-semibold text-[#181719]">
+                              <p className="font-semibold text-[#181719] text-right">
                                 {formattedStartDate} {!isSameDay && ` - ${formattedEndDate}`}
                               </p>
                             </span>
