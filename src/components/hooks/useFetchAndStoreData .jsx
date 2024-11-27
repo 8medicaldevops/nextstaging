@@ -100,20 +100,20 @@ const fetchData = async (page = currentPage) => {
     setTotalDocs(totalDocs);
 
     const mappedData = docs.map((doc) => {
-      // Handle conditional structure for ambulances
-      const isOriginalStructure = Array.isArray(doc.ambulances);
-
-      const ambulances = isOriginalStructure
-        ? doc.ambulances
-        : doc.ambulances
-        ? [doc.ambulances]
-        : []; // Normalize to an array for mapping
-
-      const standbyDetails = ambulances.map((ambulance) => {
-        // Handle different structures for events
-        const firstEvent = isOriginalStructure
-          ? Array.isArray(ambulance.events) && ambulance.events[0]
-          : ambulance;
+      // Normalize `ambulances` to an array for consistent processing
+    const ambulances = Array.isArray(doc.ambulances)
+      ? doc.ambulances
+      : doc.ambulances
+      ? [doc.ambulances]
+      : [];
+  
+    // Map over the normalized `ambulances` array
+    const standbyDetails = ambulances.map((ambulance) => {
+      // Extract the first event, ensuring compatibility with nested structure
+      const firstEvent =
+        Array.isArray(ambulance.events) && ambulance.events.length > 0
+          ? ambulance.events[0]
+          : null;
 
         return {
           standbyDateAndTime:
