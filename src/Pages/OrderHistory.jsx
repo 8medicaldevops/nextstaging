@@ -660,12 +660,28 @@ export default function OrderHistory () {
                             <OrderBox 
                             key={index}
                             id={order.id}
-                            eventLocationName={order.ambulances.eventLocationName}
-                            startDate={order.ambulances[0].startDate}
-                            startTime={order.ambulances[0].startTime}
-                            price={order.price}
-                            endDate={order.ambulances[0].endDate}
-                            endTime={order.ambulances[0].endTime}
+                            eventLocationName={order.ambulances?.[0]?.eventLocationName || 'N/A'}
+                            startDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startDate || order.ambulances[0]?.startDate || 'N/A'
+                                : order.ambulances?.startDate || 'N/A'
+                            }
+                            startTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startTime || order.ambulances[0]?.startTime || 'N/A'
+                                : order.ambulances?.startTime || 'N/A'
+                            }
+                            price={order.price || 0}
+                            endDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endDate || order.ambulances[0]?.endDate || 'N/A'
+                                : order.ambulances?.endDate || 'N/A'
+                            }
+                            endTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endTime || order.ambulances[0]?.endTime || 'N/A'
+                                : order.ambulances?.endTime || 'N/A'
+                            }
                             largeAmbulance={order.ambulances[0].largeAmbulance}
                             noOfMedic={order.ambulances[0].noOfMedic}
                             smallAmbulanceCost={order.ambulances[0].smallAmbulance}
@@ -740,12 +756,28 @@ export default function OrderHistory () {
                             <OrderBox 
                             key={index}
                             id={order.id}
-                            eventLocationName={order.ambulances[0].eventLocationName}
-                            startDate={order.ambulances[0].startDate}
-                            startTime={order.ambulances[0].startTime}
-                            price={order.price}
-                            endDate={order.ambulances[0].endDate}
-                            endTime={order.ambulances[0].endTime}
+                            eventLocationName={order.ambulances?.[0]?.eventLocationName || 'N/A'}
+                            startDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startDate || order.ambulances[0]?.startDate || 'N/A'
+                                : order.ambulances?.startDate || 'N/A'
+                            }
+                            startTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startTime || order.ambulances[0]?.startTime || 'N/A'
+                                : order.ambulances?.startTime || 'N/A'
+                            }
+                            price={order.price || 0}
+                            endDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endDate || order.ambulances[0]?.endDate || 'N/A'
+                                : order.ambulances?.endDate || 'N/A'
+                            }
+                            endTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endTime || order.ambulances[0]?.endTime || 'N/A'
+                                : order.ambulances?.endTime || 'N/A'
+                            }
                             largeAmbulance={order.ambulances[0].largeAmbulance}
                             noOfMedic={order.ambulances[0].noOfMedic}
                             smallAmbulanceCost={order.ambulances[0].smallAmbulance}
