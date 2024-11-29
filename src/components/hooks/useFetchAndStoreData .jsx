@@ -101,34 +101,40 @@ const fetchData = async (page = currentPage) => {
 
     const mappedData = docs.map((doc) => {
       // Normalize `ambulances` to an array for consistent processing
-    const ambulances = Array.isArray(doc.ambulances)
-      ? doc.ambulances
-      : doc.ambulances
-      ? [doc.ambulances]
-      : [];
-  
-    // Map over the normalized `ambulances` array
-    const standbyDetails = ambulances.map((ambulance) => {
-      // Extract the first event, ensuring compatibility with nested structure
-      const firstEvent =
-        Array.isArray(ambulance.events) && ambulance.events.length > 0
-          ? ambulance.events[0]
-          : null;
-
+      const ambulances = Array.isArray(doc.ambulances)
+        ? doc.ambulances
+        : doc.ambulances
+        ? [doc.ambulances]
+        : [];
+    
+      // Map over the normalized `ambulances` array
+      const standbyDetails = ambulances.map((ambulance) => {
+        // Handle `events` array or directly structured data
+        const firstEvent =
+          Array.isArray(ambulance.events) && ambulance.events.length > 0
+            ? ambulance.events[0]
+            : ambulance;
+    
+        // Extract startDate, startTime, and ensure fallback handling
+        const startDate = firstEvent?.startDate || firstEvent?.startDateTime || null;
+        const startTime = firstEvent?.startTime || null;
+    
         return {
           standbyDateAndTime:
-            firstEvent && firstEvent.startDate && firstEvent.startTime
-              ? `${format(parseISO(firstEvent.startDate), "do MMMM, yyyy")} ${formatTimeToAMPM(firstEvent.startTime)}`
+            startDate && startTime
+              ? `${format(parseISO(startDate), "do MMMM, yyyy")} ${formatTimeToAMPM(
+                  startTime
+                )}`
               : "N/A",
           standbyVenue: ambulance.eventLocationName || "N/A",
         };
       });
-
+    
       // Calculate amount conditionally
       const amount = doc.price
         ? doc.price
         : doc.smallAmbulanceCost + doc.largeAmbulanceCost + doc.medicCost || 0;
-
+    
       // Return the mapped data
       return {
         id: doc._id,
@@ -143,6 +149,7 @@ const fetchData = async (page = currentPage) => {
         status: doc.orderStatus || "Pending",
       };
     });
+    
 
     const storedData = localStorage.getItem(storageKey);
     const newData = JSON.stringify(mappedData);
