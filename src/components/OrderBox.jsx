@@ -29,6 +29,7 @@ export default function OrderBox({
     color,
 }) {
     const formatBackendDate = (date) => {
+
         if (!date || isNaN(new Date(date))) {
           return 'N/A';
         }
@@ -65,6 +66,7 @@ export default function OrderBox({
     const formatDispDate = (dateStr) => {
         if (!dateStr || isNaN(new Date(dateStr))) return 'N/A';
         return new Date(dateStr).toLocaleDateString('en-GB', {
+
             day: 'numeric',
             month: 'short',
             year: 'numeric',
