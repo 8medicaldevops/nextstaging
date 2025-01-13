@@ -133,7 +133,7 @@ export default function Footer() {
             <div className="flex flex-col gap-8 w-[80%]">
                 <div className="border-[1px] border-[#3B3B65]"></div>
                 <div className=" gap-12 flex justify-between max-lg:flex-col max-lg:items-center ">
-                    <p className="font-brmedium text-[#B3B3C3]">© 2024 8medical. All rights reserved.</p>
+                    <p className="font-brmedium text-[#B3B3C3]">© 2025 8medical. All rights reserved.</p>
                     <span className="flex items-center gap-6">
                         <a target="blank" href="https://www.facebook.com/8medical?mibextid=LQQJ4d" >
                             <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
