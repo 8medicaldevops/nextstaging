@@ -249,7 +249,6 @@ export default function ConfirmOrder() {
       
     // axios post request to generate invoice
       const generateInvoice = async() => {
-
         setLoading(!loading)
         // create fresh booking/order
         const data = {
