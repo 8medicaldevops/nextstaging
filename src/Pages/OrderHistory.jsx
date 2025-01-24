@@ -1,6 +1,7 @@
 import NavBar from "@/components/NavBar";
 import OrderBox from "@/components/OrderBox";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import {
@@ -12,11 +13,6 @@ import {
   } from "@/components/ui/select"
 import NoBooking from "@/components/NoBooking";
 import { Skeleton } from "@/components/ui/skeleton"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-  } from "@/components/ui/popover"
 
   
 
@@ -44,6 +40,7 @@ export default function OrderHistory () {
     const decodedToken = token? jwtDecode(token) : '';
     const iaFlag = decodedToken?.userType ;
     const totalOrders = pendingPagination.totalDocs + upcomingPagination.totalDocs + completedPagination.totalDocs;
+    const navigate = useNavigate();
     //console.log(totalPendingOrdersAdmin)
 
     const handleCategoryClick = (category) => {
@@ -173,7 +170,9 @@ export default function OrderHistory () {
                     return response.data; // Return the order data
                     
                 } catch (error) {
-                    //console.error('Error fetching orders:', error);
+                    console.error('Error fetching orders:', error);
+                    sessionStorage.clear();
+                    navigate('/SignIn');
                     // Handle the error (e.g., display a message to the user)
                 } finally {
                     setLoading(false)
@@ -408,30 +407,32 @@ export default function OrderHistory () {
                             <OrderBox 
                             key={index}
                             id={order.id}
-                            eventLocationName={order.ambulances.eventLocationName}
-                            startDate={order.ambulances.startDate}
-                            startTime={order.ambulances.startTime}
-                            price={order.price}
-                            endDate={order.ambulances.endDate}
-                            endTime={order.ambulances.endTime}
-                            largeAmbulance={order.ambulances.largeAmbulance}
-                            noOfMedic={order.ambulances.noOfMedic}
-                            smallAmbulanceCost={order.smallAmbulanceCost}
-                            largeAmbulanceCost={order.largeAmbulanceCost}
-                            medicCost={order.medicCost}
-                            smallAmbulanceCount={order.ambulances.smallAmbulance}
-                            largeAmbulanceCount={order.ambulances.largeAmbulance}
-                            estimatedFee={order.price}
-                            venueAddress={order.ambulances.eventAddress}
-                            guests={order.ambulances.estimatedNumberOfGuests}
-                            eventType={order.ambulances.eventType}
-                            description={order.ambulances.description}
-                            fullName={order.callerDetails.fullName}
-                            emailAddress={order.callerDetails.email}
-                            phoneNumber={order.callerDetails.phone}
-                            companyName={order.callerDetails.company}
-                            eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
-                            pendingOrder = {true}
+                            eventLocationName={order.ambulances?.[0]?.eventLocationName || 'N/A'}
+                            startDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startDate || order.ambulances[0]?.startDate || 'N/A'
+                                : order.ambulances?.startDate || 'N/A'
+                            }
+                            startTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startTime || order.ambulances[0]?.startTime || 'N/A'
+                                : order.ambulances?.startTime || 'N/A'
+                            }
+                            price={order.price || 0}
+                            endDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endDate || order.ambulances[0]?.endDate || 'N/A'
+                                : order.ambulances?.endDate || 'N/A'
+                            }
+                            endTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endTime || order.ambulances[0]?.endTime || 'N/A'
+                                : order.ambulances?.endTime || 'N/A'
+                            }
+                            largeAmbulance={order.ambulances?.[0]?.largeAmbulance || 0}
+                            noOfMedic={order.ambulances?.[0]?.noOfMedic || 0}
+                            smallAmbulanceCost={order.smallAmbulanceCost || 0}
+                            pendingOrder={true}
                             color={'#F34197'}
                             iaFlag={iaFlag}
                             />
@@ -463,15 +464,32 @@ export default function OrderHistory () {
                     (upcomingOrders.slice(0,6).map((order, index) =>(
                             <OrderBox 
                             key={index}
-                            eventLocationName={order.ambulances.eventLocationName}
-                            startDate={order.ambulances.startDate}
-                            startTime={order.ambulances.startTime}
+                            id={order.id}
+                            eventLocationName={order.ambulances?.[0]?.eventLocationName || 'N/A'}
+                            startDate={
+                            Array.isArray(order.ambulances) 
+                            ? order.ambulances[0]?.events?.[0]?.startDate || order.ambulances[0]?.startDate || 'N/A' 
+                            : order.ambulances?.startDate || 'N/A'
+                            }
+                            startTime={
+                            Array.isArray(order.ambulances) 
+                            ? order.ambulances[0]?.events?.[0]?.startTime || order.ambulances[0]?.startTime || 'N/A' 
+                            : order.ambulances?.startTime || 'N/A'
+                            }
                             price={order.price}
-                            endDate={order.ambulances.endDate}
-                            endTime={order.ambulances.endTime}
-                            largeAmbulance={order.ambulances.largeAmbulance}
-                            noOfMedic={order.ambulances.noOfMedic}
-                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            endDate={
+                            Array.isArray(order.ambulances) 
+                            ? order.ambulances[0]?.events?.[0]?.endDate || order.ambulances[0]?.endDate || 'N/A' 
+                            : order.ambulances?.endDate || 'N/A'
+                            }
+                            endTime={
+                            Array.isArray(order.ambulances) 
+                            ? order.ambulances[0]?.events?.[0]?.endTime || order.ambulances[0]?.endTime || 'N/A' 
+                            : order.ambulances?.endTime || 'N/A'
+                            }
+                            largeAmbulance={order.ambulances?.[0]?.largeAmbulance || 0}
+                            noOfMedic={order.ambulances?.[0]?.noOfMedic || 0}
+                            smallAmbulanceCost={order.ambulances?.[0]?.smallAmbulance || 0}
                             medicCost={order.medicCost}
                             color={'#F96D09'}
                             />
@@ -501,15 +519,16 @@ export default function OrderHistory () {
                     (completedOrders.slice(0,6).map((order, index) =>(
                             <OrderBox 
                             key={index}
-                            eventLocationName={order.ambulances.eventLocationName}
-                            startDate={order.ambulances.startDate}
-                            startTime={order.ambulances.startTime}
+                            id={order.id}
+                            eventLocationName={order.ambulances[0].eventLocationName}
+                            startDate={order.ambulances[0]?.startDate}
+                            startTime={order.ambulances[0].startTime}
                             price={order.price}
-                            endDate={order.ambulances.endDate}
-                            endTime={order.ambulances.endTime}
-                            largeAmbulance={order.ambulances.largeAmbulance}
-                            noOfMedic={order.ambulances.noOfMedic}
-                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            endDate={order.ambulances[0].endDate}
+                            endTime={order.ambulances[0].endTime}
+                            largeAmbulance={order.ambulances[0].largeAmbulance}
+                            noOfMedic={order.ambulances[0].noOfMedic}
+                            smallAmbulanceCost={order.ambulances[0].smallAmbulance}
                             medicCost={order.medicCost}
                             color={'#39C574'}
                             />
@@ -545,29 +564,31 @@ export default function OrderHistory () {
                             <OrderBox 
                             key={index}
                             id={order.id}
-                            eventLocationName={order.ambulances.eventLocationName}
-                            startDate={order.ambulances.startDate}
-                            startTime={order.ambulances.startTime}
-                            price={order.price}
-                            endDate={order.ambulances.endDate}
-                            endTime={order.ambulances.endTime}
-                            largeAmbulance={order.ambulances.largeAmbulance}
-                            noOfMedic={order.ambulances.noOfMedic}
-                            smallAmbulanceCost={order.smallAmbulanceCost}
-                            largeAmbulanceCost={order.largeAmbulanceCost}
-                            medicCost={order.medicCost}
-                            smallAmbulanceCount={order.ambulances.smallAmbulance}
-                            largeAmbulanceCount={order.ambulances.largeAmbulance}
-                            estimatedFee={order.price}
-                            venueAddress={order.ambulances.eventAddress}
-                            guests={order.ambulances.estimatedNumberOfGuests}
-                            eventType={order.ambulances.eventType}
-                            description={order.ambulances.description}
-                            fullName={order.callerDetails.fullName}
-                            emailAddress={order.callerDetails.email}
-                            phoneNumber={order.callerDetails.phone}
-                            companyName={order.callerDetails.company}
-                            eventEndsSameDay={order.ambulances.eventEndOnTheSameDay}
+                            eventLocationName={order.ambulances?.[0]?.eventLocationName || 'N/A'}
+                            startDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startDate || order.ambulances[0]?.startDate || 'N/A'
+                                : order.ambulances?.startDate || 'N/A'
+                            }
+                            startTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startTime || order.ambulances[0]?.startTime || 'N/A'
+                                : order.ambulances?.startTime || 'N/A'
+                            }
+                            price={order.price || 0}
+                            endDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endDate || order.ambulances[0]?.endDate || 'N/A'
+                                : order.ambulances?.endDate || 'N/A'
+                            }
+                            endTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endTime || order.ambulances[0]?.endTime || 'N/A'
+                                : order.ambulances?.endTime || 'N/A'
+                            }
+                            largeAmbulance={order.ambulances?.[0]?.largeAmbulance || 0}
+                            noOfMedic={order.ambulances?.[0]?.noOfMedic || 0}
+                            smallAmbulanceCost={order.smallAmbulanceCost || 0}
                             pendingOrder = {true}
                             iaFlag={iaFlag}
                             color={'#F34197'}
@@ -638,15 +659,32 @@ export default function OrderHistory () {
                 (upcomingOrders.map((order, index) =>(
                             <OrderBox 
                             key={index}
-                            eventLocationName={order.ambulances.eventLocationName}
-                            startDate={order.ambulances.startDate}
-                            startTime={order.ambulances.startTime}
-                            price={order.price}
-                            endDate={order.ambulances.endDate}
-                            endTime={order.ambulances.endTime}
-                            largeAmbulance={order.ambulances.largeAmbulance}
-                            noOfMedic={order.ambulances.noOfMedic}
-                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            id={order.id}
+                            eventLocationName={order.ambulances?.[0]?.eventLocationName || 'N/A'}
+                            startDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startDate || order.ambulances[0]?.startDate || 'N/A'
+                                : order.ambulances?.startDate || 'N/A'
+                            }
+                            startTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startTime || order.ambulances[0]?.startTime || 'N/A'
+                                : order.ambulances?.startTime || 'N/A'
+                            }
+                            price={order.price || 0}
+                            endDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endDate || order.ambulances[0]?.endDate || 'N/A'
+                                : order.ambulances?.endDate || 'N/A'
+                            }
+                            endTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endTime || order.ambulances[0]?.endTime || 'N/A'
+                                : order.ambulances?.endTime || 'N/A'
+                            }
+                            largeAmbulance={order.ambulances[0].largeAmbulance}
+                            noOfMedic={order.ambulances[0].noOfMedic}
+                            smallAmbulanceCost={order.ambulances[0].smallAmbulance}
                             medicCost={order.medicCost}
                             iaFlag={iaFlag}
                             color={'#F96D09'}
@@ -717,15 +755,32 @@ export default function OrderHistory () {
                 (completedOrders.map((order, index) =>(
                             <OrderBox 
                             key={index}
-                            eventLocationName={order.ambulances.eventLocationName}
-                            startDate={order.ambulances.startDate}
-                            startTime={order.ambulances.startTime}
-                            price={order.price}
-                            endDate={order.ambulances.endDate}
-                            endTime={order.ambulances.endTime}
-                            largeAmbulance={order.ambulances.largeAmbulance}
-                            noOfMedic={order.ambulances.noOfMedic}
-                            smallAmbulanceCost={order.ambulances.smallAmbulance}
+                            id={order.id}
+                            eventLocationName={order.ambulances?.[0]?.eventLocationName || 'N/A'}
+                            startDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startDate || order.ambulances[0]?.startDate || 'N/A'
+                                : order.ambulances?.startDate || 'N/A'
+                            }
+                            startTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startTime || order.ambulances[0]?.startTime || 'N/A'
+                                : order.ambulances?.startTime || 'N/A'
+                            }
+                            price={order.price || 0}
+                            endDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endDate || order.ambulances[0]?.endDate || 'N/A'
+                                : order.ambulances?.endDate || 'N/A'
+                            }
+                            endTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endTime || order.ambulances[0]?.endTime || 'N/A'
+                                : order.ambulances?.endTime || 'N/A'
+                            }
+                            largeAmbulance={order.ambulances[0].largeAmbulance}
+                            noOfMedic={order.ambulances[0].noOfMedic}
+                            smallAmbulanceCost={order.ambulances[0].smallAmbulance}
                             medicCost={order.medicCost}
                             iaFlag={iaFlag}
                             color={'#39C574'}
@@ -860,28 +915,33 @@ export default function OrderHistory () {
                             <OrderBox 
                             key={index}
                             id={order._id}
-                            eventLocationName={order.ambulances.eventLocationName}
-                            startDate={order.ambulances.startDate}
-                            startTime={order.ambulances.startTime}
-                            price={order.price}
-                            endDate={order.ambulances.endDate}
-                            endTime={order.ambulances.endTime}
-                            largeAmbulance={order.ambulances.largeAmbulance}
-                            noOfMedic={order.ambulances.noOfMedic}
-                            smallAmbulanceCost={order.smallAmbulanceCost}
-                            largeAmbulanceCost={order.largeAmbulanceCost}
-                            medicCost={order.medicCost}
-                            smallAmbulanceCount={order.ambulances.smallAmbulance}
-                            largeAmbulanceCount={order.ambulances.largeAmbulance}
-                            estimatedFee={order.price}
-                            venueAddress={order.ambulances.eventAddress}
-                            guests={order.ambulances.estimatedNumberOfGuests}
-                            eventType={order.ambulances.eventType}
-                            description={order.ambulances.description}
-                            fullName={order.callerDetails.fullName}
-                            emailAddress={order.callerDetails.email}
-                            phoneNumber={order.callerDetails.phone}
-                            companyName={order.callerDetails.company}
+
+                            eventLocationName={order.ambulances?.[0]?.eventLocationName || 'N/A'}
+                            startDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startDate || order.ambulances[0]?.startDate || 'N/A'
+                                : order.ambulances?.startDate || 'N/A'
+                            }
+                            startTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.startTime || order.ambulances[0]?.startTime || 'N/A'
+                                : order.ambulances?.startTime || 'N/A'
+                            }
+                            price={order.price || 0}
+                            endDate={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endDate || order.ambulances[0]?.endDate || 'N/A'
+                                : order.ambulances?.endDate || 'N/A'
+                            }
+                            endTime={
+                                Array.isArray(order.ambulances) 
+                                ? order.ambulances[0]?.events?.[0]?.endTime || order.ambulances[0]?.endTime || 'N/A'
+                                : order.ambulances?.endTime || 'N/A'
+                            }
+                            largeAmbulance={order.ambulances?.[0]?.largeAmbulance || 0}
+                            noOfMedic={order.ambulances?.[0]?.noOfMedic || 0}
+                            smallAmbulanceCost={order.smallAmbulanceCost || 0}
+
                             token={token}
                             pendingOrder={true}
                             iaFlag={iaFlag}

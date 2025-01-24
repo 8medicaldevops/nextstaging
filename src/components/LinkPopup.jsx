@@ -17,6 +17,7 @@ export default function LinkPopup(props) {
   const [scheduleData, setScheduleData] = useState('');
   const [ambulanceData, setAmbulanceData] = useState('');
   const [formattedFee, setFormattedFee] = useState('');
+  const [formattedSchedules, setFormattedSchedules] = useState([]);
   const [formattedTimeRange, setFormattedTimeRange] = useState('');
   const [formattedDateRange, setFormattedDateRange] = useState('');
   const [smallAmbulanceTotal, setSmallAmbulanceTotal] = useState('');
@@ -47,38 +48,40 @@ export default function LinkPopup(props) {
 
     const estimatedFee = storedAmbulanceData?.estimatedFee || 0;
     setFormattedFee(new Intl.NumberFormat().format(estimatedFee));
-
-    // Format start and end dates
-    if (storedScheduleData) {
-      const startDate = parseISO(storedScheduleData?.startDate || '');
-      const endDate = parseISO(storedScheduleData?.endDate || '');
-        // Check if start date and end date are the same
-    if (isSameDay(startDate, endDate)) {
-      const formattedStartDate = startDate ? format(startDate, 'do MMMM, yyyy') : 'N/A';
-      setFormattedDateRange(formattedStartDate); // Only display start date
-    } else {
-      const formattedStartDate = startDate ? format(startDate, 'do MMMM, yyyy') : 'N/A';
-      const formattedEndDate = endDate ? format(endDate, 'do MMMM, yyyy') : 'N/A';
-      setFormattedDateRange(`${formattedStartDate} - ${formattedEndDate}`); // Display date range
-    }
-    }
-
-    // Helper function to parse time strings into Date objects
-    const parseTime = (timeStr) => {
-      return timeStr ? parse(timeStr, 'HH:mm', new Date()) : null;
-    };
-
-    // Parse the time strings to Date objects
-    if (storedScheduleData) {
-      const startTime = parseTime(storedScheduleData?.startTime || '');
-      const endTime = parseTime(storedScheduleData?.endTime || '');
-
-      const formattedStartTime = startTime ? format(startTime, 'h:mm a') : 'N/A';
-      const formattedEndTime = endTime ? format(endTime, 'h:mm a') : 'N/A';
-
-      setFormattedTimeRange(`${formattedStartTime} - ${formattedEndTime}`);
-    }
   }, []);
+
+  useEffect(() => {
+    if (scheduleData) {
+      const formattedData = scheduleData.map((schedule) => {
+        // Parse start and end dates
+        const startDate = parseISO(schedule.startDate || '');
+        const endDate = parseISO(schedule.endDate || '');
+
+        // Format date range
+   
+          const formattedStartDate = startDate ? format(startDate, 'do') : 'N/A';
+          const fullStartDate = format(startDate, "do MMMM, yyyy");
+          const formattedEndDate = endDate ? format(endDate, 'do MMMM, yyyy') : 'N/A';
+          const formattedDateRange = fullStartDate === formattedEndDate ? fullStartDate : `${formattedStartDate} - ${formattedEndDate}`;
+        
+
+        // Parse and format time range
+        const parseTime = (timeStr) => (timeStr ? parse(timeStr, 'HH:mm', new Date()) : null);
+        const startTime = parseTime(schedule.startTime || '');
+        const endTime = parseTime(schedule.endTime || '');
+        const formattedTimeRange = `${startTime ? format(startTime, 'h:mm a') : 'N/A'} - ${endTime ? format(endTime, 'h:mm a') : 'N/A'}`;
+
+        // Return formatted schedule object
+        return {
+          formattedDateRange,
+          formattedTimeRange,
+        };
+      });
+
+      setFormattedSchedules(formattedData); // Store all formatted schedules
+      console.log(formattedData)
+    }
+  }, [scheduleData]);
 const handleButtonClick = () => {
     //console.log('clicked')   
    
@@ -87,15 +90,15 @@ const handleButtonClick = () => {
 const invoiceProps = {
   callerData: callerData,
   eventData: eventData,
-  scheduleData: scheduleData,
+  scheduleData: formattedSchedules,
   ambulanceData: ambulanceData,
   formattedFee: formattedFee,
-  formattedTimeRange: formattedTimeRange,
-  formattedDateRange: formattedDateRange,
   smallAmbulanceTotal: smallAmbulanceTotal,
   largeAmbulanceTotal: largeAmbulanceTotal,
   medicsTotal: medicsTotal,
 };
+
+console.log(scheduleData)
 
     return(
         <Dialog open={props.open}>

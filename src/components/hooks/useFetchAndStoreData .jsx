@@ -51,104 +51,133 @@ const useFetchAndStoreData = (url, storageKey, accessToken, interval = 60000) =>
     };
 }, [searchTerm]);
 
-  const fetchData = async (page = currentPage) => {
-    
-    const validPage = page || currentPage;
-    const tokenData = getStoredToken();
-    if (!tokenData || !tokenData || isTokenExpired(tokenData)) {
-      clearStorageAndRedirect();
-      return;
-    }
-    const params = {
-      search: debouncedSearchTerm,
-      page: validPage,
-      limit: itemsPerPage,
-      orderStatus: filteredStatus , 
-      from: filteredDate.from,     
-      to: filteredDate.to             
-    };
-    
-    
-    // Remove undefined or empty values
-    const filteredParams = Object.fromEntries(
-        Object.entries(params).filter(([_, value]) => value !== undefined && value !== '')
-    );
-    const queryString = new URLSearchParams(filteredParams).toString();
-      setIsLoading(true);
-    try {
-      const response = await axios.get(`${url}?${queryString}}`, {
-        headers: {
-          Authorization: `Bearer ${tokenData.accessToken}`,
-        },
-      });
-      setStatusCount(response.data.data.statuses);
-      setTotalPages(response.data.data.totalPages);
-      setTotalDocs(response.data.data.totalDocs);
-      const mappedData = response.data.data.docs.map((doc) => {
-        let dateObject = null;
-        let dateBookedObj = null;
-      
-        if (doc.ambulances && doc.ambulances.startDate) {
-          dateObject = parseISO(doc.ambulances.startDate);
-        }
-      
-        if (doc.dateBooked) {
-          dateBookedObj = parseISO(doc.dateBooked);
-        }
-      
-        const formatTimeToAMPM = (time) => {
-          if (!time) {
-            return '';
-          }
-        
-          const timeComponents = time.split(':');
-          if (timeComponents.length !== 2) {
-            return time; // Return the original time if it doesn't match the expected format
-          }
-        
-          const hours = parseInt(timeComponents[0], 10);
-          const minutes = parseInt(timeComponents[1], 10);
-        
-          if (isNaN(hours) || isNaN(minutes)) {
-            return time; // Return the original time if the components are not valid numbers
-          }
-        
-          const ampm = hours >= 12 ? 'PM' : 'AM';
-          const formattedHours = hours % 12 || 12; // Convert "00" or "12" to "12"
-          return `${formattedHours}:${timeComponents[1]} ${ampm}`;
-        };
-        return {
-          id: doc._id,
-          ContactName: doc.callerDetails.fullName,
-          amount: doc.price,
-          status: doc.orderStatus,
-          standbyVenue: doc.ambulances?.eventLocationName || '',
-          phoneNumber: doc.callerDetails.phone,
-          standbyDate: dateObject ? format(dateObject, 'do MMMM , yyyy') : '',
-          startTime: formatTimeToAMPM(doc.ambulances.startTime) || '',
-          EndTime: formatTimeToAMPM(doc.ambulances.endTime) || '',
-          standbyDateAndTime : dateObject ? `${format(dateObject, 'do MMMM , yyyy')} : ${formatTimeToAMPM(doc.ambulances?.startTime) || ''} - ${formatTimeToAMPM(doc.ambulances?.endTime) || ''}` : '',
-          dateBooked : dateBookedObj ? format(dateBookedObj, 'do MMMM , yyyy') : '',
+const formatTimeToAMPM = (time) => {
+  if (!time) return "N/A";
 
-        };
-      });
+  const [hours, minutes] = time.split(":").map(Number);
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 || 12; // Convert 0 to 12 for midnight
+  return `${formattedHours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+};
 
-      const storedData = JSON.stringify(mappedData);
-      localStorage.setItem(storageKey, storedData); // Update the data in localStorage
-      setData(mappedData);
-      // if (storedData !== localStorage.getItem(storageKey)) {
-      //   setData(mappedData);
-      //   localStorage.setItem(storageKey, storedData);
-      // }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      if (error.response && error.response.status === 401) {
-        clearStorageAndRedirect(); // Token might be invalid or expired, clear storage and redirect
-      }
-    } finally {
-      setIsLoading(false)
-    }
+
+const fetchData = async (page = currentPage) => {
+  const validPage = page || currentPage;
+  const tokenData = getStoredToken();
+
+  if (!tokenData || isTokenExpired(tokenData)) {
+    clearStorageAndRedirect();
+    return;
+  }
+
+  const params = {
+    search: debouncedSearchTerm,
+    page: validPage,
+    limit: itemsPerPage,
+    orderStatus: filteredStatus,
+    from: filteredDate?.from,
+    to: filteredDate?.to,
   };
+
+  const filteredParams = Object.fromEntries(
+    Object.entries(params).filter(([_, value]) => value !== undefined && value !== "")
+  );
+  const queryString = new URLSearchParams(filteredParams).toString();
+
+  setIsLoading(true);
+
+  try {
+    const response = await axios.get(`${url}?${queryString}`, {
+      headers: {
+        Authorization: `Bearer ${tokenData.accessToken}`,
+      },
+    });
+
+    const { statuses, totalPages, totalDocs, docs } = response.data.data;
+
+    setStatusCount(statuses);
+    setTotalPages(totalPages);
+    setTotalDocs(totalDocs);
+
+    const mappedData = docs.map((doc) => {
+      // Normalize `ambulances` to an array for consistent processing
+      const ambulances = Array.isArray(doc.ambulances)
+        ? doc.ambulances
+        : doc.ambulances
+        ? [doc.ambulances]
+        : [];
+    
+      // Map over the normalized `ambulances` array
+      const standbyDetails = ambulances.map((ambulance) => {
+        // Handle `events` array or directly structured data
+        const firstEvent =
+          Array.isArray(ambulance.events) && ambulance.events.length > 0
+            ? ambulance.events[0]
+            : ambulance;
+    
+        // Extract startDate, startTime, and ensure fallback handling
+        const startDate = firstEvent?.startDate || firstEvent?.startDateTime || null;
+        const startTime = firstEvent?.startTime || null;
+    
+        return {
+          standbyDateAndTime:
+            startDate && startTime
+              ? `${format(parseISO(startDate), "do MMMM, yyyy")} ${formatTimeToAMPM(
+                  startTime
+                )}`
+              : "N/A",
+          standbyVenue: ambulance.eventLocationName || "N/A",
+        };
+      });
+    
+      // Calculate amount conditionally
+      const amount = doc.price
+        ? doc.price
+        : doc.smallAmbulanceCost + doc.largeAmbulanceCost + doc.medicCost || 0;
+    
+      // Return the mapped data
+      return {
+        id: doc._id,
+        contactName: doc.callerDetails?.fullName || "N/A",
+        phoneNumber: doc.callerDetails?.phone || "N/A",
+        dateBooked: doc.dateBooked
+          ? format(parseISO(doc.dateBooked), "do MMMM, yyyy")
+          : "N/A",
+        standbyDateAndTime: standbyDetails[0]?.standbyDateAndTime || "N/A",
+        standbyVenue: standbyDetails[0]?.standbyVenue || "N/A",
+        amount: amount,
+        status: doc.orderStatus || "Pending",
+      };
+    });
+    
+
+    const storedData = localStorage.getItem(storageKey);
+    const newData = JSON.stringify(mappedData);
+
+
+    if (storedData !== newData) {
+      localStorage.setItem(storageKey, newData);
+
+    }
+
+    setData(mappedData);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response.status === 403)
+    ) {
+      clearStorageAndRedirect();
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
+
+
 
 
 
