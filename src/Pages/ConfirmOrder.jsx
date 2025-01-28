@@ -34,7 +34,7 @@ export default function ConfirmOrder() {
     const siginData = JSON.parse(sessionStorage.getItem('SignIn'));
     const userId = siginData?.data?.id
     const navigate = useNavigate();
-    
+
     //Google analytics
     useEffect(() => {
         ReactGA.send({
@@ -67,7 +67,7 @@ export default function ConfirmOrder() {
             console.error('No sign-in data found.');
         }
     }, []); // Empty array ensures this runs only once
-    
+
     //Formatting date, time , fee
 
     // Helper function to parse time strings into Date objects
@@ -98,7 +98,7 @@ export default function ConfirmOrder() {
         const endTime = parseTime(schedule.endTime) || 'N/A';
 
         // Format times to desired string format
-        const formattedStartTime = format(startTime, 'h:mm a')|| 'N/A';
+        const formattedStartTime = format(startTime, 'h:mm a') || 'N/A';
         const formattedEndTime = format(endTime, 'h:mm a') || 'N/A';
         const formattedTimeRange = `${formattedStartTime} - ${formattedEndTime}` || 'N/A';
 
@@ -111,35 +111,35 @@ export default function ConfirmOrder() {
         };
     });
 
-   // console.log(formattedScheduleData);
+    // console.log(formattedScheduleData);
 
 
-     
-    
+
+
     /// check for invalid dates 
     useEffect(() => {
         const currentDate = new Date();
         let errorMsg = ''; // Initialize error message
-    
+
         storedScheduleData.forEach((schedule) => {
             // Parse dates and times
             const startDate = parseISO(schedule.startDate);
             const endDate = parseISO(schedule.endDate);
             const startTime = parseTime(schedule.startTime);
             const endTime = parseTime(schedule.endTime);
-    
+
             // Check if dates and times are defined
             if (!startDate || !endDate || !startTime || !endTime) return;
-    
+
             // Combine dates and times into single Date objects
             const combinedStartDateTime = new Date(startDate);
             combinedStartDateTime.setHours(startTime.getHours());
             combinedStartDateTime.setMinutes(startTime.getMinutes());
-    
+
             const combinedEndDateTime = new Date(endDate);
             combinedEndDateTime.setHours(endTime.getHours());
             combinedEndDateTime.setMinutes(endTime.getMinutes());
-    
+
             // Check for invalid date conditions
             if (isSameDay(combinedStartDateTime, currentDate)) {
                 if (isBefore(combinedStartDateTime, currentDate)) {
@@ -148,15 +148,15 @@ export default function ConfirmOrder() {
             } else if (isBefore(combinedStartDateTime, currentDate)) {
                 errorMsg = 'The selected start date and time are earlier than the current date.';
             }
-    
+
             if (isBefore(combinedEndDateTime, currentDate)) {
                 errorMsg = 'The selected end date is earlier than the current date.';
             }
-    
+
             // Stop further checks if an error message is already set
             if (errorMsg) return;
         });
-    
+
         // Set error message and popup display if any invalid date is found
 
         if (errorMsg) {
@@ -166,12 +166,12 @@ export default function ConfirmOrder() {
             setShowPopup(false);
         }
     }, [storedScheduleData]);
-    
+
 
 
 
     /// Paystack actions
-    const handlePaymentLinkClose = () =>{
+    const handlePaymentLinkClose = () => {
         setModalOpen(false);
         localStorage.clear();
         navigate('/OrderHistory')
@@ -199,7 +199,7 @@ export default function ConfirmOrder() {
                 estimatedNumberOfGuests: storedEventData.guests,
                 eventType: storedEventData.eventType,
                 description: storedEventData.description,
-                events:storedScheduleData,
+                events: storedScheduleData,
                 smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
                 largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
                 noOfMedic: storedAmbulanceData.medicsCount,
@@ -246,9 +246,9 @@ export default function ConfirmOrder() {
         localStorage.clear(),
             navigate("/")
     }
-      
+
     // axios post request to generate invoice
-      const generateInvoice = async() => {
+    const generateInvoice = async () => {
         setLoading(!loading)
         // create fresh booking/order
         const data = {
@@ -269,15 +269,14 @@ export default function ConfirmOrder() {
                 // endDate: formattedBackendEndDate,
                 // startTime: storedScheduleData.startTime,
                 // endTime: storedScheduleData.endTime,
-                events:storedScheduleData,
+                events: storedScheduleData,
                 smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
                 largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
                 noOfMedic: storedAmbulanceData.medicsCount,
             },
             country: "NG",
             orderId: invId || "",
-
-            userId:userId || "",
+            userId: userId || "",
 
         };
         // patch/update data for already existing invoice/order
@@ -296,14 +295,13 @@ export default function ConfirmOrder() {
                 noOfMedic: storedAmbulanceData.medicsCount,
             },
             eventDetails: {
-
-                    eventLocationName: storedEventData.venueName,
-                    eventAddress: storedEventData.venueAddress,
-                    estimatedNumberOfGuests: storedEventData.guests,
-                    eventType: storedEventData.eventType,
-                    description: storedEventData.description,
+                eventLocationName: storedEventData.venueName,
+                eventAddress: storedEventData.venueAddress,
+                estimatedNumberOfGuests: storedEventData.guests,
+                eventType: storedEventData.eventType,
+                description: storedEventData.description,
             },
-             scheduleEvent: storedScheduleData,
+            scheduleEvent: storedScheduleData,
             //{
             //         startDate: formattedBackendStartDate,
             //         endDate: formattedBackendEndDate,
@@ -316,29 +314,34 @@ export default function ConfirmOrder() {
         const requestData = invId && iaFlag == "ADMIN" ? patchData : data;
         try {
 
-            const apiUrl = iaFlag !== "ADMIN" 
-            ? (invId ?
-                `${import.meta.env.VITE_UPDATE_INVOICE}${invId}`
-                :
-                import.meta.env.VITE_GENERATE_INVOICE )
+            const apiUrl = iaFlag !== "ADMIN"
+                ? (invId ?
+                    `${import.meta.env.VITE_UPDATE_INVOICE}${invId}`
+                    :
+                    import.meta.env.VITE_GENERATE_INVOICE
 
-            : (
-                invId 
-                ? `${import.meta.env.VITE_ORDER_API}${invId}` 
-                : import.meta.env.VITE_GENERATE_PAYMENT_LINK
-              );
-    
-        const method = invId? 'patch' : 'post'; // Choose 'patch' if  invId available, otherwise 'post'
-        // await function 
-        const response = await axios[method](
-            apiUrl, 
-            requestData,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`, 
-                },
-            }
+                )
+                : (
+                    invId
+                        ? `${import.meta.env.VITE_ORDER_API}${invId}`
+                        :
+                        import.meta.env.VITE_GENERATE_PAYMENT_LINK
+                );
+            const unAuthenticatedApiUrl = import.meta.env.VITE_GENERATE_INVOICE_UNAUTHENTICATED
+
+            const method = invId  && userId ? 'patch' : 'post'; // Choose 'patch' if  invId available, otherwise 'post'
+            // await function 
+
+            let response = await axios[method](
+                userId ? apiUrl : unAuthenticatedApiUrl,
+                requestData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
+
             console.log("Response:", response.data.data.id);
             localStorage.setItem('bookingid', JSON.stringify(response.data.data.id));
 
@@ -395,7 +398,7 @@ export default function ConfirmOrder() {
                 estimatedNumberOfGuests: storedEventData.guests,
                 eventType: storedEventData.eventType,
                 description: storedEventData.description,
-                events:storedScheduleData,
+                events: storedScheduleData,
                 smallAmbulance: storedAmbulanceData.smallAmbulanceCount,
                 largeAmbulance: storedAmbulanceData.largeAmbulanceCount,
                 noOfMedic: storedAmbulanceData.medicsCount,
@@ -418,21 +421,21 @@ export default function ConfirmOrder() {
                 noOfMedic: storedAmbulanceData.medicsCount,
             },
 
-                eventDetails: {
-                    eventLocationName: storedEventData.venueName,
-                    eventAddress: storedEventData.venueAddress,
-                    estimatedNumberOfGuests: storedEventData.guests,
-                    eventType: storedEventData.eventType,
-                    description: storedEventData.description,
-                },
-                scheduleEvent: storedScheduleData,
-                // {
-                //     startDate: formattedBackendStartDate,
-                //     endDate: formattedBackendEndDate,
-                //     startTime: storedScheduleData.startTime,
-                //     endTime: storedScheduleData.endTime,
-                // }
-              
+            eventDetails: {
+                eventLocationName: storedEventData.venueName,
+                eventAddress: storedEventData.venueAddress,
+                estimatedNumberOfGuests: storedEventData.guests,
+                eventType: storedEventData.eventType,
+                description: storedEventData.description,
+            },
+            scheduleEvent: storedScheduleData,
+            // {
+            //     startDate: formattedBackendStartDate,
+            //     endDate: formattedBackendEndDate,
+            //     startTime: storedScheduleData.startTime,
+            //     endTime: storedScheduleData.endTime,
+            // }
+
 
         }
         const requestData = invId ? patchData : data;
@@ -696,17 +699,17 @@ export default function ConfirmOrder() {
                             </Link>
                         </span>
                         <div className=" space-y-3">
-                        {formattedScheduleData.map((schedule, index) => (
-                            <div key={index} className="flex justify-between py-3 px-5 rounded-xl bg-[#F9F9FA] flex-wrap"> {/* Each date-time entry */}
-                                <p className="font-semibold text-[#181719]">
-                                    {schedule.formattedDateRange}. {/* Date */}
-                                </p>
-                                <p className="font-brmedium text-[#181719]">
-                                    {schedule.formattedTimeRange} {/* Time */}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                            {formattedScheduleData.map((schedule, index) => (
+                                <div key={index} className="flex justify-between py-3 px-5 rounded-xl bg-[#F9F9FA] flex-wrap"> {/* Each date-time entry */}
+                                    <p className="font-semibold text-[#181719]">
+                                        {schedule.formattedDateRange}. {/* Date */}
+                                    </p>
+                                    <p className="font-brmedium text-[#181719]">
+                                        {schedule.formattedTimeRange} {/* Time */}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
 
                         {/* <span className="flex justify-between items-center py-3 px-5 rounded-xl bg-[#F9F9FA]">
                             <p className=" font-brmedium text-[#181719]">Time</p>
@@ -861,10 +864,11 @@ export default function ConfirmOrder() {
             <div className="flex justify-between fixed bottom-0 bg-white w-full py-6 px-20 max-lg:px-4 max-md:flex-col max-md:gap-3">
                 {
                     invId &&
-                    
+
                     <button
-                        className={`border border-red-700 rounded-mm px-5 py-3 font-brbold text-lg text-red-700 ${showPopup ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`border border-red-700 rounded-mm px-5 py-3 font-brbold text-lg text-red-700 ${showPopup || !userId ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={() => deleteOrder()}
+                        disabled={!userId}
                     >
                         Delete Order
                     </button>
@@ -899,7 +903,7 @@ export default function ConfirmOrder() {
 
                 </span>
             </div>
-            <LinkPopup open={isOpen} close={() => setIsOpen(false)} />
+            <LinkPopup open={isOpen} close={() => setIsOpen(false)} userId={userId} />
             <PaymentLinkModal open={modalOpen} close={handlePaymentLinkClose} checkoutLink={checkoutLink} />
         </div>
     )
