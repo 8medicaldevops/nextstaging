@@ -866,7 +866,7 @@ export default function ConfirmOrder() {
             </div>
             <div className="flex justify-between fixed bottom-0 bg-white w-full py-6 px-20 max-lg:px-4 max-md:flex-col max-md:gap-3">
                 {
-                    invId &&
+                    invId && userId &&
 
                     <button
                         className={`border border-red-700 rounded-mm px-5 py-3 font-brbold text-lg text-red-700 ${showPopup || !userId ? 'opacity-50 cursor-not-allowed' : ''}`}
