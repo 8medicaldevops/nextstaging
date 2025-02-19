@@ -298,7 +298,7 @@ export default function NavBar() {
                   </Link>
                   <Link to="/CreateAccount">
                     <li className="cursor-pointer">
-                      <button className={`px-5 py-3 text-sm font-brsemi rounded-[61px] cursor-pointer flex items-center gap-1 ${isActive('/CreateAccount') ? ' rounded-[61px]  px-1  font-semibold' : '  '} hover:text-ev-700 hover:border hover:bg-white hover:border-ev-700  bg-ev-700  text-white`}>
+                      <button className={`px-5 py-3 text-lg font-brsemi rounded-[61px] cursor-pointer flex items-center gap-1 ${isActive('/CreateAccount') ? ' rounded-[61px]  px-1  font-semibold' : '  '} hover:text-ev-700 hover:border hover:bg-white hover:border-ev-700  bg-ev-700  text-white`}>
                         Create Account
                       </button>
                     </li>
