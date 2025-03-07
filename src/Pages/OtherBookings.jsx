@@ -64,7 +64,7 @@ export default function OtherBookings() {
                                         </svg>
 
                                         <p className="font-brreg">Phone</p>
-                                        <p className="pl-2 border-l-[1px] font-brreg border-[#E4E3E5]">+2348098888763</p>
+                                        <p className="pl-2 border-l-[1px] font-brreg border-[#E4E3E5]">+234 707 1534 107</p>
                                     </span>
                                 </a>
                             </div>
