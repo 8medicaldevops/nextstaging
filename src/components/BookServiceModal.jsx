@@ -14,7 +14,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 
  export default function(props) {
     const [emailValue, setEmailValue] = useState('hello@8medical.co');
-    const [phoneValue, setPhoneValue] = useState('+2348098888763');
+    const [phoneValue, setPhoneValue] = useState('+234 707 1534 107');
     const [emailCopied, setEmailCopied] = useState(false);
     const [phoneCopied, setPhoneCopied] = useState(false);
     const onClick = useCallback(({target: {innerText}}) => {
@@ -182,7 +182,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
                         </svg>
 
                             <p className="font-brreg">Phone</p>
-                            <p className="pl-2 border-l-[1px] w-full font-brreg border-[#E4E3E5]">+2348098888763</p>
+                            <p className="pl-2 border-l-[1px] w-full font-brreg border-[#E4E3E5]">+234 707 1534 107</p>
                             </div>
                             </a>
                             <section className="flex items-center">
