@@ -1,24 +1,33 @@
 import logo from '../../assets/images/logo.png';
-import logo2 from '../../assets/images/images 2.png';
+import logo2 from '../../assets/images/police.png';
 import logo3 from '../../assets/images/leadway assurance.png';
+import logo4 from '../../assets/images/fastcake.png';
+import logo5 from '../../assets/images/pharmarun.png';
+import logo6 from '../../assets/images/lecc.png';
+import logo7 from '../../assets/images/redbanner.png';
+import logo8 from '../../assets/images/ehcon.png';
+import logo9 from '../../assets/images/lag.png';
+import logo10 from '../../assets/images/asemhp.png';
+import logo11 from '../../assets/images/cee.png';
+import logo12 from '../../assets/images/eagle.png';
 
 export default function Sponsors() {
     return (
-        <section className="py-20 flex flex-col justify-center items-center gap-10">
-            <h1 className="text-[#121212] text-4xl font-brbold">Proudly Supported By</h1>
-            <div className="flex flex-row gap-5">
-                <img src={logo} alt="8medical logo" />
-                <img src={logo2} alt="" />
-                <img src={logo3} alt="" />
-                <img src="" alt="" />
-                <img src="" alt="" />
-                <img src="" alt="" />
-                <img src="" alt="" />
-                <img src="" alt="" />
-                <img src="" alt="" />
-                <img src="" alt="" />
-                <img src="" alt="" />
-                <img src="" alt="" />
+        <section className="py-20 px-20 flex flex-col justify-center items-center gap-10">
+            <h1 className="text-[#121212] text-4xl font-brbold text-center">Proudly Supported By</h1>
+            <div className="flex flex-row gap-5 flex-wrap">
+                <img src={logo} alt="8medical logo" className='h-[30px]' />
+                <img src={logo2} alt="" className='h-[30px]' />
+                <img src={logo3} alt="" className='h-[30px]' />
+                <img src={logo4} alt="" className='h-[30px]' />
+                <img src={logo5} alt="" className='h-[30px]' />
+                <img src={logo6} alt="" className='h-[30px]' />
+                <img src={logo7} alt="" className='h-[30px]' />
+                <img src={logo8} alt="" className='h-[30px]' />
+                <img src={logo9} alt="" className='h-[30px]' />
+                <img src={logo10} alt="" className='h-[30px]' />
+                <img src={logo11} alt="" className='h-[30px]' />
+                <img src={logo12} alt="" className='h-[30px]' />
             </div>
             <button className="bg-ev-700 px-5 py-2 text-md text-white w-fit font-brsemi rounded-mm cursor-pointer flex items-center gap-1  justify-center">
                 Become a Sponsor
