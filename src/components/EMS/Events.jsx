@@ -50,11 +50,9 @@ export default function Events() {
 
     return (
         <section>
-            <div className="h-full md:mt-1/2 flex gap-6 md:gap-16 flex-col md:flex-row md:justify-center md:items-center md:w-[100%]  md:-px-auto md:-py-auto">
-                <div className="h-full md:w-[50%] md:self-center">
-                    <img src={events} alt="" className="object-fill md:flex" />
-                </div>
-                <div className="test bg-[#110f21] md:w-[50%] md:self-center flex flex-col gap-10">
+            <div className="h-full bg-[#110f21] md:mt-1/2 flex flex-col md:flex-row md:justify-center md:items-center md:w-[100%]">
+                <img src={events} alt="" className="md:w-[45%] max-h-[50rem]" />
+                <div className="size-full py-[4rem] px-10 md:w-[55%] md:self-center flex flex-col gap-10 w-full">
                     <h1 className="text-[#fff] text-4xl font-brbold border-[#ffe563]">Activities Schedule</h1>
                     <Accordion type="single" collapsible className="w-full">
                         {

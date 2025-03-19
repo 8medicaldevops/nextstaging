@@ -1,6 +1,3 @@
-import EmblaCarousel from '../../components/EmblaCarousel';
-import { useState, useEffect, useRef } from "react";
-
 import {
     Carousel,
     CarouselContent,
@@ -11,17 +8,41 @@ import {
 
 import Autoplay from "embla-carousel-autoplay";
 
-const carouselImgs = [
-    '../Rectangle 56.png',
-    '../Rectangle 57.png',
-    '../Rectangle 58.png',
-    '../Rectangle 59.png',
-    '../Rectangle 60.png',
-    '../Rectangle 61.png',
-    '../Rectangle 62.png',
-    '../Rectangle 63.png',
-    '../Rectangle 64.png',
-];
+const images = [
+    {
+        image: '../Rectangle 56.png',
+    },
+    {
+        image: '../Rectangle 57.png',
+    },
+    {
+        image: '../Rectangle 58.png',
+    },
+    {
+        image: '../Rectangle 59.png',
+    },
+    {
+        image: '../Rectangle 60.png',
+    },
+    {
+        image: '../Rectangle 61.png',
+    },
+    {
+        image: '../Rectangle 62.png',
+    },
+    {
+        image: '../Rectangle 63.png',
+    },
+    {
+        image: '../Rectangle 64.png',
+    },
+]
+
+export function ImageCarousel({ image }) {
+    return (
+        <img src={image} alt="" className="rounded" />
+    );
+}
 
 export default function ExcitingMoment() {
     return (
@@ -30,8 +51,37 @@ export default function ExcitingMoment() {
                 <h1 className="text-[#fff] text-4xl font-brbold">EMS Week'24</h1>
                 <p className="text-[#d2b3fd] font-brreg">Exciting moments from the last EMS Week held in Lagos</p>
             </div>
+ 
             <div>
-                <EmblaCarousel slides={carouselImgs} options={{ loop: true, stopOnMouseEnter: true, stopOnInteraction: false }} className="flex" />
+
+                <Carousel
+                    opts={{
+                        align: "start",
+                        loop: true,
+                    }}
+                    plugins={[
+                        Autoplay({
+                            delay: 2000,
+                        }),
+                    ]}
+                    className="w-full mx-auto relative">
+                    <CarouselContent className="flex ml-12 gap-9">
+                        {images.map((testy, index) => (
+                            <CarouselItem className="flex-[0_0_330px] h-[231px] p-2 " key={index}>
+                                <ImageCarousel
+                                    image={testy.image}
+                                />
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="bg-ev-700 border-none text-white left-5 ">
+                        Previous
+                    </CarouselPrevious>
+                    <CarouselNext className="bg-ev-700 border-none text-white right-5 ">
+                        Next
+                    </CarouselNext>
+                    <div className="blur-effect absolute top-0 right-0 w-[100px] h-full pointer-events-none bg-gradient-to-l from-white/100 to-transparent"></div>
+                </Carousel>
             </div>
         </section>
     )
