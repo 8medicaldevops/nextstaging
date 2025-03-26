@@ -74,13 +74,6 @@ export default function ExcitingMoment() {
                             </CarouselItem>
                         ))}
                     </CarouselContent>
-                    <CarouselPrevious className="bg-ev-700 border-none text-white left-5 ">
-                        Previous
-                    </CarouselPrevious>
-                    <CarouselNext className="bg-ev-700 border-none text-white right-5 ">
-                        Next
-                    </CarouselNext>
-                    <div className="blur-effect absolute top-0 right-0 w-[100px] h-full pointer-events-none bg-gradient-to-l from-white/100 to-transparent"></div>
                 </Carousel>
             </div>
         </section>

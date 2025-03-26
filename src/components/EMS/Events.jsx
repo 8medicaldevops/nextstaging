@@ -11,39 +11,58 @@ export default function Events() {
 
     const activities = [
         {
-            day: 1,
+            day: "Day 1",
             title: "EMS Rally",
-            content: "Hello"
+            content: [
+                "Emergency medical vehicle showcase and drive across Lagos.", 
+                "Nigeria's largest gathering of first responders."
+            ]
         },
         {
-            day: 2,
+            day: "Day 2",
             title: "EMS Training & Certification Sessions",
-            content: "Hello"
+            content: [
+                "Emergency medical vehicle showcase and drive across Lagos.", 
+                "Nigeria's largest gathering of first responders."
+            ]
         },
         {
-            day: 3,
+            day: "Day 3",
             title: "Preconference Workshop",
-            content: "Hello"
+            content: [
+                "Hands-on training for professionals and first responders."
+            ]
         },
         {
-            day: 4,
+            day: "Day 4",
             title: "EMS Conference & Keynote Sessions",
-            content: "Hello"
+            content: [
+                "Keynote addresses by healthcare leaders and policy makers.",
+                "Expert panel discussions on reimagining emergency care in Nigeria."
+            ]
         },
         {
-            day: 5,
+            day: "Day 5",
             title: "Emergency Response Simulations & Live Demonstrations",
-            content: "Hello"
+            content: [
+                "Simulated emergency scenarios to showcase best practices.",
+                "Interactive drills for professionals and the general public."
+
+            ]
         },
         {
-            day: 6,
+            day: "Day 6",
             title: "Stakeholders Engagement",
-            content: "Hello"
+            content: [
+                "Courtesy visit to stakeholders, partners and relevant policy makers."
+            ]
         },
         {
-            day: 7,
+            day: "Day 7",
             title: "Sports and Fitness Fest",
-            content: "Hello"
+            content: [
+                "Indoor and outdoor sports activities between EMS stakeholders in Nigeria."
+            ]
         },
 
     ]
@@ -58,9 +77,22 @@ export default function Events() {
                         {
                             activities.map((activity, index) =>
                                 <AccordionItem value={activity.day} className="text-white">
-                                    <AccordionTrigger>{activity.title}</AccordionTrigger>
+                                    <AccordionTrigger>
+                                        <div className="flex items-center">
+                                            <button className="w-fit bg-[#ff2e60] p-[5px] text-sm text-white font-brsemi rounded-mm cursor-pointer">
+                                                {activity.day}
+                                            </button>
+                                            <span className="font-brsemi text-sm ml-[2px]">
+                                                {activity.title}
+                                            </span>
+                                        </div>
+                                    </AccordionTrigger>
                                     <AccordionContent>
-                                        {activity.content}
+                                        {activity.content.map((act) =>
+                                            <ol className="list-disc list-inside">
+                                                <li className="font-brreg">{act}</li>
+                                            </ol>
+                                        )}
                                     </AccordionContent>
                                 </AccordionItem>
                             )}

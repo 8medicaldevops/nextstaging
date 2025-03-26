@@ -14,20 +14,20 @@ import logo12 from '../../assets/images/eagle.png';
 export default function Sponsors() {
     return (
         <section className="py-20 px-20 flex flex-col justify-center items-center gap-10">
-            <h1 className="text-[#121212] text-4xl font-brbold text-center">Proudly Supported By</h1>
-            <div className="flex flex-row gap-5 flex-wrap">
+            <h1 className="text-[#121212] text-3xl font-brbold text-center">Proudly Supported By</h1>
+            <div className="flex justify-center gap-5 flex-wrap">
                 <img src={logo} alt="8medical logo" className='h-[30px]' />
-                <img src={logo2} alt="" className='h-[30px]' />
-                <img src={logo3} alt="" className='h-[30px]' />
-                <img src={logo4} alt="" className='h-[30px]' />
-                <img src={logo5} alt="" className='h-[30px]' />
-                <img src={logo6} alt="" className='h-[30px]' />
-                <img src={logo7} alt="" className='h-[30px]' />
-                <img src={logo8} alt="" className='h-[30px]' />
-                <img src={logo9} alt="" className='h-[30px]' />
-                <img src={logo10} alt="" className='h-[30px]' />
-                <img src={logo11} alt="" className='h-[30px]' />
-                <img src={logo12} alt="" className='h-[30px]' />
+                <img src={logo2} alt="Nigerian police logo" className='h-[30px]' />
+                <img src={logo3} alt="Leadway logo" className='h-[30px]' />
+                <img src={logo4} alt="Fastcakes logo" className='h-[30px]' />
+                <img src={logo5} alt="Pharmarun logo" className='h-[30px]' />
+                <img src={logo6} alt="Lecc logo" className='h-[30px]' />
+                <img src={logo7} alt="logo" className='h-[30px]' />
+                <img src={logo8} alt="Ehcon logo" className='h-[30px]' />
+                <img src={logo9} alt="logo" className='h-[30px]' />
+                <img src={logo10} alt="Asemhp logo" className='h-[30px]' />
+                <img src={logo11} alt="logo" className='h-[30px]' />
+                <img src={logo12} alt="logo" className='h-[30px]' />
             </div>
             <button className="bg-ev-700 px-5 py-2 text-md text-white w-fit font-brsemi rounded-mm cursor-pointer flex items-center gap-1  justify-center">
                 Become a Sponsor
