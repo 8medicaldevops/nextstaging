@@ -43,7 +43,7 @@ export default function Events() {
         },
         {
             day: "Day 5",
-            title: "Emergency Response Simulations & Live Demonstrations",
+            title: "Response Simulations & Live Demos",
             content: [
                 "Simulated emergency scenarios to showcase best practices.",
                 "Interactive drills for professionals and the general public."
@@ -70,26 +70,26 @@ export default function Events() {
     return (
         <section>
             <div className="h-full bg-[#110f21] md:mt-1/2 flex flex-col md:flex-row md:justify-center md:items-center md:w-[100%]">
-                <img src={events} alt="" className="md:w-[45%] max-h-[50rem]" />
-                <div className="size-full py-[4rem] px-10 md:w-[55%] md:self-center flex flex-col gap-10 w-full">
+                <img src={events} alt="Eight medical staff in front of white ambulances" className="md:w-[45%] max-h-[70rem] md:max-h-[45rem]" />
+                <div className="size-full py-[3rem] px-[1rem] md:w-[55%] md:self-center flex flex-col gap-5 w-full">
                     <h1 className="text-[#fff] text-4xl font-brbold border-[#ffe563]">Activities Schedule</h1>
                     <Accordion type="single" collapsible className="w-full">
                         {
                             activities.map((activity, index) =>
-                                <AccordionItem value={activity.day} className="text-white">
+                                <AccordionItem value={activity.day} className="text-white" key={index}>
                                     <AccordionTrigger>
                                         <div className="flex items-center">
-                                            <button className="w-fit bg-[#ff2e60] p-[5px] text-sm text-white font-brsemi rounded-mm cursor-pointer">
+                                            <span className="w-fit h-fit bg-[#ff2e60] p-[4px] mr-[2px] text-sm text-white font-brsemi rounded-mm cursor-pointer">
                                                 {activity.day}
-                                            </button>
-                                            <span className="font-brsemi text-sm ml-[2px]">
+                                            </span>
+                                            <span className="font-brsemi text-sm text-left">
                                                 {activity.title}
                                             </span>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent>
-                                        {activity.content.map((act) =>
-                                            <ol className="list-disc list-inside">
+                                        {activity.content.map((act, index) =>
+                                            <ol className="list-disc list-inside" key={index}>
                                                 <li className="font-brreg">{act}</li>
                                             </ol>
                                         )}

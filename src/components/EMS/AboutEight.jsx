@@ -17,13 +17,13 @@ export default function AboutEight() {
                         and credit to users in 10 mins or less, we ensure accessibility, Improved patient care, and
                         streamlined processes to care.
                     </p>
-                    <button type="button" className="bg-ev-700 px-5 py-2 text-md text-white w-fit font-brsemi rounded-mm cursor-pointer flex items-center gap-1 justify-center">
+                    <a className="bg-ev-700 px-5 py-2 text-md text-white w-fit font-brsemi rounded-mm cursor-pointer flex items-center gap-1 justify-center" href="https://www.8medical.co/AboutUs">
                         Learn More
                         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9.62 4.45331L13.6667 8.49998L9.62 12.5466" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                             <path d="M2.33337 8.5H13.5534" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
         </section>

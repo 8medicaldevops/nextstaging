@@ -9,7 +9,7 @@ export default function Hero() {
     const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS;
   
     return (
-        <section className="bg-[url(./assets/emsHero.png)] px-6 bg-no-repeat bg-cover bg-center md:h-full">
+        <section className="bg-[url(./assets/emsHero.png)] bg-no-repeat bg-cover bg-center md:h-full">
             <div className="h-full md:mt-1/2 flex gap-6 md:gap-16 flex-col md:flex-row md:justify-center md:items-center md:w-[100%]  md:-px-auto md:-py-auto p-[2rem]">
                 <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[55%] md:self-center flex flex-col gap-5">
                     <img src={hero1} alt="EMS logo" className="w-[10rem]" />

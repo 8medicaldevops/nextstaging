@@ -5,7 +5,7 @@ export default function Theme() {
                 <button className="bg-ev-700 w-fit px-5 py-2 text-xl text-white font-brsemi rounded-mm cursor-pointer flex items-center justify-center">
                     Global Theme:
                 </button>
-                <p className="text-[#fff] font-brbold text-4xl">
+                <p className="text-[#fff] font-brbold text-4xl text-center">
                     We Care. For Everyone
                 </p>
             </div>
