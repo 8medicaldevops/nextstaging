@@ -10,31 +10,31 @@ import Autoplay from "embla-carousel-autoplay";
 
 const images = [
     {
-        image: '../Rectangle 56.png',
+        image: '../Rectangle56.png',
     },
     {
-        image: '../Rectangle 57.png',
+        image: '../Rectangle57.png',
     },
     {
-        image: '../Rectangle 58.png',
+        image: '../Rectangle58.png',
     },
     {
-        image: '../Rectangle 59.png',
+        image: '../Rectangle59.png',
     },
     {
-        image: '../Rectangle 60.png',
+        image: '../Rectangle60.png',
     },
     {
-        image: '../Rectangle 61.png',
+        image: '../Rectangle61.png',
     },
     {
-        image: '../Rectangle 62.png',
+        image: '../Rectangle62.png',
     },
     {
-        image: '../Rectangle 63.png',
+        image: '../Rectangle63.png',
     },
     {
-        image: '../Rectangle 64.png',
+        image: '../Rectangle64.png',
     },
 ]
 

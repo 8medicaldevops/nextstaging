@@ -1,5 +1,5 @@
-import hero1 from "../../assets/images/Group 27.png";
-import hero2 from "../../assets/images/Group 43239.png";
+import hero1 from "../../assets/images/Group27.png";
+import hero2 from "../../assets/images/Group43239.png";
 import EventCountdown from "./EventCountdown";
 
 export default function Hero() {

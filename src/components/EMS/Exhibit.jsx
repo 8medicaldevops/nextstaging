@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import ContactModal from '../ContactModal';
 
-import about from "../../assets/images/Footer Image.png"
+import about from "../../assets/images/FooterImage.png"
 import contact from '../../assets/images/contact.svg';
 
 export default function Exhibit() {
