@@ -49,7 +49,7 @@ export default function ExcitingMoment() {
         <section className="bg-[#6d09f9] py-20 px-5">
             <div className="mb-10 flex flex-col items-center justify-center gap-5">
                 <h1 className="text-[#fff] text-4xl font-brbold">EMS Week'24</h1>
-                <p className="text-[#d2b3fd] font-brreg">Exciting moments from the last EMS Week held in Lagos</p>
+                <p className="text-[#d2b3fd] font-brreg text-[20px]">Exciting moments from the last EMS Week held in Lagos</p>
             </div>
  
             <div>

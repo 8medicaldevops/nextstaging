@@ -12,7 +12,7 @@ export default function AboutEight() {
                 <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[40%] md:self-center flex flex-col gap-10">
                     <img src={logo} alt="Eight Medical logo" className="w-[200px]"/>
                     <h1 className="text-[#181719] text-4xl font-brbold">About Us</h1>
-                    <p className="text-[#505050] font-brreg">
+                    <p className="text-[#505050] font-brreg text-[20px]">
                         We are an end to end platform that identifies and connects hospital, personnel, care, information
                         and credit to users in 10 mins or less, we ensure accessibility, Improved patient care, and
                         streamlined processes to care.

@@ -11,28 +11,28 @@ export default function Ticket() {
                 <div>
                     <img src={grid1} alt="" className="h-[40px]"/>
                     <h3 className="text-[#121212] font-brbold text-md py-2">Hands-on Emergency Medical Training</h3>
-                    <p className="text-[#505050]">
+                    <p className="text-[#505050] text-[16px]">
                         Pre-conference professional training workshop including training members of the society on basic life saving medical interventions.
                     </p>
                 </div>
                 <div>
                     <img src={grid2} alt="" className="h-[40px]" />
                     <h3 className="text-[#121212] font-brbold text-md py-2">Access to Industry Experts</h3>
-                    <p className="text-[#505050]">
+                    <p className="text-[#505050] text-[16px]">
                         You can directly and indirectly learn and engage with industry experts, offering valuable opportunities to gain deeper insights into your areas of interest
                     </p>
                 </div>
                 <div>
                     <img src={grid3} alt="" className="h-[40px]"/>
                     <h3 className="text-[#121212] font-brbold text-md py-2">Connect and Network</h3>
-                    <p className="text-[#505050]">
+                    <p className="text-[#505050] text-[16px]">
                         We bring together the biggest stakeholders in Nigeria’s emergency medical ecosystem to create opportunities for professional growth and aid collaboration and partnerships.
                     </p>
                 </div>
                 <div>
                     <img src={grid4} alt="" className="h-[40px]"/>
                     <h3 className="text-[#121212] font-brbold text-md py-2">Have Fun and Unwind</h3>
-                    <p className="text-[#505050]">
+                    <p className="text-[#505050] text-[16px]">
                         Come have fun with known and new friends in our sporting activities lined up for your enjoyment.
                     </p>
                 </div>

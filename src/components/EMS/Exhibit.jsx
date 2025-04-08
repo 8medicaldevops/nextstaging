@@ -19,7 +19,7 @@ export default function Exhibit() {
             <div className="bg-[#110f21] h-full md:mt-1/2 flex gap-6 md:gap-16 flex-col md:flex-row md:justify-center md:items-center md:w-[100%]  md:-px-auto md:-py-auto p-[2rem]">
                 <div className="md:py-[4rem] md:px-[1rem] xl:px-[1rem] border-[#F4F2F5] md:w-[50%] md:self-center flex flex-col gap-10">
                     <h1 className="text-[#fff] text-4xl font-brbold">Would you like to Exhibit your Startup or Business?</h1>
-                    <p className="text-[#a3a3a3] font-brreg">
+                    <p className="text-[#a3a3a3] font-brreg text-[20px]">
                         Increase your startup and business visibility by booking a booth with us to exhibit at our conference today.
                     </p>
                     <button className="bg-ev-700 px-5 py-2 text-md text-white w-fit font-brsemi rounded-mm cursor-pointer flex items-center gap-1  justify-center"
