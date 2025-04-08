@@ -79,10 +79,10 @@ export default function Events() {
                                 <AccordionItem value={activity.day} className="text-white" key={index}>
                                     <AccordionTrigger>
                                         <div className="flex items-center">
-                                            <span className="w-fit h-fit bg-[#ff2e60] p-[4px] mr-[2px] text-[20px] text-white font-brsemi rounded-mm cursor-pointer">
+                                            <span className="w-fit h-fit bg-[#ff2e60] p-[4px] mr-[2px] text-sm text-white font-brsemi rounded-mm cursor-pointer">
                                                 {activity.day}
                                             </span>
-                                            <span className="font-brsemi text-[20px] text-left">
+                                            <span className="font-brsemi text-sm text-left">
                                                 {activity.title}
                                             </span>
                                         </div>
@@ -90,7 +90,7 @@ export default function Events() {
                                     <AccordionContent>
                                         {activity.content.map((act, index) =>
                                             <ol className="list-disc list-inside" key={index}>
-                                                <li className="font-brreg text-[16px]">{act}</li>
+                                                <li className="font-brreg text-sm">{act}</li>
                                             </ol>
                                         )}
                                     </AccordionContent>
