@@ -1,6 +1,6 @@
-import ellipse1 from '../../assets/images/ellipse4.png';
-import ellipse2 from '../../assets/images/ellipse5.png';
-import ellipse3 from '../../assets/images/ellipse6.png';
+import ellipse1 from '../../assets/images/Ellipse4.png';
+import ellipse2 from '../../assets/images/Ellipse5.png';
+import ellipse3 from '../../assets/images/Ellipse6.png';
 
 export default function Banner() {
     return (
