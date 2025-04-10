@@ -16,7 +16,6 @@ import {
 import { useNavigate } from "react-router-dom";
  
 
-
 // const faqs = {
 //   Individuals: {
 //     questions: {
