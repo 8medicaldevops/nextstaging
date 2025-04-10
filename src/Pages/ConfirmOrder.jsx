@@ -1,5 +1,5 @@
 import NavBar from "../components/NavBar";
-import { parseISO, parse, format, isBefore, isSameDay } from "date-fns";
+import { parseISO, parse, format, isBefore, isSameDay, set } from "date-fns";
 import { PaystackButton } from 'react-paystack';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,6 +12,7 @@ import PaymentLinkModal from "@/components/PaymentLinkModal";
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 import { useToasts } from 'react-toast-notifications';
+import ErrorPopup from "@/components/ErrorPopup";
 
 
 export default function ConfirmOrder() {
@@ -19,6 +20,7 @@ export default function ConfirmOrder() {
     const { addToast } = useToasts();
     // eslint-disable-next-line no-unused-vars
     let [color, setColor] = useState("#6D09F9");
+    const [invError, setInvError] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [checkoutLink, setCheckoutLink] = useState('');
@@ -344,15 +346,16 @@ export default function ConfirmOrder() {
 
             console.log("Response:", response.data.data.id);
             localStorage.setItem('bookingid', JSON.stringify(response.data.data.id));
-
+            setIsOpen(true);
 
         } catch (error) {
+            setInvError(true);
             //console.error("You are not logged in:", error);
             //navigate("/BookingError");
         } finally {
             setLoading(false);
         }
-        setIsOpen(true);
+       
     }
 
     const deleteOrder = async () => {
@@ -863,7 +866,7 @@ export default function ConfirmOrder() {
             </div>
             <div className="flex justify-between fixed bottom-0 bg-white w-full py-6 px-20 max-lg:px-4 max-md:flex-col max-md:gap-3">
                 {
-                    invId &&
+                    invId && userId &&
 
                     <button
                         className={`border border-red-700 rounded-mm px-5 py-3 font-brbold text-lg text-red-700 ${showPopup || !userId ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -903,7 +906,12 @@ export default function ConfirmOrder() {
 
                 </span>
             </div>
+
+            <ErrorPopup open={invError} close={() => setInvError(false)} />
+
+
             <LinkPopup open={isOpen} close={() => setIsOpen(false)} userId={userId} />
+
             <PaymentLinkModal open={modalOpen} close={handlePaymentLinkClose} checkoutLink={checkoutLink} />
         </div>
     )
