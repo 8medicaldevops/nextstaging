@@ -12,7 +12,7 @@ export default function Events() {
     const activities = [
         {
             day: "Day 1",
-            title: "EMS Rally",
+            title: "EMS Drive",
             content: [
                 "Emergency medical vehicle showcase and drive across Lagos.", 
                 "Nigeria's largest gathering of first responders."
@@ -28,7 +28,7 @@ export default function Events() {
         },
         {
             day: "Day 3",
-            title: "Preconference Workshop",
+            title: "Pre-conference Workshop",
             content: [
                 "Hands-on training for professionals and first responders."
             ]
