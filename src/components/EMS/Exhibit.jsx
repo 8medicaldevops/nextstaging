@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import ContactModal from '../ContactModal';
 
-import about from "../../assets/images/FooterImage.png"
+import exhibit from "../../assets/images/exhibit.png";
 import contact from '../../assets/images/contact.svg';
 
 export default function Exhibit() {
@@ -41,7 +41,7 @@ export default function Exhibit() {
                     )}
                 </div>
                 <div className="h-full md:w-[50%] md:self-center">
-                    <img src={about} alt="" className="object-fill md:flex mx-auto rounded-[1rem]" />
+                    <img src={exhibit} alt="" className="object-fill md:flex mx-auto rounded-[1rem]" />
                 </div>
             </div>
         </section>
