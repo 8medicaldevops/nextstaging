@@ -11,9 +11,9 @@ export default function Banner() {
                 <img src={ellipse3} alt="" className='md:ml-[-20px]'/>
             </div>
             <div className="flex flex-col items-center justify-center gap-5 text-center">
-                <h1 className="text-[#fff] font-brbold text-4xl">Join the 2nd Edition of the EMS Week in Nigeria!</h1>
+                <h1 className="text-[#fff] font-brbold text-4xl">About EMS Week</h1>
                 <p className="text-[#fff] font-brreg text-xl max-w-[50rem]">
-                    EMS Week’25 is set to take place in the city of Lagos, Nigeria, from the 18th to 24th of May, 2025. This event promises to be an unforgettable experience with inspiring keynote speakers, and hands-on advanced workshops.
+                    EMS Week is an annual event dedicated to celebrating and recognizing the work of Emergency Medical Services (EMS) professionals. It traditionally takes place during the month of May and is a period in which to advocate for awareness of the vital role EMS providers play in emergency services, engage with the public, and promote education regarding emergency response.
                 </p>
             </div>
         </section>
