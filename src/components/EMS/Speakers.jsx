@@ -1,5 +1,5 @@
 import speaker1 from '../../assets/images/docAyo.png';
-import speaker2 from '../../assets/images/docTemi.png';
+import speaker2 from '../../assets/images/ACP.png';
 import speaker3 from '../../assets/images/docAlli.png';
 
 const facilitators = [
@@ -9,8 +9,8 @@ const facilitators = [
         image: speaker1
     },
     {
-        name: 'Dr. Temi Filani',
-        position: 'Senior Advisor Palladium',
+        name: 'ACP Abosede M. Salami',
+        position: 'Assistant Commissioner of Police Medical, Lagos State Command',
         image: speaker2
     },
     {

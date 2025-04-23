@@ -2,6 +2,7 @@ import grid1 from "../../assets/images/Medical.png";
 import grid2 from "../../assets/images/Manager.png";
 import grid3 from "../../assets/images/Stakeholder.png";
 import grid4 from "../../assets/images/confetti.png";
+import ticketIcon from "../../assets/images/ticket.png";
 
 export default function Ticket() {
     return (
@@ -38,12 +39,9 @@ export default function Ticket() {
                 </div>
             </div>
             <button className="w-fit bg-[#ff2e60] py-3 px-5 text-xl text-white font-brsemi rounded-mm cursor-pointer">
-                <a href="https://linktr.ee/8medicalcommsteam" target="_blank" className="flex items-center gap-1 justify-center">
+                <a href="https://linktr.ee/8medicalcommsteam" target="_blank" className="flex items-center gap-2 justify-center">
                     Get a Ticket Now
-                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9.62 4.45331L13.6667 8.49998L9.62 12.5466" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M2.33337 8.5H13.5534" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <img src={ticketIcon} alt="ticket icon" />
                 </a>
             </button>
         </section>
