@@ -22,8 +22,8 @@ export default function Events() {
             day: "Day 2",
             title: "EMS Training & Certification Sessions",
             content: [
-                "Emergency medical vehicle showcase and drive across Lagos.", 
-                "Nigeria's largest gathering of first responders."
+                "Hands-on training for primary and secondary schools and other stakeholders.", 
+                "Certification in emergency medical response techniques."
             ]
         },
         {
