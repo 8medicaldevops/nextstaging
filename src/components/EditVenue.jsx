@@ -63,6 +63,12 @@ export default function (props) {
       };
 
       const handleAddressSelect = (value) => {
+        if (!value) {
+          // Clear the value if null
+          setEventData((prev) => ({ ...prev, venueAddress: '' }));
+          return;
+        }
+      
         const event = {
           target: {
             name: 'venueAddress',
@@ -144,58 +150,72 @@ export default function (props) {
                            value={eventData.venueAddress}
                            name="venueAddress"
                            onChange={handleInputChange} /> */}
-                           <div className="font-brreg rounded-xl  ">
-                            <GooglePlacesAutocomplete
-                               apiKey= {import.meta.env.VITE_PLACES_KEY}
-                               autocompletionRequest={{
-                                  
-                                   componentRestrictions: {
-                                     country: ['ng'],
-                                   }
-                                 }}
-                               selectProps={{
-                               value: eventData.venueAddress ? { label: eventData.venueAddress, value: eventData.venueAddress } : null,
-                               onChange: handleAddressSelect,
-                               placeholder: "Enter venue address",
-                               onFocus:{outline:'none'},
-                               styles: {
-                                   control: (provided) => ({
-                                       ...provided,
-                                       
-                                       border:'1px solid #E4E3E5',
-                                       borderRadius:'8px',
-                                       padding:'0px 6px',
-                                       height:'48px',
-                                       outline:'none'
-                                   }),
-                                   placeholder: (provided) => ({
-                                       ...provided,
-                                       color:'#9C9A9E'
-                                   }),
-                                   input: (provided) => ({
-                                   ...provided,
-                                   border: 'none',
-                                   padding: '0px 0px',
-                                   color: '#232323',
-                                   maxWidth: '100%',
-                                   height:'40px'
-                                   }),
-                                   option: (provided) => ({
-                                   ...provided,
-                                   color: '#232323',
-                                   border: 'none',
-                                   outline: 'none',
-                                   }),
-                                   singleValue: (provided) => ({
-                                   ...provided,
-                                   color: '#232323',
-                                   outline: 'none',
-                                   padding: '0px 0px',
-                                   }),
-                               },
-                               }}
-                           />
-                           </div>
+                          <div className="relative w-full">
+                          <GooglePlacesAutocomplete
+                                    apiKey={import.meta.env.VITE_PLACES_KEY}
+                                    autocompletionRequest={{
+                                        componentRestrictions: {
+                                        country: ['ng'],
+                                        },
+                                    }}
+                                    selectProps={{
+                                        value: eventData.venueAddress
+                                        ? { label: eventData.venueAddress, value: eventData.venueAddress }
+                                        : null,
+                                        onChange: handleAddressSelect,
+                                        placeholder: 'Enter venue address',
+                                        isClearable: true, // ✅ Required!
+                                        components: {
+                                        DropdownIndicator: () => null, // remove arrow
+                                        IndicatorSeparator: () => null,
+                                        ClearIndicator: (props) =>
+                                            ClearIndicator({
+                                            ...props,
+                                            selectProps: {
+                                                ...props.selectProps,
+                                                setEventData,
+                                            },
+                                            }),
+                                        },
+                              styles: {
+                                control: (provided) => ({
+                                  ...provided,
+                                  border: '1px solid #E4E3E5',
+                                  borderRadius: '8px',
+                                  padding: '0px 6px',
+                                  height: '48px',
+                                  outline: 'none',
+                                }),
+                                placeholder: (provided) => ({
+                                  ...provided,
+                                  color: '#9C9A9E',
+                                }),
+                                input: (provided) => ({
+                                  ...provided,
+                                  border: 'none',
+                                  padding: '0px 0px',
+                                  color: '#232323',
+                                  maxWidth: '100%',
+                                  height: '40px',
+                                }),
+                                option: (provided) => ({
+                                  ...provided,
+                                  color: '#232323',
+                                  border: 'none',
+                                  outline: 'none',
+                                }),
+                                singleValue: (provided) => ({
+                                  ...provided,
+                                  color: '#232323',
+                                  outline: 'none',
+                                  padding: '0px 0px',
+                                }),
+                              },
+                            }}
+                          />
+
+                          </div>
+
                            </span>
    
                            <span>
@@ -286,3 +306,29 @@ export default function (props) {
         </div>
     )
 }
+
+
+const ClearIndicator = (props) => {
+  const {
+    innerRef,
+    innerProps,
+    selectProps: { setEventData },
+  } = props;
+
+  return (
+    <div
+      ref={innerRef}
+      {...innerProps}
+      onClick={(e) => {
+        e.stopPropagation();
+        setEventData((prev) => ({ ...prev, venueAddress: '' }));
+      }}
+      style={{ padding: '0 8px', cursor: 'pointer' }}
+    >
+      <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10.0003 2.45557C5.40866 2.45557 1.66699 6.19723 1.66699 10.7889C1.66699 15.3806 5.40866 19.1222 10.0003 19.1222C14.592 19.1222 18.3337 15.3806 18.3337 10.7889C18.3337 6.19723 14.592 2.45557 10.0003 2.45557ZM12.8003 12.7056C13.042 12.9472 13.042 13.3472 12.8003 13.5889C12.6753 13.7139 12.517 13.7722 12.3587 13.7722C12.2003 13.7722 12.042 13.7139 11.917 13.5889L10.0003 11.6722L8.08366 13.5889C7.95866 13.7139 7.80033 13.7722 7.64199 13.7722C7.48366 13.7722 7.32533 13.7139 7.20033 13.5889C6.95866 13.3472 6.95866 12.9472 7.20033 12.7056L9.11699 10.7889L7.20033 8.87223C6.95866 8.63057 6.95866 8.23057 7.20033 7.9889C7.44199 7.74723 7.84199 7.74723 8.08366 7.9889L10.0003 9.90557L11.917 7.9889C12.1587 7.74723 12.5587 7.74723 12.8003 7.9889C13.042 8.23057 13.042 8.63057 12.8003 8.87223L10.8837 10.7889L12.8003 12.7056Z" fill="#181719"/>
+      </svg>
+
+    </div>
+  );
+};
