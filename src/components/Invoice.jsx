@@ -1,9 +1,9 @@
 import { Page, Text, View, Image, Document, StyleSheet } from '@react-pdf/renderer';
 import {Font} from '@react-pdf/renderer';
 import headerImg from '../assets/images/recieptheader.png';
-import firmaBold from '../assets/fonts/br-firma-cufonfonts/BR Firma Bold.otf';
-import firmaSemi from '../assets/fonts/br-firma-cufonfonts/BR Firma SemiBold.otf';
-import firmaReg from '../assets/fonts/br-firma-cufonfonts/BR Firma Regular.otf';
+import firmaBold from '/fonts/br-firma-cufonfonts/BR Firma Bold.woff2';
+import firmaSemi from '/fonts/br-firma-cufonfonts/BR Firma SemiBold.woff2';
+import firmaReg from '/fonts/br-firma-cufonfonts/BR Firma Regular.woff2';
 
 
 Font.register({

@@ -33,7 +33,7 @@ import { useNavigate } from "react-router-dom";
 //       a3: 'Yes, we transport patients to all states.',
 //       a4: 'No, we are only actively present in Lagos.',
 //       a5: 'Payment confirms your booking.',
-//       a6: 'You can reach us via phone call on 08098888763 or via mail at hello@8medical.co',
+//       a6: 'You can reach us via phone call on +2348098888763 or via mail at hello@8medical.co',
 //     },
 //   },
 //   // Add similar objects for other categories
@@ -136,7 +136,7 @@ import { useNavigate } from "react-router-dom";
 //     },
 //     answers: {
 //       a1: 'No, you can volunteer or work part-time with us.',
-//       a2: 'Apply for the role via the button below or send an email to human@8medical.co or call 08098888763.',
+//       a2: 'Apply for the role via the button below or send an email to human@8medical.co or call +2348098888763.',
 //       a3: 'Background in healthcare, can communicate in English.',
 //       a4: 'A responder is anyone who directly or indirectly provide care for individuals or businesses in need (urgent and emergency cases).',
 //     },
