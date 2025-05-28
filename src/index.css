@@ -1,26 +1,26 @@
 @font-face {
     font-family: 'firmaregular';
-    src: url('./assets/fonts/br-firma-cufonfonts/BR Firma Regular.otf'), format('opentype');
+    src: url('/fonts/br-firma-cufonfonts/BR Firma Regular.woff2'), format('woff2');
 }
 
 @font-face {
     font-family: 'firmabold';
-    src: url('./assets/fonts/br-firma-cufonfonts/BR Firma Bold.otf'), format('opentype');
+    src: url('/fonts/br-firma-cufonfonts/BR Firma Bold.woff2'), format('woff2');
 }
 
 @font-face {
     font-family: 'firmasemibold';
-    src: url('./assets/fonts/br-firma-cufonfonts/BR Firma SemiBold.otf'), format('opentype');
+    src: url('/fonts/br-firma-cufonfonts/BR Firma SemiBold.woff2'), format('woff2');
 }
 
 @font-face {
     font-family: 'firmalight';
-    src: url('./assets/fonts/br-firma-cufonfonts/BR Firma Light.otf'), format('opentype');
+    src: url('/fonts/br-firma-cufonfonts/BR Firma Light.woff2'), format('woff2');
 }
 
 @font-face {
     font-family: 'firmamedium';
-    src: url('./assets/fonts/br-firma-cufonfonts/BR Firma Medium.otf'), format('opentype');
+    src: url('/fonts/br-firma-cufonfonts/BR Firma Medium.woff2'), format('woff2');
 }
 
 

@@ -91,7 +91,7 @@ export default function ServicesEr() {
                             <p className="font-brbold text-4xl text-center text-[#B8FB5A] max-lg:text-2xl">+2348098888763</p>
                         </div>
                         <button className="py-3 px-6 bg-[#B8FB5A] text-lg font-brsemi text-ev-700 rounded-[41px]">
-                            <a href="tel:+2348098888763">
+                            <a aria-label="contact us" href="tel:+2348098888763">
                                 Save Number
                             </a>
                         </button>

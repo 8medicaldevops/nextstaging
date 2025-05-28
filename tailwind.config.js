@@ -110,11 +110,11 @@ module.exports = {
         radiate: 'radiate 3s infinite',
       },
       fontFamily: {
-        'brlight': 'firmalight',
-        'brreg': 'firmaregular',
-        'brmedium': 'firmamedium',
-        'brsemi': 'firmasemibold',
-        'brbold': 'firmabold',
+        'brlight': ['firmalight', 'system-ui', 'sans-serif'],
+        'brreg': ['firmaregular', 'system-ui', 'sans-serif'],
+        'brmedium': ['firmamedium', 'system-ui', 'sans-serif'],
+        'brsemi': ['firmasemibold', 'system-ui', 'sans-serif'],
+        'brbold': ['firmabold', 'system-ui', 'sans-serif'],
       },
       screens: {
         'sm': '376px',
