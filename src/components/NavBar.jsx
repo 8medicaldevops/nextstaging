@@ -187,7 +187,7 @@ export default function NavBar() {
             onClick={() => setIsMenuOpen(false)}
           ></div>
           <div
-            className={`fixed top-0 right-0 h-full rounded-l-mm w-2/3 bg-white transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? '' : 'translate-x-full'}`}
+            className={`fixed top-0 right-0 h-full rounded-l-mm w-2/3 bg-white transform transition-transform duration-300 ease-in-out z-[9999] ${isMenuOpen ? '' : 'translate-x-full'}`}
           >
             <button
               className='absolute top-4 right-4 text-gray-700'

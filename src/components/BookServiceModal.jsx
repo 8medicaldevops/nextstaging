@@ -133,7 +133,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
                <div className="flex flex-col justify-between w-full gap-6">
                        <div>
                         <span className="flex bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 max-md:w-full w-full">
-                        <a href="mailto:hello@8medical.co" className="w-full">
+                        <a href="mailto:hello@8medical.co" aria-label="send a mail" className="w-full">
                          <div className="flex w-full gap-3">
                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12.5" r="12" fill="#6D09F9"/>
@@ -173,7 +173,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
                        <div>
                        
                         <span className="flex justify-between items-center bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 max-md:w-full w-full">
-                        <a href="tel:+2348098888763" className="w-full">
+                        <a href="tel:+234 809 8888763" aria-label="phone number " className="w-full">
                             <div className="flex w-full gap-3">
                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12.5" r="12" fill="#6D09F9"/>

@@ -45,7 +45,7 @@ export default function OtherCountries() {
                         <p className="text-xl font-brsemi max-lg:text-center text-[#181719] max-lg:w-full">For bookings outside Nigeria, contact us via</p>
                         <div className="flex flex-col justify-between gap-6">
                             <div>
-                                <a href="mailto:hello@8medical.co">
+                                <a aria-label="mail us" href="mailto:hello@8medical.co">
                                     <span className="flex bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 max-md:w-full w-[568px]">
 
                                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,7 +60,7 @@ export default function OtherCountries() {
                                 </a>
                             </div>
                             <div>
-                                <a href="tel:+2348098888763">
+                                <a aria-label="contact us" href="tel:+2348098888763">
                                     <span className="flex bg-[#F9F9FA] border-[1px] border-[#F4F2F5] gap-3 rounded-mm p-3 max-md:w-full w-[568px]">
 
                                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -7,16 +7,16 @@ import {
 
 
 
-export default function ErrorPopup(props) {
+export default function ErrorPopup({open, errorMsg, close}) {
  
 
 
     return(
-        <Dialog open={props.open}>
+        <Dialog open={open}>
         <DialogContent className="bg-white bg-none w-full rounded-[44px] max-md:rounded-[84px] max-mm:rounded-[24px] max-mm:px-0 max-md:w-[95%] sm:rounded-[24px] py-12 ">
           <DialogHeader>
           <div className=" flex px-2 justify-end cursor-pointer">
-            <button onClick={props.close}><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <button onClick={close}><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 0C4.49 0 0 4.49 0 10C0 15.51 4.49 20 10 20C15.51 20 20 15.51 20 10C20 4.49 15.51 0 10 0ZM13.36 12.3C13.65 12.59 13.65 13.07 13.36 13.36C13.21 13.51 13.02 13.58 12.83 13.58C12.64 13.58 12.45 13.51 12.3 13.36L10 11.06L7.7 13.36C7.55 13.51 7.36 13.58 7.17 13.58C6.98 13.58 6.79 13.51 6.64 13.36C6.35 13.07 6.35 12.59 6.64 12.3L8.94 10L6.64 7.7C6.35 7.41 6.35 6.93 6.64 6.64C6.93 6.35 7.41 6.35 7.7 6.64L10 8.94L12.3 6.64C12.59 6.35 13.07 6.35 13.36 6.64C13.65 6.93 13.65 7.41 13.36 7.7L11.06 10L13.36 12.3Z" fill="#F9091D"/>
             </svg>
             </button>
@@ -37,7 +37,7 @@ export default function ErrorPopup(props) {
             <DialogTitle>
             <p className="font-brsemi text-[28px]">Error generating Invoice</p>
             </DialogTitle>
-            <p className="text-center font-brmedium text-[#636066]">Your Invoice could not be generated at the moment. Please wait a few seconds and try again.</p>
+            <p className="text-center font-brmedium text-[#636066]">{errorMsg}</p>
             
             {/* <PDFDownloadLink document={<InvoicePDF {...invoiceProps} />} filename="Eightmedical-invoice">
              {({loading}) => (loading ? 
