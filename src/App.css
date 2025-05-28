@@ -112,6 +112,11 @@
   z-index: 9;
 }
 
+.event-countdown{
+  margin-bottom: -4rem;
+  z-index: 2;
+  position:relative;
+}
 
 /*input[type="time"]:invalid:before {
   content: 'Select Time';

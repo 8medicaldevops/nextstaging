@@ -41,10 +41,12 @@
       font-size: 14px;
     }
 
+
     #cookie-consent-banner .buttons {
       display: flex;
       gap: 10px;
     }
+
 
     #cookie-consent-banner button {
       background-color: #6D09F9; 
@@ -88,6 +90,8 @@
       }
     }
   </style>
+
+
 
 </head>
 
@@ -137,11 +141,26 @@
         f.parentNode.insertBefore(j, f);
       })(window, document, 'script', 'dataLayer', 'GTM-PL59LTKG');
     }
+    
+     function loadTawkChat() {
+      var Tawk_API = Tawk_API || {},
+        Tawk_LoadStart = new Date();
+      (function () {
+        var s1 = document.createElement("script"),
+          s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/67b09d47d56a6c191666adb7/1ik4uco20';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s0.parentNode.insertBefore(s1, s0);
+      })();
+    }
 
     function initializeAnalytics() {
       loadClarity();
       loadGoogleAnalytics();
       loadGoogleTagManager();
+      loadTawkChat();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -176,6 +195,6 @@
 
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PL59LTKG" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
-  </body>
+
 
 </html>

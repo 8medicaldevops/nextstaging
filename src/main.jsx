@@ -37,6 +37,7 @@ import ForgotPassword from './Pages/userOnboarding/ForgotPassword';
 import ChangePassword from './Pages/userOnboarding/ChangePassword';
 import AmbulanceTp from './Pages/AmbulanceTp';
 import AfterLife from './Pages/AfterLife';
+import EmsLanding from './Pages/EMS';
 
 import { ToastProvider } from 'react-toast-notifications';
 
@@ -182,6 +183,11 @@ const router = createBrowserRouter([
   {
     path: "/AfterLife",
     element: <AfterLife />,
+  },
+
+  {
+    path: "/ems-week",
+    element: <EmsLanding />,
   }
 ]);
 
