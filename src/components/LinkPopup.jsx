@@ -4,101 +4,98 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import InvoicePDF from "./Invoice"
-import { PDFDownloadLink } from "@react-pdf/renderer"
-import { useState, useEffect } from "react";
-import { parseISO, parse, format, isSameDay } from "date-fns";
-import { FadeLoader } from "react-spinners";
+// import InvoicePDF from "./Invoice"
+// import { PDFDownloadLink } from "@react-pdf/renderer"
+// import { useState, useEffect } from "react";
+// import { parseISO, parse, format, isSameDay } from "date-fns";
+// import { FadeLoader } from "react-spinners";
 
 
 export default function LinkPopup(props) {
-  const [callerData, setCallerData] = useState('');
-  const [eventData, setEventData] = useState('');
-  const [scheduleData, setScheduleData] = useState('');
-  const [ambulanceData, setAmbulanceData] = useState('');
-  const [formattedFee, setFormattedFee] = useState('');
-  const [formattedSchedules, setFormattedSchedules] = useState([]);
-  const [formattedTimeRange, setFormattedTimeRange] = useState('');
-  const [formattedDateRange, setFormattedDateRange] = useState('');
-  const [smallAmbulanceTotal, setSmallAmbulanceTotal] = useState('');
-  const [largeAmbulanceTotal, setLargeAmbulanceTotal] = useState('');
-  const [medicsTotal, setMedicsTotal] = useState('');
-  const [color, setColor] = useState("#6d09f9");
+  // const [callerData, setCallerData] = useState('');
+  // const [eventData, setEventData] = useState('');
+  //const [scheduleData, setScheduleData] = useState('');
+  // const [ambulanceData, setAmbulanceData] = useState('');
+  // const [formattedFee, setFormattedFee] = useState('');
+  // const [formattedSchedules, setFormattedSchedules] = useState([]);
+  // const [formattedTimeRange, setFormattedTimeRange] = useState('');
+  // const [formattedDateRange, setFormattedDateRange] = useState('');
+  // const [smallAmbulanceTotal, setSmallAmbulanceTotal] = useState('');
+  // const [largeAmbulanceTotal, setLargeAmbulanceTotal] = useState('');
+  // const [medicsTotal, setMedicsTotal] = useState('');
+  // const [color, setColor] = useState("#6d09f9");
 
-  useEffect(() => {
-    // Retrieve and set session storage data
-    const storedCallerData = JSON.parse(localStorage.getItem('callerData'));
-    const storedEventData = JSON.parse(localStorage.getItem('eventData'));
-    const storedScheduleData = JSON.parse(localStorage.getItem('schedule'));
-    const storedAmbulanceData = JSON.parse(localStorage.getItem('ambulanceData'));
+  // useEffect(() => {
+  //   // Retrieve and set session storage data
+  //   const storedCallerData = JSON.parse(localStorage.getItem('callerData'));
+  //   const storedEventData = JSON.parse(localStorage.getItem('eventData'));
+  //   const storedScheduleData = JSON.parse(localStorage.getItem('schedule'));
+  //   const storedAmbulanceData = JSON.parse(localStorage.getItem('ambulanceData'));
 
-    setCallerData(storedCallerData);
-    setEventData(storedEventData);
-    setScheduleData(storedScheduleData);
-    setAmbulanceData(storedAmbulanceData);
+  //   setCallerData(storedCallerData);
+  //   setEventData(storedEventData);
+  //   setScheduleData(storedScheduleData);
+  //   setAmbulanceData(storedAmbulanceData);
 
-    // Format fees
-    const smallAmbulance = JSON.parse(localStorage.getItem('smallAmbulanceTotal')) || 0;
-    const largeAmbulance = JSON.parse(localStorage.getItem('largeAmbulanceTotal')) || 0;
-    const medics = JSON.parse(localStorage.getItem('medicsTotal')) || 0;
+  //   // Format fees
+  //   const smallAmbulance = JSON.parse(localStorage.getItem('smallAmbulanceTotal')) || 0;
+  //   const largeAmbulance = JSON.parse(localStorage.getItem('largeAmbulanceTotal')) || 0;
+  //   const medics = JSON.parse(localStorage.getItem('medicsTotal')) || 0;
 
-    setSmallAmbulanceTotal(new Intl.NumberFormat().format(smallAmbulance));
-    setLargeAmbulanceTotal(new Intl.NumberFormat().format(largeAmbulance));
-    setMedicsTotal(new Intl.NumberFormat().format(medics));
+  //   setSmallAmbulanceTotal(new Intl.NumberFormat().format(smallAmbulance));
+  //   setLargeAmbulanceTotal(new Intl.NumberFormat().format(largeAmbulance));
+  //   setMedicsTotal(new Intl.NumberFormat().format(medics));
 
-    const estimatedFee = storedAmbulanceData?.estimatedFee || 0;
-    setFormattedFee(new Intl.NumberFormat().format(estimatedFee));
-  }, []);
+  //   const estimatedFee = storedAmbulanceData?.estimatedFee || 0;
+  //   setFormattedFee(new Intl.NumberFormat().format(estimatedFee));
+  // }, []);
 
-  useEffect(() => {
-    if (scheduleData) {
-      const formattedData = scheduleData.map((schedule) => {
-        // Parse start and end dates
-        const startDate = parseISO(schedule.startDate || '');
-        const endDate = parseISO(schedule.endDate || '');
+  // useEffect(() => {
+  //   if (scheduleData) {
+  //     const formattedData = scheduleData.map((schedule) => {
+  //       // Parse start and end dates
+  //       const startDate = parseISO(schedule.startDate || '');
+  //       const endDate = parseISO(schedule.endDate || '');
 
-        // Format date range
+  //       // Format date range
 
-        const formattedStartDate = startDate ? format(startDate, 'do') : 'N/A';
-        const fullStartDate = format(startDate, "do MMMM, yyyy");
-        const formattedEndDate = endDate ? format(endDate, 'do MMMM, yyyy') : 'N/A';
-        const formattedDateRange = fullStartDate === formattedEndDate ? fullStartDate : `${formattedStartDate} - ${formattedEndDate}`;
+  //       const formattedStartDate = startDate ? format(startDate, 'do') : 'N/A';
+  //       const fullStartDate = format(startDate, "do MMMM, yyyy");
+  //       const formattedEndDate = endDate ? format(endDate, 'do MMMM, yyyy') : 'N/A';
+  //       const formattedDateRange = fullStartDate === formattedEndDate ? fullStartDate : `${formattedStartDate} - ${formattedEndDate}`;
 
 
-        // Parse and format time range
-        const parseTime = (timeStr) => (timeStr ? parse(timeStr, 'HH:mm', new Date()) : null);
-        const startTime = parseTime(schedule.startTime || '');
-        const endTime = parseTime(schedule.endTime || '');
-        const formattedTimeRange = `${startTime ? format(startTime, 'h:mm a') : 'N/A'} - ${endTime ? format(endTime, 'h:mm a') : 'N/A'}`;
+  //       // Parse and format time range
+  //       const parseTime = (timeStr) => (timeStr ? parse(timeStr, 'HH:mm', new Date()) : null);
+  //       const startTime = parseTime(schedule.startTime || '');
+  //       const endTime = parseTime(schedule.endTime || '');
+  //       const formattedTimeRange = `${startTime ? format(startTime, 'h:mm a') : 'N/A'} - ${endTime ? format(endTime, 'h:mm a') : 'N/A'}`;
 
-        // Return formatted schedule object
-        return {
-          formattedDateRange,
-          formattedTimeRange,
-        };
-      });
+  //       // Return formatted schedule object
+  //       return {
+  //         formattedDateRange,
+  //         formattedTimeRange,
+  //       };
+  //     });
 
-      setFormattedSchedules(formattedData); // Store all formatted schedules
-      console.log(formattedData)
-    }
-  }, [scheduleData]);
-  const handleButtonClick = () => {
-    //console.log('clicked')   
+  //     setFormattedSchedules(formattedData); // Store all formatted schedules
+  //     console.log(formattedData)
+  //   }
+  // }, [scheduleData]);
+ 
 
-  }
+  // const invoiceProps = {
+  //   callerData: callerData,
+  //   eventData: eventData,
+  //   scheduleData: formattedSchedules,
+  //   ambulanceData: ambulanceData,
+  //   formattedFee: formattedFee,
+  //   smallAmbulanceTotal: smallAmbulanceTotal,
+  //   largeAmbulanceTotal: largeAmbulanceTotal,
+  //   medicsTotal: medicsTotal,
+  // };
 
-  const invoiceProps = {
-    callerData: callerData,
-    eventData: eventData,
-    scheduleData: formattedSchedules,
-    ambulanceData: ambulanceData,
-    formattedFee: formattedFee,
-    smallAmbulanceTotal: smallAmbulanceTotal,
-    largeAmbulanceTotal: largeAmbulanceTotal,
-    medicsTotal: medicsTotal,
-  };
-
-  console.log(scheduleData)
+  // console.log(scheduleData)
 
   return (
     <Dialog open={props.open}>
@@ -126,8 +123,10 @@ export default function LinkPopup(props) {
             <DialogTitle>
               <p className="font-brsemi text-[28px]">Invoice Generated</p>
             </DialogTitle>
-            <p className="text-center font-brmedium text-[#636066]">The invoice for this booking has been sent to the associated email. {props.userId && `You can download directly below.`}</p>
-            {props.userId &&
+            <p className="text-center font-brmedium text-[#636066]">The invoice for this booking has been sent to the associated email. 
+              {/* {props.userId && `You can download directly below.`} */}
+              </p>
+            {/* {props.userId &&
               <PDFDownloadLink document={<InvoicePDF {...invoiceProps} />} filename="Eightmedical-invoice">
                 {({ loading }) => (loading ?
                   <button className="">
@@ -147,7 +146,7 @@ export default function LinkPopup(props) {
                     </svg>
                   </button>)}
               </PDFDownloadLink>
-            }
+            } */}
           </div>
         </DialogHeader>
       </DialogContent>
