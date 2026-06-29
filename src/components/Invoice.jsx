@@ -1,24 +1,24 @@
 // import { Page, Text, View, Image, Document, StyleSheet } from '@react-pdf/renderer';
 // import {Font} from '@react-pdf/renderer';
 // import headerImg from '../assets/images/recieptheader.png';
-// import firmaBold from '/fonts/br-firma-cufonfonts/BR Firma Bold.woff2';
-// import firmaSemi from '/fonts/br-firma-cufonfonts/BR Firma SemiBold.woff2';
-// import firmaReg from '/fonts/br-firma-cufonfonts/BR Firma Regular.woff2';
+// import figtreeBold from '/fonts/figtree/figtree-700.woff2';
+// import figtreeSemi from '/fonts/figtree/figtree-600.woff2';
+// import figtreeReg from '/fonts/figtree/figtree-400.woff2';
 
 
 // Font.register({
-//   family: 'firmaBold',
-//   src: firmaBold,
+//   family: 'figtreeBold',
+//   src: figtreeBold,
 // });
 
 // Font.register({
-//   family: 'firmaSemi',
-//   src: firmaSemi,
+//   family: 'figtreeSemi',
+//   src: figtreeSemi,
 // });
 
 // Font.register({
-//   family: 'firmaReg',
-//   src: firmaReg,
+//   family: 'figtreeReg',
+//   src: figtreeReg,
 // });
 
 // // Create styles similar to Tailwind using React-PDF's StyleSheet
@@ -49,7 +49,7 @@
 //   invoiceTitle: {
 //     color: '#171718',
 //     fontSize: 30,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
 //     textTransform: 'uppercase',
    
 //   },
@@ -73,24 +73,24 @@
 //   receiptFor: {
 //     color: '#6D09F9',
 //     fontSize: 20,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
     
 //   },
 //   customerName: {
 //     color: '#171718',
 //     fontSize: 20,
-//     fontFamily: 'firmaSemi',
+//     fontFamily: 'figtreeSemi',
 //     textTransform: 'capitalize'
 //   },
 //   customerCompany: {
 //     color: '#171718',
 //     fontSize: 16,
-//     fontFamily: 'firmaSemi',
+//     fontFamily: 'figtreeSemi',
 //   },
 //   contactInfo: {
 //     color: '#636065',
 //     fontSize: 14,
-//     fontFamily: 'firmaSemi',
+//     fontFamily: 'figtreeSemi',
 //   },
 //   orderInfoContainer: {
 //     flexDirection: 'column',
@@ -100,22 +100,22 @@
 //   orderInfoLabel: {
 //     color: '#171718',
 //     fontSize: 16,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
 //   },
 //   orderInfoValue: {
 //     color: '#636065',
 //     fontSize: 14,
-//     fontFamily: 'firmaSemi',
+//     fontFamily: 'figtreeSemi',
 //   },
 //   dateInfoLabel: {
 //     color: '#171718',
 //     fontSize: 16,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
 //   },
 //   dateInfoValue: {
 //     color: '#636065',
 //     fontSize: 14,
-//     fontFamily: 'firmaSemi',
+//     fontFamily: 'figtreeSemi',
 //     width: '150px'
 //   },
 //   bookingInfoContainer: {
@@ -137,7 +137,7 @@
 //   bookingInfoLabel: {
 //     color: '#6D09F9',
 //     fontSize: 20,
-//     fontFamily: 'firmaSemi',
+//     fontFamily: 'figtreeSemi',
 //   },
 //   bookingDetails: {
 //     flexDirection: 'column',
@@ -183,21 +183,21 @@
 //   },
 //   headerTextOne: {
 //     fontSize: 16,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
 //     color: '#171718',
 //     width: '30%', // Adjust as needed
 //     textAlign: 'left', // Adjust alignment as needed
 //   },
 //   headerTextTwo: {
 //     fontSize: 16,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
 //     color: '#171718',
 //     width: '30%', // Adjust as needed
 //     textAlign: 'center', // Adjust alignment as needed
 //   },
 //   headerTextThree: {
 //     fontSize: 16,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
 //     color: '#171718',
 //     width: '30%', // Adjust as needed
 //     textAlign: 'right', // Adjust alignment as needed
@@ -211,21 +211,21 @@
 //   },
 //   itemTextOne: {
 //     fontSize: 12,
-//     fontFamily: 'firmaReg',
+//     fontFamily: 'figtreeReg',
 //     color: '#636065',
 //     width: '100%', // Adjust as needed
 //     textAlign: 'left', // Adjust alignment as needed
 //   },
 //   itemTextTwo: {
 //     fontSize: 12,
-//     fontFamily: 'firmaReg',
+//     fontFamily: 'figtreeReg',
 //     color: '#636065',
 //     width: '100%', // Adjust as needed
 //     textAlign: 'center', // Adjust alignment as needed
 //   },
 //   itemTextThree: {
 //     fontSize: 12,
-//     fontFamily: 'firmaReg',
+//     fontFamily: 'figtreeReg',
 //     color: '#636065',
 //     width: '100%', // Adjust as needed
 //     textAlign: 'right', // Adjust alignment as needed
@@ -241,14 +241,14 @@
 //   },
 //   totalText: {
 //     fontSize: 18,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
 //     color: '#171718',
 //     width: '30%',
 //     textAlign: 'left',
 //   },
 //   totalAmount: {
 //     fontSize: 18,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
 //     color: '#6D09F9',
 //     width: '30%',
 //     textAlign: 'right',
@@ -264,7 +264,7 @@
 //   footerText: {
 //     color: '#292929',
 //     fontSize: 26.67,
-//     fontFamily: 'firmaBold',
+//     fontFamily: 'figtreeBold',
 //   },
 // });
 
