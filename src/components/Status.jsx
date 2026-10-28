@@ -1,3 +1,4 @@
+"use client";
 import {
     Select,
     SelectContent,
@@ -14,7 +15,7 @@ export default function Status (props) {
       const [selectedValue, setSelectedValue] = useState(props.row);
 //   console.log(selectedValue)
 const accessToken = JSON.parse(localStorage.getItem('token')).accessToken;
-const { response, error, loading, patchData } = usePatchData(import.meta.env.VITE_ORDER_API, accessToken);
+const { response, error, loading, patchData } = usePatchData(process.env.VITE_ORDER_API, accessToken);
 
   
     const handlePatch = (value) => {

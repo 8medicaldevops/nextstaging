@@ -41,7 +41,38 @@
 @tailwind utilities;
 
 @layer base {
+    :root {
+        /* Strong ease-out: responsive-feeling UI transitions */
+        --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+        --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
     body {
         font-family: 'figtree-regular', 'Figtree', system-ui, sans-serif;
+    }
+
+    /* Press feedback on plain buttons (Radix triggers carry data-state and are excluded) */
+    button {
+        transition: transform 150ms var(--ease-out-strong);
+    }
+
+    button:active:not([data-state]) {
+        transform: scale(0.98);
+    }
+
+    :focus-visible {
+        outline: 2px solid #6d09f9;
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
     }
 }

@@ -1,7 +1,10 @@
-import ellipse1 from '../../assets/images/Ellipse4.png';
-import ellipse2 from '../../assets/images/Ellipse5.png';
-import ellipse3 from '../../assets/images/Ellipse6.png';
-
+"use client";
+import ellipse1__asset from '../../assets/images/Ellipse4.png';
+const ellipse1 = ellipse1__asset.src ?? ellipse1__asset;
+import ellipse2__asset from '../../assets/images/Ellipse5.png';
+const ellipse2 = ellipse2__asset.src ?? ellipse2__asset;
+import ellipse3__asset from '../../assets/images/Ellipse6.png';
+const ellipse3 = ellipse3__asset.src ?? ellipse3__asset;
 export default function Banner() {
     return (
         <section className="bg-[#110f21] py-20 px-10 md:px-20 flex flex-col gap-10 items-center">

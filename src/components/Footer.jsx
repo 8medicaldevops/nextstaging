@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+"use client";
+import { Link } from "@/lib/router-compat";
 
 export default function Footer() {
     return (

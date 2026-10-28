@@ -1,14 +1,15 @@
+"use client";
 //import React from 'react';
 import { Formik } from 'formik';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "@/lib/router-compat";
 
 
 export default function AuthDisp() {
   const navigate = useNavigate();
   const handleLogin = async (values, { setSubmitting }) => {
     try {
-      const response = await axios.post(import.meta.env.VITE_ADMIN_LOGIN, {
+      const response = await axios.post(process.env.VITE_ADMIN_LOGIN, {
         identifier: values.email,
         password: values.password,
       });

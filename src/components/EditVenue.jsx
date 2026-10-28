@@ -1,7 +1,8 @@
+"use client";
 /// Other countries components 
 import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
-import { Link,useNavigate } from "react-router-dom";
+import { Link,useNavigate } from "@/lib/router-compat";
 import {
     Select,
     SelectContent,
@@ -79,7 +80,7 @@ export default function (props) {
       };
 
       const accessToken = JSON.parse(localStorage.getItem('token')).accessToken;
-      const { response, setResponse, error, loading, patchData } = usePatchData(import.meta.env.VITE_ORDER_API, accessToken);
+      const { response, setResponse, error, loading, patchData } = usePatchData(process.env.VITE_ORDER_API, accessToken);
     
       const handlePatch = () => {
         const id = props.id;
@@ -152,7 +153,7 @@ export default function (props) {
                            onChange={handleInputChange} /> */}
                           <div className="relative w-full">
                           <GooglePlacesAutocomplete
-                                    apiKey={import.meta.env.VITE_PLACES_KEY}
+                                    apiKey={process.env.VITE_PLACES_KEY}
                                     autocompletionRequest={{
                                         componentRestrictions: {
                                         country: ['ng'],

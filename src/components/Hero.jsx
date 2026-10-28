@@ -1,11 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
+"use client";
+import { Link, useNavigate } from "@/lib/router-compat";
 import { useState, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton"
 import EmblaCarousel from '../components/EmblaCarousel'
 import '../App.css'
-import ambuBig from '../assets/images/ambu-big-transformed.png'
-import doctor from '../assets/images/doctor.jpeg';
-import afterlife from '../assets/images/afterlife.png';
+import ambuBig__asset from '../assets/images/ambu-big-transformed.png';
+const ambuBig = ambuBig__asset.src ?? ambuBig__asset;
+import doctor__asset from '../assets/images/doctor.jpeg';
+const doctor = doctor__asset.src ?? doctor__asset;
+import afterlife__asset from '../assets/images/afterlife.png';
+const afterlife = afterlife__asset.src ?? afterlife__asset;
 import NewsLetter from "./NewsLetter";
 import Footer from "./Footer";
 import {
@@ -164,7 +168,7 @@ export default function Hero() {
     const getServiceContent = () => {
         switch (activeService) {
             case 'standby':
-                return <div className="px-12  py-12 rounded-3xl bg-white ">
+                return <div className="px-12 py-12 rounded-2xl bg-white border border-[#ECEBED] ">
                     <p className="font-brmedium text-ev-700 mb-2">Ambulance Standby</p>
                     <div className="flex justify-between gap-32 max-lg:flex-col max-lg:gap-4 ">
 
@@ -176,22 +180,22 @@ export default function Hero() {
                         <aside className="flex flex-col gap-3 w-[464px] max-lg:w-full">
                             <p className="font-brreg text-lg text-[#636066]">Be it film sporting events, film shoots,  conferences or weddings, let&apos;s provide round the clock medical support.</p>
                             <Link to='/ServiceAmb'>
-                                <p className="font-brmedium text-ev-700 ">Learn more</p>
+                                <p className="font-brmedium text-ev-700 ">Learn more about Ambulance Standby</p>
                             </Link>
                         </aside>
 
                     </div>
 
-                    {import.meta.env.VITE_READY_TO_LAUNCH === 'Ready' &&
+                    {process.env.VITE_READY_TO_LAUNCH === 'Ready' &&
                         <button onClick={() => navigate('/Standby')} className="bg-ev-700 mt-4 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
 
                     }
-                    {import.meta.env.VITE_READY_TO_LAUNCH === 'notReady' &&
+                    {process.env.VITE_READY_TO_LAUNCH === 'notReady' &&
                         <button onClick={() => setBookingModal(true)} className="bg-ev-700 mt-4 font-brbold text-lg text-white rounded py-3 px-5 w-36">Book Now</button>
                     }
                 </div>
             case 'transport':
-                return <div className="px-12 py-12 rounded-3xl bg-white">
+                return <div className="px-12 py-12 rounded-2xl bg-white border border-[#ECEBED]">
                     <p className="font-brmedium text-ev-700 mb-2">Ambulance Transport (Air and Ground)</p>
                     <div className="flex justify-between gap-32 max-lg:flex-col max-lg:gap-4">
                         <main className="flex flex-col gap-6  w-[464px] max-lg:w-full">
@@ -200,7 +204,7 @@ export default function Hero() {
                         <aside className="flex flex-col gap-3  w-[464px] max-lg:w-full">
                             <p className="font-brreg text-lg text-[#636066]">Arrange ambulance transport for a loved one or patient whether by land or air</p>
                             <Link to="/ServiceAgt" >
-                                <p className="font-brmedium text-ev-700 ">Learn More</p>
+                                <p className="font-brmedium text-ev-700 ">Learn more about Ambulance Transport</p>
                             </Link>
                         </aside>
                     </div>
@@ -209,7 +213,7 @@ export default function Hero() {
                     </button>
                 </div>;
             case 'urgentCare':
-                return <div className="px-12 py-12 rounded-3xl bg-white">
+                return <div className="px-12 py-12 rounded-2xl bg-white border border-[#ECEBED]">
                     <p className="font-brmedium text-ev-700 mb-2 ">Urgent Care</p>
                     <div className="flex justify-between gap-32 max-lg:flex-col max-lg:gap-4">
                         <main className="flex flex-col gap-6 w-[464px] max-lg:w-full">
@@ -218,14 +222,14 @@ export default function Hero() {
                         <aside className="flex flex-col gap-3 w-[464px] max-lg:w-full">
                             <p className="font-brreg text-lg text-[#636066]">Need periodic ambulance transport or standby for your individual, family or business use? Curate a package to suit your needs.</p>
                             <Link to="/ServiceUg">
-                                <p className="font-brmedium text-ev-700 ">Learn More</p>
+                                <p className="font-brmedium text-ev-700 ">Learn more about Urgent Care</p>
                             </Link>
                         </aside>
                     </div>
                     <button onClick={() => setBookingModal(true)} className="bg-ev-700 font-brbold text-lg mt-4 text-white rounded py-3 px-5 w-40">Get Started</button>
                 </div>;
             case 'afterLife':
-                return <div className="px-12 py-12 rounded-3xl bg-white">
+                return <div className="px-12 py-12 rounded-2xl bg-white border border-[#ECEBED]">
                     <p className="font-brmedium text-ev-700 mb-2 ">Afterlife Transport</p>
                     <div className="flex justify-between gap-32 max-lg:flex-col max-lg:gap-4">
 
@@ -235,7 +239,7 @@ export default function Hero() {
                         <aside className="flex flex-col gap-3 w-[464px] max-lg:w-full">
                             <p className="font-brreg text-lg text-[#636066]">We handle your loved one&apos;s final journey with care and respect. Our dedicated team ensures seamless, compassionate service, allowing you to focus on honoring their memory.</p>
                             <Link to="/ServiceAfterLife">
-                                <p className="font-brmedium text-ev-700 ">Learn More</p>
+                                <p className="font-brmedium text-ev-700 ">Learn more about After Life Transport</p>
                             </Link>
                         </aside>
                     </div>
@@ -256,8 +260,8 @@ export default function Hero() {
 
     return (
         <div>
-            <section className="flex flex-col justify-center items-center gap-6 bg-[#30056B] bg-[url(./assets/Siren.gif)] bg-no-repeat bg-cover bg-center lg:h-[85vh] bg-blend-soft-light  py-20">
-                <p className="font-brbold text-[56px] text-white w-[794px] text-center max-lg:text-5xl max-lg:w-[396px] max-sm:w-full leading-snug ">Get urgent ambulance and medical care services</p>
+            <section className="flex flex-col justify-center items-center gap-6 bg-[#30056B] bg-[url(/assets/Siren.gif)] bg-no-repeat bg-cover bg-center lg:h-[85vh] bg-blend-soft-light  py-20">
+                <h1 className="font-brbold text-[56px] text-white w-[794px] text-center max-lg:text-5xl max-lg:w-[396px] max-sm:w-full leading-snug ">Get urgent ambulance and medical care services</h1>
                 <p className=" font-brreg text-white w-[694px] text-center text-2xl rounded max-lg:text-lg max-lg:w-[396px] max-sm:w-full ">We offer responsive and dependable ambulance and medical care services according to your needs.</p>
                 <div className="flex gap-4 items-center max-lg:flex-col max-lg:w-[396px] max-sm:w-full max-sm:px-1 ">
 
@@ -288,7 +292,7 @@ export default function Hero() {
 
             <section ref={sectionRef} className="bg-[#F9F9FA] py-12 px-32 flex flex-col gap-9 max-lg:px-4 max-lg:py-9">
                 <div className=" max-lg:hidden">
-                    <p className="font-brsemi text-3xl pb-6">Choose a Service</p>
+                    <h2 className="font-brsemi text-3xl pb-6">Choose a Service</h2>
                     <div className="flex gap-3">
                         <button className={`${buttonClass} ${activeService === 'standby' ? activeClass : ''}`} onClick={() => handleButtonClick('standby')}>
                             {activeService === 'standby' ? whiteTpEmoji : blackTpEmoji}
@@ -309,7 +313,7 @@ export default function Hero() {
                     </div>
                 </div>
                 <div className="lg:hidden">
-                    <p className="font-brsemi text-2xl pb-6">Choose a Service</p>
+                    <h2 className="font-brsemi text-2xl pb-6">Choose a Service</h2>
                     <Select onValueChange={handleSelectChange}>
                         <SelectTrigger className="w-[240px] rounded-mm border-[1px] border-[#E4E3E5] font-brmedium text-[#181719] ">
                             <SelectValue placeholder={<div className="flex gap-2 items-center">{blackTpEmoji}Ambulance Standby</div>} />
@@ -492,7 +496,7 @@ const Counter = ({ targetNumber, duration }) => {
 
     return (
         <div className="text-4xl font-brbold">
-            <h1>{formatNumber(count)}</h1>
+            <p>{formatNumber(count)}</p>
         </div>
     );
 };

@@ -1,9 +1,14 @@
-import grid1 from "../../assets/images/Medical.png";
-import grid2 from "../../assets/images/Manager.png";
-import grid3 from "../../assets/images/Stakeholder.png";
-import grid4 from "../../assets/images/confetti.png";
-import ticketIcon from "../../assets/images/ticket.png";
-
+"use client";
+import grid1__asset from "../../assets/images/Medical.png";
+const grid1 = grid1__asset.src ?? grid1__asset;
+import grid2__asset from "../../assets/images/Manager.png";
+const grid2 = grid2__asset.src ?? grid2__asset;
+import grid3__asset from "../../assets/images/Stakeholder.png";
+const grid3 = grid3__asset.src ?? grid3__asset;
+import grid4__asset from "../../assets/images/confetti.png";
+const grid4 = grid4__asset.src ?? grid4__asset;
+import ticketIcon__asset from "../../assets/images/ticket.png";
+const ticketIcon = ticketIcon__asset.src ?? ticketIcon__asset;
 export default function Ticket() {
     return (
         <section className="py-20 px-[2rem] flex flex-col gap-10">

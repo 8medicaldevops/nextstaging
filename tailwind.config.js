@@ -64,6 +64,12 @@ module.exports = {
 
 
       },
+      boxShadow: {
+        // Flat design scale: hairline cards, soft popovers, diffuse modals.
+        card: "0 1px 2px rgba(16, 24, 40, 0.05)",
+        pop: "0 8px 24px -12px rgba(24, 23, 25, 0.18)",
+        modal: "0 24px 48px -24px rgba(24, 23, 25, 0.25)",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

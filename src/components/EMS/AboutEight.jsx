@@ -1,6 +1,8 @@
-import about from "../../assets/images/abouteight.png";
-import logo from '../../assets/images/logo.png';
-
+"use client";
+import about__asset from "../../assets/images/abouteight.png";
+const about = about__asset.src ?? about__asset;
+import logo__asset from '../../assets/images/logo.png';
+const logo = logo__asset.src ?? logo__asset;
 export default function AboutEight() {
 
     return (
@@ -18,7 +20,7 @@ export default function AboutEight() {
                         streamlined processes to care.
                     </p>
                     <a className="bg-ev-700 px-5 py-2 text-md text-white w-fit font-brsemi rounded-mm cursor-pointer flex items-center gap-1 justify-center" href="https://www.8medical.co/AboutUs">
-                        Learn More
+                        Learn more about 8medical
                         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9.62 4.45331L13.6667 8.49998L9.62 12.5466" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                             <path d="M2.33337 8.5H13.5534" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />

@@ -1,10 +1,13 @@
+"use client";
 import { useState } from 'react';
 
 import ContactModal from '../ContactModal';
 
-import exhibit from "../../assets/images/exhibit.png";
-import contact from '../../assets/images/contact.svg';
+import exhibit__asset from "../../assets/images/exhibit.png";
 
+const exhibit = exhibit__asset.src ?? exhibit__asset;
+import contact__asset from '../../assets/images/contact.svg';
+const contact = contact__asset.src ?? contact__asset;
 export default function Exhibit() {
     const [exhibition, setExhibition] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);

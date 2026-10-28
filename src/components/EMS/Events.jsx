@@ -1,3 +1,4 @@
+"use client";
 import {
     Accordion,
     AccordionContent,
@@ -5,8 +6,9 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 
-import events from "../../assets/images/events.png";
+import events__asset from "../../assets/images/events.png";
 
+const events = events__asset.src ?? events__asset;
 export default function Events() {
 
     const activities = [

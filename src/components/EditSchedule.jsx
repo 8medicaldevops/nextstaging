@@ -1,9 +1,10 @@
+"use client";
  
 import { useState, useEffect } from "react";
 import { format, parse, differenceInMinutes, formatDate  } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import NavBar from "../components/NavBar" ;
-import { Link , useNavigate } from "react-router-dom";
+import { Link , useNavigate } from "@/lib/router-compat";
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -217,7 +218,7 @@ export default function (props) {
       const daysDiff = getNumberOfDays()
       //console.log(daysDiff)
       const accessToken = JSON.parse(localStorage.getItem('token')).accessToken;
-    const { response, setResponse, error, loading, patchData } = usePatchData(import.meta.env.VITE_ORDER_API, accessToken);
+    const { response, setResponse, error, loading, patchData } = usePatchData(process.env.VITE_ORDER_API, accessToken);
       
       const handlePatch = () => {
         const id = props.id;

@@ -1,3 +1,4 @@
+"use client";
 // import { Page, Text, View, Image, Document, StyleSheet } from '@react-pdf/renderer';
 // import {Font} from '@react-pdf/renderer';
 // import headerImg from '../assets/images/recieptheader.png';

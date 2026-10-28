@@ -1,8 +1,9 @@
+"use client";
 import axios from 'axios';
 import { useState } from 'react';
 import { useToasts } from 'react-toast-notifications';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/lib/router-compat";
 
 export const useFetch = (url) => {
 

@@ -1,20 +1,34 @@
+"use client";
 import { useState } from 'react';
 import ContactModal from '../ContactModal';
 
-import logo from '../../assets/images/logo.png';
-import logo2 from '../../assets/images/police.png';
-import logo3 from '../../assets/images/leadway assurance.png';
-import logo4 from '../../assets/images/fastcake.png';
-import logo5 from '../../assets/images/pharmarun.png';
-import logo6 from '../../assets/images/lecc.png';
-import logo7 from '../../assets/images/redbanner.png';
-import logo8 from '../../assets/images/ehcon.png';
-import logo9 from '../../assets/images/lag.png';
-import logo10 from '../../assets/images/asemhp.png';
-import logo11 from '../../assets/images/cee.png';
-import logo12 from '../../assets/images/eagle.png';
-import contact from '../../assets/images/contact.svg';
+import logo__asset from '../../assets/images/logo.png';
 
+const logo = logo__asset.src ?? logo__asset;
+import logo2__asset from '../../assets/images/police.png';
+const logo2 = logo2__asset.src ?? logo2__asset;
+import logo3__asset from '../../assets/images/leadway assurance.png';
+const logo3 = logo3__asset.src ?? logo3__asset;
+import logo4__asset from '../../assets/images/fastcake.png';
+const logo4 = logo4__asset.src ?? logo4__asset;
+import logo5__asset from '../../assets/images/pharmarun.png';
+const logo5 = logo5__asset.src ?? logo5__asset;
+import logo6__asset from '../../assets/images/lecc.png';
+const logo6 = logo6__asset.src ?? logo6__asset;
+import logo7__asset from '../../assets/images/redbanner.png';
+const logo7 = logo7__asset.src ?? logo7__asset;
+import logo8__asset from '../../assets/images/ehcon.png';
+const logo8 = logo8__asset.src ?? logo8__asset;
+import logo9__asset from '../../assets/images/lag.png';
+const logo9 = logo9__asset.src ?? logo9__asset;
+import logo10__asset from '../../assets/images/asemhp.png';
+const logo10 = logo10__asset.src ?? logo10__asset;
+import logo11__asset from '../../assets/images/cee.png';
+const logo11 = logo11__asset.src ?? logo11__asset;
+import logo12__asset from '../../assets/images/eagle.png';
+const logo12 = logo12__asset.src ?? logo12__asset;
+import contact__asset from '../../assets/images/contact.svg';
+const contact = contact__asset.src ?? contact__asset;
 export default function Sponsors() {
 
     const [isSponsor, setIsSponsor] = useState(false);

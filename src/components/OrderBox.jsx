@@ -1,5 +1,6 @@
+"use client";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/lib/router-compat";
 import { parseISO, parse, format } from "date-fns";
 import axios from "axios";
 import PaymentLinkModal from "./PaymentLinkModal";
@@ -167,7 +168,7 @@ export default function OrderBox({
         const accessToken = token;
         try {
             setLoading(true);
-            const response = await axios.get(`${import.meta.env.VITE_ORDER_API}${id}`, {
+            const response = await axios.get(`${process.env.VITE_ORDER_API}${id}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
@@ -249,7 +250,7 @@ export default function OrderBox({
     };
 
     return(
-        <div onClick={()=>handleFetchData(id)} className="rounded-3xl cursor-pointer bg-white p-6 w-[378px] drop-shadow">
+        <div onClick={()=>handleFetchData(id)} className="rounded-2xl cursor-pointer bg-white p-6 w-[378px] border border-[#ECEBED] shadow-card transition-colors duration-200 hover:border-ev-300">
             <div className="flex flex-col gap-3">
                 <p className="font-brsemi text-[24px] text-[#181719]">{eventLocationName}</p>
                 <p className="font-brmedium text-[#181719]">{formatDispDate(startDate)}, {formatDispTime(startTime)}</p>

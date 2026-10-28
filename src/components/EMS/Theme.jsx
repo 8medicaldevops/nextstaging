@@ -1,3 +1,4 @@
+"use client";
 export default function Theme() {
     return (
         <section className="bg-[url(./assets/images/theme.png)] py-[10rem] px-6 bg-no-repeat bg-cover bg-center md:h-full md:w-full  md:-px-auto p-[2rem] flex flex-col gap-20">

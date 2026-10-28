@@ -1,6 +1,10 @@
-import hero1 from "../../assets/images/Group27.png";
-import hero2 from "../../assets/images/emsHero.png";
-import ticketIcon from "../../assets/images/ticket.png";
+"use client";
+import hero1__asset from "../../assets/images/Group27.png";
+const hero1 = hero1__asset.src ?? hero1__asset;
+import hero2__asset from "../../assets/images/emsHero.png";
+const hero2 = hero2__asset.src ?? hero2__asset;
+import ticketIcon__asset from "../../assets/images/ticket.png";
+const ticketIcon = ticketIcon__asset.src ?? ticketIcon__asset;
 import EventCountdown from "./EventCountdown";
 
 export default function Hero() {

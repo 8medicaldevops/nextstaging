@@ -1,7 +1,10 @@
-import speaker1 from '../../assets/images/docAyo.png';
-import speaker2 from '../../assets/images/ACP.png';
-import speaker3 from '../../assets/images/docAlli.png';
-
+"use client";
+import speaker1__asset from '../../assets/images/docAyo.png';
+const speaker1 = speaker1__asset.src ?? speaker1__asset;
+import speaker2__asset from '../../assets/images/ACP.png';
+const speaker2 = speaker2__asset.src ?? speaker2__asset;
+import speaker3__asset from '../../assets/images/docAlli.png';
+const speaker3 = speaker3__asset.src ?? speaker3__asset;
 const facilitators = [
     {
         name: 'Dr. Abiola Fasina-Ayoola',

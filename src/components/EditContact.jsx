@@ -1,3 +1,4 @@
+"use client";
 import {
     Dialog,
     DialogContent,
@@ -63,7 +64,7 @@ export default function EditContact (props) {
 
   
     const accessToken = JSON.parse(localStorage.getItem('token')).accessToken;
-    const { response, setResponse, error, loading, patchData } = usePatchData(import.meta.env.VITE_ORDER_API, accessToken);
+    const { response, setResponse, error, loading, patchData } = usePatchData(process.env.VITE_ORDER_API, accessToken);
 
     const handlePatch = () => {
         let { phoneNumber } = callerData;

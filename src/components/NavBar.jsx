@@ -1,7 +1,10 @@
-import { useState } from 'react';
+"use client";
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 //mport { MenuIcon, XIcon } from '@heroicons/react/outline'; // You can use any icon library
-import logo from '../assets/images/logo.png';
-import { Link } from 'react-router-dom';
+import logo__asset from '../assets/images/logo.png';
+const logo = logo__asset.src ?? logo__asset;
+import { Link } from "@/lib/router-compat";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -24,8 +27,16 @@ import {
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isActive = (path) => location.pathname === path;
-  const signInData = JSON.parse(sessionStorage.getItem('SignIn'));
+  const pathname = usePathname();
+  const isActive = (path) => pathname === path;
+  const [signInData, setSignInData] = useState(null);
+  useEffect(() => {
+    try {
+      setSignInData(JSON.parse(sessionStorage.getItem('SignIn')));
+    } catch (e) {
+      /* no stored session */
+    }
+  }, []);
   const token = signInData?.data?.tokens?.accessToken || "N/A";
   const userName = signInData?.data?.firstName || "N/A";
   // console.log(userName)
@@ -43,7 +54,7 @@ export default function NavBar() {
   }
 
   return (
-    <div className='flex justify-between px-6 py-4 items-center bg-white shadow-md'>
+    <div className='flex justify-between px-6 py-4 items-center bg-white border-b border-[#ECEBED]'>
       <div>
         <Link to='/'>
           <img src={logo} alt='Logo' className='h-8 w-auto' />

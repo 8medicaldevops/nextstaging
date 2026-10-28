@@ -1,3 +1,4 @@
+"use client";
 import {
     Dialog,
     DialogContent,
@@ -8,11 +9,8 @@ import {
   } from "@/components/ui/dialog"
 import { useState, useCallback } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
-import customerCare from "../assets/images/customercare.svg";
-
-  
-
-
+import customerCare__asset from "../assets/images/customercare.svg";
+const customerCare = customerCare__asset.src ?? customerCare__asset;
  export default function(props) {
     const [emailValue, setEmailValue] = useState('hello@8medical.co');
     const [phoneValue, setPhoneValue] = useState('+234 707 1534 107');

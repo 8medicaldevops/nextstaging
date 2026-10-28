@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom"
+"use client";
+import { useNavigate } from "@/lib/router-compat"
 
 
 

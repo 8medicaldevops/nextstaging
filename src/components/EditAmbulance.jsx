@@ -1,5 +1,6 @@
+"use client";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "@/lib/router-compat";
 import { useState, useEffect } from "react";
 import {
     Dialog,
@@ -164,7 +165,7 @@ export default function EditAmbulance(props) {
     
  
         const accessToken = JSON.parse(localStorage.getItem('token')).accessToken;
-        const { response, setResponse, error, loading, patchData } = usePatchData(import.meta.env.VITE_ORDER_API, accessToken);
+        const { response, setResponse, error, loading, patchData } = usePatchData(process.env.VITE_ORDER_API, accessToken);
           
           const handlePatch = () => {
             const id = props.id;

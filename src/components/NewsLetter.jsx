@@ -1,11 +1,13 @@
+"use client";
 import { useState } from "react";
 import Suscribed from "./Suscribed";
 import axios from "axios";
 
-import successImage from '../assets/images/sub-success.svg';
-import subscribedImage from '../assets/images/sub-already.svg';
+import successImage__asset from '../assets/images/sub-success.svg';
 
-
+const successImage = successImage__asset.src ?? successImage__asset;
+import subscribedImage__asset from '../assets/images/sub-already.svg';
+const subscribedImage = subscribedImage__asset.src ?? subscribedImage__asset;
 export default function NewsLetter() {
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [emailAddress, setEmailAddress] = useState('');
@@ -51,7 +53,7 @@ export default function NewsLetter() {
         }
 
 
-        axios.post(import.meta.env.VITE_NEWSLETTER_API, {
+        axios.post(process.env.VITE_NEWSLETTER_API, {
             email: emailAddress,
         })
             .then(function (response) {

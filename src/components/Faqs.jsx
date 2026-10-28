@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -13,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/lib/router-compat";
  
 
 // const faqs = {
@@ -152,7 +153,7 @@ const AccordionComponent = ({ category }) => {
   useEffect(()=>{
     async function fetchFAQs() {
       try {
-        const response = await axios.get(import.meta.env.VITE_FAQS_API);
+        const response = await axios.get(process.env.VITE_FAQS_API);
         
         // Handle the response data
         setFaq(response.data.faqs)
