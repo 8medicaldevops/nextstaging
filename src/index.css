@@ -1,41 +1,3 @@
-@font-face {
-    font-family: 'figtree-regular';
-    src: url('/fonts/figtree/figtree-400.woff2') format('woff2');
-    font-weight: 400;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'figtree-bold';
-    src: url('/fonts/figtree/figtree-700.woff2') format('woff2');
-    font-weight: 700;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'figtree-semibold';
-    src: url('/fonts/figtree/figtree-600.woff2') format('woff2');
-    font-weight: 600;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'figtree-light';
-    src: url('/fonts/figtree/figtree-300.woff2') format('woff2');
-    font-weight: 300;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'figtree-medium';
-    src: url('/fonts/figtree/figtree-500.woff2') format('woff2');
-    font-weight: 500;
-    font-display: swap;
-}
-
-
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,7 +10,15 @@
     }
 
     body {
-        font-family: 'figtree-regular', 'Figtree', system-ui, sans-serif;
+        font-family: var(--font-manrope), system-ui, sans-serif;
+    }
+
+    /* Partner logos sit in white tiles so colored marks stay legible on the night theme */
+    .partner-marquee .embla__slide img {
+        background: #ffffff;
+        border: 1px solid #ECEBED;
+        border-radius: 12px;
+        padding: 10px 16px;
     }
 
     /* Press feedback on plain buttons (Radix triggers carry data-state and are excluded) */

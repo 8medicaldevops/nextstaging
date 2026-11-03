@@ -15,6 +15,20 @@ module.exports = {
     },
     extend: {
       colors: {
+        // Deep night-purple surfaces (hero, footer, membership band)
+        'night': {
+          DEFAULT: '#120338',
+          deep: '#0B0226',
+          footer: '#04041A',
+        },
+        // Emergency accent (alarm red), brand-fixed
+        'alarm': {
+          DEFAULT: '#F9091D',
+          strong: '#D90818',
+        },
+        'ink': '#181719',
+        'mute': '#636066',
+        'line': '#ECEBED',
         'ev': {
           50: '#f4f1ff',
           100: '#ece5ff',
@@ -65,10 +79,16 @@ module.exports = {
 
       },
       boxShadow: {
-        // Flat design scale: hairline cards, soft popovers, diffuse modals.
-        card: "0 1px 2px rgba(16, 24, 40, 0.05)",
-        pop: "0 8px 24px -12px rgba(24, 23, 25, 0.18)",
-        modal: "0 24px 48px -24px rgba(24, 23, 25, 0.25)",
+        // Flat design system: zero shadows. Elevation is expressed with hairline
+        // borders and background tone, never drop shadows.
+        card: "none",
+        pop: "none",
+        modal: "none",
+        lift: "none",
+      },
+      transitionTimingFunction: {
+        'out-strong': 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'in-out-strong': 'cubic-bezier(0.77, 0, 0.175, 1)',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -99,6 +119,22 @@ module.exports = {
         },
 
 
+        // "Why choose us" illustrations: continuous, transform/opacity only
+        sweep: { from: { transform: 'rotate(0deg)' }, to: { transform: 'rotate(360deg)' } },
+        ecg: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+        pill: {
+          '0%, 38%': { transform: 'translateX(0)' },
+          '50%, 88%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+        'pill-a': { '0%, 38%': { opacity: '1' }, '46%, 90%': { opacity: '0' }, '100%': { opacity: '1' } },
+        'pill-b': { '0%, 38%': { opacity: '0' }, '46%, 90%': { opacity: '1' }, '100%': { opacity: '0' } },
+        ring: {
+          '0%, 68%': { transform: 'scale(0.6)', opacity: '0' },
+          '72%': { opacity: '0.5' },
+          '100%': { transform: 'scale(2.4)', opacity: '0' },
+        },
+
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -114,13 +150,19 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "siren": 'siren 2s infinite',
         radiate: 'radiate 3s infinite',
+        sweep: 'sweep 14s linear infinite',
+        ecg: 'ecg 3.2s linear infinite',
+        pill: 'pill 6s cubic-bezier(0.77, 0, 0.175, 1) infinite',
+        'pill-a': 'pill-a 6s ease infinite',
+        'pill-b': 'pill-b 6s ease infinite',
+        ring: 'ring 3.6s cubic-bezier(0.23, 1, 0.32, 1) infinite',
       },
       fontFamily: {
-        'brlight': ['figtree-light', 'Figtree', 'system-ui', 'sans-serif'],
-        'brreg': ['figtree-regular', 'Figtree', 'system-ui', 'sans-serif'],
-        'brmedium': ['figtree-medium', 'Figtree', 'system-ui', 'sans-serif'],
-        'brsemi': ['figtree-semibold', 'Figtree', 'system-ui', 'sans-serif'],
-        'brbold': ['figtree-bold', 'Figtree', 'system-ui', 'sans-serif'],
+        'brlight': ['var(--font-manrope)', 'system-ui', 'sans-serif'],
+        'brreg': ['var(--font-manrope)', 'system-ui', 'sans-serif'],
+        'brmedium': ['var(--font-manrope)', 'system-ui', 'sans-serif'],
+        'brsemi': ['var(--font-manrope)', 'system-ui', 'sans-serif'],
+        'brbold': ['var(--font-manrope)', 'system-ui', 'sans-serif'],
       },
       screens: {
         'sm': '376px',
@@ -130,5 +172,17 @@ module.exports = {
 
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    // Manrope is one variable font: the old per-weight family names now just pick a weight
+    function ({ addUtilities }) {
+      addUtilities({
+        ".font-brlight": { fontWeight: "300" },
+        ".font-brreg": { fontWeight: "400" },
+        ".font-brmedium": { fontWeight: "500" },
+        ".font-brsemi": { fontWeight: "600" },
+        ".font-brbold": { fontWeight: "700" },
+      });
+    },
+  ],
 }

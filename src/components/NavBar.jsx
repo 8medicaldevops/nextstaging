@@ -1,35 +1,100 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-//mport { MenuIcon, XIcon } from '@heroicons/react/outline'; // You can use any icon library
 import logo__asset from '../assets/images/logo.png';
 const logo = logo__asset.src ?? logo__asset;
 import { Link } from "@/lib/router-compat";
+import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
-  //NavigationMenuIndicator,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  //NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  // DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-//import { googleLogout } from '@react-oauth/google';
-// import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/dropdown-menu";
 
-export default function NavBar() {
+const NAV_LINKS = [
+  { label: "Home", to: "/" },
+  { label: "About Us", to: "/AboutUs" },
+  // "Services" dropdown is rendered between these
+  { label: "Impact", to: "/Impact" },
+  { label: "Contact", to: "/OtherBookings" },
+  { label: "EMS Week", to: "/ems-week" },
+];
+
+const SERVICE_LINKS = [
+  { label: "Emergency Response", to: "/ServiceEr" },
+  { label: "Ambulance Standby", to: "/ServiceAmb" },
+  { label: "Ambulance Transport", to: "/ServiceAgt" },
+  { label: "Urgent care", to: "/ServiceUg" },
+  { label: "AfterLife Transport", to: "/ServiceAfterLife" },
+];
+
+function UserAvatar() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <path d="M14 28C21.732 28 28 21.732 28 14C28 6.26801 21.732 0 14 0C6.26801 0 0 6.26801 0 14C0 21.732 6.26801 28 14 28Z" fill="#D9CFFF" />
+      <path d="M4 24.0723C6.58763 26.4981 10.1134 27.9999 14 27.9999C17.8866 27.9999 21.4124 26.4981 24 24.0723C23.2666 21.3498 21.2032 19.0929 18.4389 17.9091C19.9867 16.6713 20.9956 14.8275 20.9956 12.7423C20.9956 9.02476 17.8571 5.99992 14 5.99992C10.1429 5.99992 7.00442 9.02476 7.00442 12.7423C7.00442 14.8275 8.01325 16.6713 9.56112 17.9091C6.79676 19.0929 4.73343 21.3498 4 24.0723Z" fill="#8540FF" />
+    </svg>
+  );
+}
+
+function LogOutItem({ onLogOut }) {
+  return (
+    <DropdownMenuItem>
+      <button onClick={onLogOut} className="flex items-center gap-1 font-brmedium text-sm text-alarm">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M14.5332 12.1837L16.6665 10.0503L14.5332 7.91699" stroke="currentColor" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M8.1333 10.0498H16.6083" stroke="currentColor" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M9.79997 16.6663C6.11663 16.6663 3.1333 14.1663 3.1333 9.99967C3.1333 5.83301 6.11663 3.33301 9.79997 3.33301" stroke="currentColor" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Log Out
+      </button>
+    </DropdownMenuItem>
+  );
+}
+
+// Nav link with an animated underline that grows from the left on hover,
+// and stays full-width when the route is active.
+function NavLink({ to, label, active, dark, className, onClick }) {
+  return (
+    <Link
+      to={to}
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "group relative py-1 text-sm transition-colors duration-200",
+        dark
+          ? active ? "font-brsemi text-white" : "font-brreg text-white/60 hover:text-white"
+          : active ? "font-brsemi text-ink" : "font-brreg text-mute hover:text-ink",
+        className
+      )}
+    >
+      {label}
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute -bottom-0.5 left-0 h-[2px] rounded-full transition-[width] duration-300 ease-out-strong",
+          dark ? "bg-ev-400" : "bg-ev-700",
+          active ? "w-full" : "w-0 group-hover:w-full"
+        )}
+      />
+    </Link>
+  );
+}
+
+export default function NavBar({ dark = false }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const isActive = (path) => pathname === path;
   const [signInData, setSignInData] = useState(null);
+
   useEffect(() => {
     try {
       setSignInData(JSON.parse(sessionStorage.getItem('SignIn')));
@@ -37,302 +102,208 @@ export default function NavBar() {
       /* no stored session */
     }
   }, []);
+
   const token = signInData?.data?.tokens?.accessToken || "N/A";
   const userName = signInData?.data?.firstName || "N/A";
-  // console.log(userName)
-
-  function signUserOut() {
-    sessionStorage.clear();
-    localStorage.clear();
-    //googleLogout();
-  }
+  const isSignedIn = token !== "N/A";
 
   const handleLogOut = () => {
-    sessionStorage.clear()
-    localStorage.clear()
+    sessionStorage.clear();
+    localStorage.clear();
+  };
 
-  }
+  const isServicePage = SERVICE_LINKS.some((s) => isActive(s.to));
 
   return (
-    <div className='flex justify-between px-6 py-4 items-center bg-white border-b border-[#ECEBED]'>
-      <div>
-        <Link to='/'>
-          <img src={logo} alt='Logo' className='h-8 w-auto' />
+    <header
+      className={cn(
+        "sticky top-0 z-50 border-b backdrop-blur-md",
+        dark ? "border-white/10 bg-night-deep/80" : "border-line bg-white/85"
+      )}
+    >
+      <div className="mx-auto grid h-16 w-full max-w-[1200px] grid-cols-[auto_1fr_auto] items-center gap-6 px-4 sm:px-6 lg:px-8">
+        <Link to="/" aria-label="8medical home" className="shrink-0">
+          <img
+            src={dark ? "/8-medical-logo-white%201.svg" : logo}
+            alt="8medical"
+            className={dark ? "h-8 w-auto" : "h-7 w-auto"}
+          />
         </Link>
-      </div>
-      <div className='hidden md:flex'>
-        <ul className='flex items-center gap-6 font-light font-brreg text-sm text-[#636066]'>
-          <Link to="/"
-          >
-            <li className={`cursor-pointer ${isActive('/') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Home</li>
-          </Link>
-          <Link to="/AboutUs" >
-            <li className={`cursor-pointer ${isActive('/AboutUs') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>About Us</li>
-          </Link>
 
-          <li >
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className={`cursor-pointer p-0 ${isActive('/ServiceEr') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Services</NavigationMenuTrigger>
-                  <NavigationMenuContent className="bg-white rounded-[15px] gap-4 flex flex-col py-[40px] px-4">
-                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                      <Link to="/ServiceEr">
-                        Emergency Response
-                      </Link>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                      <Link to="/ServiceAmb">
-                        Ambulance Standby
-                      </Link>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                      <Link to="/ServiceAgt">
-                        Ambulance Transport
-                      </Link>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                      <Link to="/ServiceUg">
-                        Urgent care
-                      </Link>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className=' w-[220px] hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                      <Link to="/ServiceAfterLife">
-                        AfterLife Transport
-                      </Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-          </li>
-          <Link to="/Impact">
-            <li className={`cursor-pointer ${isActive('/Impact') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Impact</li>
-          </Link>
-          {/* <li className={`cursor-pointer ${isActive('/Blog') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Blog</li> */}
-          <Link to="/OtherBookings">
-            <li className={`cursor-pointer ${isActive('/Contact') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Contact</li>
-          </Link>
-          <Link to="/ems-week">
-            <li className={`cursor-pointer ${isActive('/ems-week') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>EMS Week</li>
-          </Link>
-          {token == "N/A" &&
-            <span className='flex items-center gap-6'>
-              <Link to="/SignIn">
-                <li className={`cursor-pointer ${isActive('/SignIn') ? '  px-1 text-ev-700 font-semibold' : ''} border-l pl-5 border-[#E4E3E5]-700`}>Sign In</li>
-              </Link>
-              <Link to="/CreateAccount">
-                <li className="cursor-pointer">
-                  <button className={`px-5 py-3 text-sm font-brsemi rounded-[61px] cursor-pointer flex items-center gap-1 ${isActive('/CreateAccount') ? ' rounded-[61px]  px-1  font-semibold' : '  '} hover:text-ev-700 hover:border hover:bg-white hover:border-ev-700  bg-ev-700  text-white`}>
-                    Create Account
-                  </button>
-                </li>
-              </Link>
-            </span>
-          }
-          {token !== "N/A" &&
-            <span className='flex items-center gap-6'>
-              <Link to="/OrderHistory">
-                <li className={`cursor-pointer ${isActive('/OrderHistory') ? '  px-1 text-ev-700 font-semibold' : ''} border-l pl-5 border-[#E4E3E5]-700`}>Order History</li>
-              </Link>
-              <Link to="/CreateAccount">
-                <li className="cursor-pointer">
+        {/* centered desktop nav */}
+        <nav className="hidden justify-center md:flex" aria-label="Main">
+          <ul className="flex items-center gap-7">
+            <li><NavLink dark={dark} to="/" label="Home" active={isActive("/")} /></li>
+            <li><NavLink dark={dark} to="/AboutUs" label="About Us" active={isActive("/AboutUs")} /></li>
+            <li>
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger
+                      className={cn(
+                        "h-auto bg-transparent p-0 py-1 text-sm transition-colors duration-200",
+                        dark
+                          ? isServicePage ? "font-brsemi text-white" : "font-brreg font-normal text-white/60 hover:text-white"
+                          : isServicePage ? "font-brsemi text-ink hover:text-ink" : "font-brreg font-normal text-mute hover:text-ink"
+                      )}
+                    >
+                      Services
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent className="flex flex-col gap-0.5 rounded-xl border border-line bg-white p-2">
+                      {SERVICE_LINKS.map((s) => (
+                        <Link
+                          key={s.to}
+                          to={s.to}
+                          className={cn(
+                            "w-[224px] rounded-lg px-3 py-2.5 text-sm transition-colors duration-150 hover:bg-ev-50 hover:text-ev-700",
+                            isActive(s.to) ? "bg-ev-50 font-brsemi text-ev-700" : "text-ink"
+                          )}
+                        >
+                          {s.label}
+                        </Link>
+                      ))}
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            </li>
+            <li><NavLink dark={dark} to="/Impact" label="Impact" active={isActive("/Impact")} /></li>
+            <li><NavLink dark={dark} to="/OtherBookings" label="Contact" active={isActive("/OtherBookings")} /></li>
+            <li><NavLink dark={dark} to="/ems-week" label="EMS Week" active={isActive("/ems-week")} /></li>
+          </ul>
+        </nav>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="flex py-1 pr-3 pl-1 gap-1 rounded-[47px] border-none outline-none bg-ev-50  items-center">
-                      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g clipPath="url(#clip0_2890_25988)">
-                          <path d="M14 28C21.732 28 28 21.732 28 14C28 6.26801 21.732 0 14 0C6.26801 0 0 6.26801 0 14C0 21.732 6.26801 28 14 28Z" fill="#D9CFFF" />
-                          <path d="M4 24.0723C6.58763 26.4981 10.1134 27.9999 14 27.9999C17.8866 27.9999 21.4124 26.4981 24 24.0723C23.2666 21.3498 21.2032 19.0929 18.4389 17.9091C19.9867 16.6713 20.9956 14.8275 20.9956 12.7423C20.9956 9.02476 17.8571 5.99992 14 5.99992C10.1429 5.99992 7.00442 9.02476 7.00442 12.7423C7.00442 14.8275 8.01325 16.6713 9.56112 17.9091C6.79676 19.0929 4.73343 21.3498 4 24.0723Z" fill="#8540FF" />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_2890_25988">
-                            <rect width="28" height="28" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <p>{userName || ''}</p>
-                      <svg width="16" height="24" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4.94 9.72699L4 10.667L8 14.667L12 10.667L11.06 9.72699L8 12.7803L4.94 9.72699Z" fill="black" />
-                      </svg>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-white rounded">
-                      {/* <DropdownMenuItem>
-                     <div>some future feature</div>
-                          </DropdownMenuItem> */}
-                      {/* <DropdownMenuSeparator />
-                             <Separator className="w-full border-[1px] bg-[#181719]" /> */}
-                      <DropdownMenuItem>
-                        <div onClick={handleLogOut} className=" flex gap-1   font-brmedium text-sm text-[#F9091D]">
-                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14.5332 12.1837L16.6665 10.0503L14.5332 7.91699" stroke="#F9091D" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M8.1333 10.0498H16.6083" stroke="#F9091D" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M9.79997 16.6663C6.11663 16.6663 3.1333 14.1663 3.1333 9.99967C3.1333 5.83301 6.11663 3.33301 9.79997 3.33301" stroke="#F9091D" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                          Log Out
-                        </div>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                </li>
+        {/* right-side actions */}
+        <div className="hidden items-center gap-5 md:flex">
+          {!isSignedIn && (
+            <>
+              <NavLink dark={dark} to="/SignIn" label="Sign In" active={isActive("/SignIn")} />
+              <Link
+                to="/CreateAccount"
+                className="inline-flex items-center rounded-full bg-ev-700 px-4 py-2 font-brsemi text-sm text-white transition-[transform,background-color] duration-200 ease-out-strong hover:bg-ev-800 active:scale-[0.97]"
+              >
+                Create Account
               </Link>
-            </span>
-          }
-        </ul>
-      </div>
-      <div className='md:hidden'>
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          {isMenuOpen ? (
-            <p>x</p>
-          ) : (
-            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 7.78888H21" stroke="#181719" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M3 12.7889H21" stroke="#181719" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M3 17.7889H21" stroke="#181719" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
+            </>
           )}
+          {isSignedIn && (
+            <>
+              <NavLink dark={dark} to="/OrderHistory" label="Order History" active={isActive("/OrderHistory")} />
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-full border border-line bg-white py-1 pl-1 pr-2.5 outline-none transition-colors hover:border-ev-300">
+                  <UserAvatar />
+                  <p className="text-sm text-ink">{userName || ''}</p>
+                  <svg width="14" height="20" viewBox="0 0 16 24" fill="none" aria-hidden="true">
+                    <path d="M4.94 9.72699L4 10.667L8 14.667L12 10.667L11.06 9.72699L8 12.7803L4.94 9.72699Z" fill="currentColor" />
+                  </svg>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="rounded-xl border border-line bg-white">
+                  <LogOutItem onLogOut={handleLogOut} />
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
+        </div>
+
+        {/* mobile trigger */}
+        <button
+          className="justify-self-end md:hidden"
+          onClick={() => setIsMenuOpen(true)}
+          aria-label="Open menu"
+          aria-expanded={isMenuOpen}
+        >
+          <svg width="24" height="25" viewBox="0 0 24 25" fill="none" aria-hidden="true" className={dark ? "text-white" : "text-ink"}>
+            <path d="M3 7.78888H21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M3 12.7889H21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M3 17.7889H21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
         </button>
       </div>
+
+      {/* mobile drawer */}
       {isMenuOpen && (
-        <div>
+        <div className="md:hidden">
           <div
-            className='fixed inset-0 bg-black opacity-50'
+            className="fixed inset-0 z-40 bg-night-deep/50 backdrop-blur-sm"
             onClick={() => setIsMenuOpen(false)}
-          ></div>
-          <div
-            className={`fixed top-0 right-0 h-full rounded-l-mm w-2/3 bg-white transform transition-transform duration-300 ease-in-out z-[9999] ${isMenuOpen ? '' : 'translate-x-full'}`}
-          >
-            <button
-              className='absolute top-4 right-4 text-gray-700'
-              onClick={() => setIsMenuOpen(false)}
-            >
-            </button>
-            <ul className='flex flex-col gap-6 font-light justify-center items-end px-8 font-brreg text-lg text-[#636066] mt-16'>
+            aria-hidden="true"
+          />
+          <div className="fixed right-0 top-0 z-50 flex h-full w-[78%] max-w-[340px] flex-col border-l border-line bg-white p-7 animate-in slide-in-from-right duration-300 ease-out-strong">
+            <div className="flex items-center justify-between">
+              <img src={logo} alt="8medical" className="h-6 w-auto" />
+              <button className="p-2 text-ink" onClick={() => setIsMenuOpen(false)} aria-label="Close menu">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
 
-              {token !== "N/A" &&
-                <span className='flex flex-col items-end gap-6'>
-                  <Link to="/CreateAccount">
-                    <li className="cursor-pointer">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="flex py-1 pr-3 pl-1 gap-1 rounded-[47px] border-none outline-none bg-ev-50  items-center">
-                          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clipPath="url(#clip0_2890_25988)">
-                              <path d="M14 28C21.732 28 28 21.732 28 14C28 6.26801 21.732 0 14 0C6.26801 0 0 6.26801 0 14C0 21.732 6.26801 28 14 28Z" fill="#D9CFFF" />
-                              <path d="M4 24.0723C6.58763 26.4981 10.1134 27.9999 14 27.9999C17.8866 27.9999 21.4124 26.4981 24 24.0723C23.2666 21.3498 21.2032 19.0929 18.4389 17.9091C19.9867 16.6713 20.9956 14.8275 20.9956 12.7423C20.9956 9.02476 17.8571 5.99992 14 5.99992C10.1429 5.99992 7.00442 9.02476 7.00442 12.7423C7.00442 14.8275 8.01325 16.6713 9.56112 17.9091C6.79676 19.0929 4.73343 21.3498 4 24.0723Z" fill="#8540FF" />
-                            </g>
-                            <defs>
-                              <clipPath id="clip0_2890_25988">
-                                <rect width="28" height="28" fill="white" />
-                              </clipPath>
-                            </defs>
-                          </svg>
-                          <p className='font-brmedium text-sm'>{userName || ''}</p>
-                          <svg width="16" height="24" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4.94 9.72699L4 10.667L8 14.667L12 10.667L11.06 9.72699L8 12.7803L4.94 9.72699Z" fill="black" />
-                          </svg>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-white rounded">
-                          {/* <DropdownMenuItem>
+            <nav className="mt-8 flex flex-1 flex-col gap-5 overflow-y-auto" aria-label="Mobile">
+              {NAV_LINKS.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  label={link.label}
+                  active={isActive(link.to)}
+                  className="w-fit text-base"
+                  onClick={() => setIsMenuOpen(false)}
+                />
+              ))}
 
-                     <div>some future feature</div>
-                          </DropdownMenuItem> */}
-                          {/* <DropdownMenuSeparator />
-                             <Separator className="w-full border-[1px] bg-[#181719]" /> */}
-                          <DropdownMenuItem>
-                            <div onClick={signUserOut} className=" flex gap-1   font-brmedium text-sm text-[#F9091D]">
-                              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M14.5332 12.1837L16.6665 10.0503L14.5332 7.91699" stroke="#F9091D" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M8.1333 10.0498H16.6083" stroke="#F9091D" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M9.79997 16.6663C6.11663 16.6663 3.1333 14.1663 3.1333 9.99967C3.1333 5.83301 6.11663 3.33301 9.79997 3.33301" stroke="#F9091D" strokeWidth="1.25" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                              Log Out
-                            </div>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-
+              <div className="border-t border-line pt-5">
+                <p className="mb-3 font-brsemi text-xs uppercase tracking-wide text-mute">Services</p>
+                <ul className="flex flex-col gap-3">
+                  {SERVICE_LINKS.map((s) => (
+                    <li key={s.to}>
+                      <Link
+                        to={s.to}
+                        className={cn("text-base", isActive(s.to) ? "font-brsemi text-ev-700" : "text-ink")}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {s.label}
+                      </Link>
                     </li>
+                  ))}
+                </ul>
+              </div>
+
+              {isSignedIn && (
+                <div className="border-t border-line pt-5">
+                  <div className="mb-4 flex items-center gap-2">
+                    <UserAvatar />
+                    <p className="font-brmedium text-sm text-ink">{userName || ''}</p>
+                  </div>
+                  <Link to="/OrderHistory" className="text-base text-ink" onClick={() => setIsMenuOpen(false)}>
+                    Order History
                   </Link>
-                </span>
-              }
-              <Link to='/'>
-                <li className={`cursor-pointer ${isActive('/') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>Home</li>
-              </Link>
-              <Link to='AboutUs'>
-                <li className={`cursor-pointer ${isActive('/AboutUs') ? 'border-b-2 border-ev-700 px-1 text-ev-700 font-semibold' : ''}`}>About Us</li>
-              </Link>
-              <li className='flex gap-1 items-center cursor-pointer'>
-                <NavigationMenu>
-                  <NavigationMenuList>
-                    <NavigationMenuItem>
-                      <NavigationMenuTrigger className="font-brreg text-lg p-0 text-[#636066]">Services</NavigationMenuTrigger>
-                      <NavigationMenuContent className="bg-white rounded-[15px] gap-4 flex flex-col  fixed   text-right ease-in-out  top-[200px]  py-[40px] px-4">
-                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                          <Link to="/ServiceEr">
-                            Emergency Response
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                          <Link to="/ServiceAmb">
-                            Ambulance Standby
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                          <Link to="/ServiceAgt">
-                            Ambulance Transport
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                          <Link to="/ServiceUg">
-                            Urgent care
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink className=' w-full hover:bg-ev-500 hover:text-white p-1 rounded-[4px]'>
-                          <Link to="/ServiceAfterLife">
-                            AfterLife Transport
-                          </Link>
-                        </NavigationMenuLink>
-                      </NavigationMenuContent>
-                    </NavigationMenuItem>
-                  </NavigationMenuList>
-                </NavigationMenu>
-              </li>
-              <Link to="/Impact">
-                <li className='cursor-pointer'>Impact</li>
-              </Link>
-              {/* <li className='cursor-pointer'>Blog</li> */}
-              <Link to="/OtherBookings">
-                <li className='cursor-pointer'>Contact</li>
-              </Link>
-              <Link to="/ems-week">
-                <li className='cursor-pointer'>EMS Week</li>
-              </Link>
-              {token == "N/A" &&
-                <span className='flex flex-col gap-6 items-end'>
-                  <Link to="/SignIn">
-                    <li className='cursor-pointer'>Sign In</li>
-                  </Link>
-                  <Link to="/CreateAccount">
-                    <li className="cursor-pointer">
-                      <button className={`px-5 py-3 text-lg font-brsemi rounded-[61px] cursor-pointer flex items-center gap-1 ${isActive('/CreateAccount') ? ' rounded-[61px]  px-1  font-semibold' : '  '} hover:text-ev-700 hover:border hover:bg-white hover:border-ev-700  bg-ev-700  text-white`}>
-                        Create Account
-                      </button>
-                    </li>
-                  </Link>
-                </span>
-              }
-              {token !== "N/A" &&
-                <span className='flex flex-col items-end gap-6'>
-                  <Link to="/OrderHistory">
-                    <li className={`cursor-pointer ${isActive('/OrderHistory') ? '  px-1 text-ev-700 font-semibold' : ''} border-l pl-5 border-[#E4E3E5]-700`}>Order History</li>
-                  </Link>
-                </span>
-              }
-            </ul>
+                  <button onClick={handleLogOut} className="mt-4 flex items-center gap-1 font-brmedium text-sm text-alarm">
+                    Log Out
+                  </button>
+                </div>
+              )}
+            </nav>
+
+            {!isSignedIn && (
+              <div className="flex flex-col gap-3 border-t border-line pt-5">
+                <Link
+                  to="/CreateAccount"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="inline-flex items-center justify-center rounded-full bg-ev-700 px-5 py-3 font-brsemi text-base text-white active:scale-[0.97]"
+                >
+                  Create Account
+                </Link>
+                <Link
+                  to="/SignIn"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="inline-flex items-center justify-center rounded-full border border-line px-5 py-3 font-brsemi text-base text-ink"
+                >
+                  Sign In
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
-    </div>
+    </header>
   );
 }

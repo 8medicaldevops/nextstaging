@@ -1,5 +1,5 @@
 import "@/index.css";
-import ReactDOM from "react-dom";
+import { Manrope } from "next/font/google";
 import Providers from "@/components/Providers";
 import CookieConsent from "@/components/CookieConsent";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, CONTACT } from "@/lib/site";
@@ -103,19 +103,15 @@ const jsonLd = {
   ],
 };
 
-const FONT_WEIGHTS = ["300", "400", "500", "600", "700"];
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-manrope",
+});
 
 export default function RootLayout({ children }) {
-  FONT_WEIGHTS.forEach((w) => {
-    ReactDOM.preload?.(`/fonts/figtree/figtree-${w}.woff2`, {
-      as: "font",
-      type: "font/woff2",
-      crossOrigin: "anonymous",
-    });
-  });
-
   return (
-    <html lang="en">
+    <html lang="en" className={manrope.variable}>
       <body>
         <script
           type="application/ld+json"

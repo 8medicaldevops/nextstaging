@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Suscribed from "./Suscribed";
 import axios from "axios";
+import { Mail } from "lucide-react";
 
 import successImage__asset from '../assets/images/sub-success.svg';
 
@@ -74,24 +75,48 @@ export default function NewsLetter() {
     }
 
     return (
-        <div className=" py-16  flex flex-col gap-8 rounded-[32px] bg-white items-center">
-            <div className="px-24 items-center gap-1 text-center max-lg:px-4 max-sm:px-2 max-lg:flex max-lg:flex-col ">
-                <p className=" font-brsemi text-4xl text-[#000000] max-lg:w-[300px] max-lg:text-[32px] max-sm:text-2xl max-lg:text-center ">Subscribe to our Newsletter</p>
-                <p className=" font-brmedium text-[#636066]">Get relevant health care updates, resources and offers straight in your inbox</p>
+        <div className="grid items-center gap-10 border-t border-white/10 pt-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20">
+            <div className="flex flex-col gap-3 max-lg:items-center max-lg:text-center">
+                <h2 className="font-brbold text-3xl tracking-tight text-white sm:text-4xl">Subscribe to our Newsletter</h2>
+                <p className="max-w-[44ch] font-brmedium text-lg text-white/70">
+                    Get relevant health care updates, resources and offers straight in your inbox
+                </p>
             </div>
-            <form onSubmit={handleSubmit} className="w-[90%] flex  gap-2 items-center max-lg:flex-col ">
-                <input
-                    placeholder="Enter your email address here"
-                    className=" font-brmedium text-[#9C9A9E] border-[1px]-[#F4F2F5] py-3 px-5 max-lg:w-full bg-[#F9F9FA] outline-none rounded-mm w-[80%]"
-                    value={emailAddress}
-                    name="emailAddress"
-                    onChange={handleInputChange}
-                />
-                <button type="submit" disabled={!emailAddressEntered} className={emailAddressEntered ? " font-brbold text-lg text-white py-3 px-5 bg-ev-700 rounded-mm max-lg:w-[90%]" : " font-brbold text-lg text-white py-3 px-5 bg-ev-300 rounded-mm max-lg:w-[90%]"}>Subscribe</button>
+            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-2">
+                <label htmlFor="newsletter-email" className="font-brsemi text-sm text-white/80">
+                    Email address
+                </label>
+                <div
+                    className={
+                        "flex items-center gap-2 rounded-full border bg-white/10 p-1.5 pl-5 transition-colors duration-200 focus-within:border-ev-300 focus-within:bg-white/15 max-sm:flex-col max-sm:rounded-3xl max-sm:p-3 " +
+                        (emailAddressEntered ? "border-white/20" : "border-[#FF6B76]")
+                    }
+                >
+                    <Mail size={20} aria-hidden="true" className="shrink-0 text-white/60 max-sm:hidden" />
+                    <input
+                        id="newsletter-email"
+                        type="email"
+                        inputMode="email"
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        aria-invalid={!emailAddressEntered}
+                        aria-describedby={!emailAddressEntered ? "newsletter-error" : undefined}
+                        className="min-w-0 flex-1 bg-transparent py-3 font-brmedium text-white outline-none placeholder:text-white/50 max-sm:w-full max-sm:px-2"
+                        value={emailAddress}
+                        name="emailAddress"
+                        onChange={handleInputChange}
+                    />
+                    <button
+                        type="submit"
+                        className="rounded-full bg-ev-700 px-7 py-3.5 font-brsemi text-lg text-white transition-[transform,background-color] duration-200 ease-out-strong hover:bg-ev-600 active:scale-[0.97] max-sm:w-full"
+                    >
+                        Subscribe
+                    </button>
+                </div>
+                <p id="newsletter-error" role="alert" className="min-h-5 pl-5 text-sm text-[#FF8A92]">
+                    {!emailAddressEntered && "Enter a valid email address, like you@example.com."}
+                </p>
             </form>
-            {!emailAddressEntered && (
-                <small className="text-red-500">Invalid email address.</small>
-            )}
             {isSubscribed && (
                 <Suscribed isModalOpen={isSubscribed} isModalClosed={() => setIsSubscribed(false)} img = {subscribedImage} title={subscribedData.title} body={subscribedData.body} bg="#181719"/>
             )}

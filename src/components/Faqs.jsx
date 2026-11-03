@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { cn } from "@/lib/utils";
+import SectionHeading from "@/components/site/SectionHeading";
 import {
   Accordion,
   AccordionContent,
@@ -146,106 +148,186 @@ import { useNavigate } from "@/lib/router-compat";
 
 
 
-const AccordionComponent = ({ category }) => {
+const CATEGORIES = [
+  { value: "Individuals", label: "Individuals" },
+  { value: "Event Planners", label: "Event Planners" },
+  { value: "Hospitals", label: "Hospitals" },
+  { value: "Estates", label: "Estates" },
+  { value: "Schools", label: "Schools" },
+  { value: "Production Companies", label: "Production Companies" },
+  { value: "HMO's", label: "HMOs" },
+];
+
+const AccordionComponent = ({ category, dark = false }) => {
   const [faq, setFaq] = useState({});
+  const [status, setStatus] = useState("loading"); // loading | ready | error
   const { questions, answers } = faq[category] || { questions: {}, answers: {} };
- 
-  useEffect(()=>{
+  const keys = Object.keys(questions);
+
+  useEffect(() => {
+    let cancelled = false;
     async function fetchFAQs() {
       try {
         const response = await axios.get(process.env.VITE_FAQS_API);
-        
-        // Handle the response data
-        setFaq(response.data.faqs)
-        //console.log(response.data.faqs);
+        if (cancelled) return;
+        setFaq(response.data.faqs);
+        setStatus("ready");
       } catch (error) {
-        // Handle any errors
-        console.error('Error fetching FAQs:', error);
+        if (cancelled) return;
+        console.error("Error fetching FAQs:", error);
+        setStatus("error");
       }
-      
     }
-  fetchFAQs()  
-  },[])
+    fetchFAQs();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
- 
-  
+  if (status === "loading") {
+    return (
+      <div className="flex flex-col gap-3" aria-busy="true" aria-label="Loading questions">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className={cn("h-[68px] animate-pulse rounded-2xl", dark ? "bg-white/5" : "bg-[#ECEBED]/70")} />
+        ))}
+      </div>
+    );
+  }
+
+  if (status === "error" || keys.length === 0) {
+    return (
+      <p className={cn("rounded-2xl border p-6 font-brmedium", dark ? "border-white/10 text-white/70" : "border-line bg-white text-mute")}>
+        {status === "error"
+          ? "We could not load the questions right now. Email hello@8medical.co and we will answer you directly."
+          : "No questions for this group yet. Email hello@8medical.co and we will help."}
+      </p>
+    );
+  }
+
   return (
-    <Accordion type="single" collapsible>
-      {Object.keys(questions).map((key, index) => (
-        <AccordionItem key={index} value={`item-${index + 1}`}>
-          <AccordionTrigger> 
-            <div className="flex items-center font-brsemi justify-between text-left gap-3 max-mm:gap-3"> 
-                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8.125 0.75C6.51803 0.75 4.94714 1.22652 3.611 2.11931C2.27485 3.0121 1.23344 4.28105 0.618482 5.7657C0.00352044 7.25035 -0.157382 8.88401 0.156123 10.4601C0.469628 12.0362 1.24346 13.4839 2.37976 14.6202C3.51606 15.7565 4.9638 16.5304 6.5399 16.8439C8.11599 17.1574 9.74966 16.9965 11.2343 16.3815C12.719 15.7666 13.9879 14.7252 14.8807 13.389C15.7735 12.0529 16.25 10.482 16.25 8.875C16.2477 6.72081 15.391 4.65551 13.8677 3.13227C12.3445 1.60903 10.2792 0.752275 8.125 0.75ZM8.125 13.875C7.93958 13.875 7.75833 13.82 7.60416 13.717C7.44999 13.614 7.32982 13.4676 7.25887 13.2963C7.18791 13.125 7.16934 12.9365 7.20552 12.7546C7.24169 12.5727 7.33098 12.4057 7.46209 12.2746C7.5932 12.1435 7.76025 12.0542 7.94211 12.018C8.12396 11.9818 8.31246 12.0004 8.48377 12.0714C8.65507 12.1423 8.80149 12.2625 8.90451 12.4167C9.00752 12.5708 9.0625 12.7521 9.0625 12.9375C9.0625 13.1861 8.96373 13.4246 8.78792 13.6004C8.6121 13.7762 8.37364 13.875 8.125 13.875ZM8.75 10.0688V10.125C8.75 10.2908 8.68416 10.4497 8.56695 10.5669C8.44974 10.6842 8.29076 10.75 8.125 10.75C7.95924 10.75 7.80027 10.6842 7.68306 10.5669C7.56585 10.4497 7.5 10.2908 7.5 10.125V9.5C7.5 9.33424 7.56585 9.17527 7.68306 9.05806C7.80027 8.94085 7.95924 8.875 8.125 8.875C9.1586 8.875 10 8.17188 10 7.3125C10 6.45312 9.1586 5.75 8.125 5.75C7.09141 5.75 6.25 6.45312 6.25 7.3125V7.625C6.25 7.79076 6.18416 7.94973 6.06695 8.06694C5.94974 8.18415 5.79076 8.25 5.625 8.25C5.45924 8.25 5.30027 8.18415 5.18306 8.06694C5.06585 7.94973 5 7.79076 5 7.625V7.3125C5 5.76172 6.40157 4.5 8.125 4.5C9.84844 4.5 11.25 5.76172 11.25 7.3125C11.25 8.67031 10.175 9.80703 8.75 10.0688Z" fill="#6D09F9"/>
-            </svg>
-            <div>
+    <Accordion type="single" collapsible className="flex flex-col gap-3">
+      {keys.map((key, index) => (
+        <AccordionItem
+          key={key}
+          value={`item-${index + 1}`}
+          className={cn(
+            "rounded-2xl border px-5 transition-colors duration-300 ease-out-strong",
+            dark
+              ? "border-white/10 bg-white/5 data-[state=open]:border-ev-400"
+              : "border-line bg-white data-[state=open]:border-ev-300"
+          )}
+        >
+          <AccordionTrigger
+            className={cn(
+              "py-5 text-left font-brsemi text-base hover:no-underline sm:text-lg",
+              dark ? "text-white" : "text-ink"
+            )}
+          >
             {questions[key]}
-            </div>
-            </div>
-            </AccordionTrigger>
-          <AccordionContent >
-            <div className="font-brreg text-base">
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className={cn("max-w-[62ch] font-brreg text-base leading-relaxed", dark ? "text-white/70" : "text-mute")}>
               {answers[`a${key.substring(1)}`]}
             </div>
-            </AccordionContent>
+          </AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>
   );
 };
 
-export default function Faqs() {
+export default function Faqs({ dark = false }) {
   const [activeElement, setActiveElement] = useState("Individuals");
   const navigate = useNavigate();
 
-  const toggleElement = (element) => {
-    setActiveElement(element);
-  };
-
-  const handleSelect = (value) => {
-setActiveElement(value)
-  };
-
   return (
-    <div className=" flex flex-col gap-12 py-20 px-[180px] w-full max-lg:py-12 max-lg:px-4 md:max-[1413px]:px-0 md:max-[1413px]:w-[90%]">
-      <div className="text-center ">
-        <p className="font-brsemi text-[40px] text-[#181719]">FAQs</p>
-        <p className="font-brreg text-lg text-[#636066]  text-center">We have answered some of the most reoccurring questions we get<br/> from users.</p>
-      </div>
-      <div className="flex gap-12 px-6 max-lg:flex-col ">
-            <div className="lg:hidden">
-              <Select onValueChange={handleSelect} >
-                <SelectTrigger className="w-[240px] rounded-mm border-[1px] border-[#E4E3E5] font-brmedium text-[#181719] ">
-                    <SelectValue placeholder="Individuals" />
-                </SelectTrigger>
-                <SelectContent className="bg-white rounded-mm">
-                    <SelectItem value="Individuals">Individuals</SelectItem>
-                    <SelectItem value="Event Planners">Event Planners</SelectItem>
-                    <SelectItem value="Hospitals">Hospitals</SelectItem>
-                    <SelectItem value="Estates">Estates</SelectItem>
-                    <SelectItem value="Schools">Schools</SelectItem>
-                    <SelectItem value="Production Companies">Production Companies</SelectItem>
-                    <SelectItem value="HMO's">HMOs</SelectItem>
-                </SelectContent>
-                </Select>
-                </div>
-        <main className="flex flex-col gap-1 py-6 w-1/3 cursor-pointer max-lg:hidden ">
-          <p onClick={() => toggleElement("Individuals")} className={activeElement === "Individuals" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Individuals</p>
-          <p onClick={() => toggleElement("Event Planners")} className={activeElement === "Event Planners" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Event Planners</p>
-          <p onClick={() => toggleElement("Hospitals")} className={activeElement === "Hospitals" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Hospitals</p>
-          <p onClick={() => toggleElement("Estates")} className={activeElement === "Estates" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Estates</p>
-          <p onClick={() => toggleElement("Schools")} className={activeElement === "Schools" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Schools</p>
-          <p onClick={() => toggleElement("Production Companies")} className={activeElement === "Production Companies" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >Production Companies</p>
-          <p onClick={() => toggleElement("HMO's")} className={activeElement === "HMO's" ? "bg-ev-700 text-sm font-brreg text-white pt-2 pl-6 pb-2 pr-3 rounded-mm " : "text-sm font-brreg text-[#636066] pt-2 pl-6 pb-2 pr-3 "} >HMOs</p>
-        </main>
-        <aside className="w-full">
-          <AccordionComponent category={activeElement} />
-        </aside>
-      </div>
-      <div className="flex justify-center py-12 px-[120px]  gap-12 rounded-[100px] bg-[url(./assets/images/Banner.png)] max-sm:px-2 bg-[#F8F4FE] max-lg:flex-col max-lg:rounded-xl max-lg:items-center md:max-[1413px]:px-24">
-                    <p className="font-brsemi text-[32px] text-[#181719] max-lg:text-center max-lg:text-2xl max-lg:w-[268px] max-sm:w-full ">Do you have any more question for us?</p>
-                    <button onClick={()=>{navigate("/OtherBookings")}} className="text-white py-3 px-5 gap-1  rounded-[49px] bg-ev-700 font-brbold text-lg  ">Contact Us</button>
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-12 px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <SectionHeading
+        dark={dark}
+        align="center"
+        title="FAQs"
+        lead="We have answered some of the most reoccurring questions we get from users."
+      />
+
+      <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-14">
+        {/* group picker: select on small screens, tab list on large */}
+        <div className="lg:hidden">
+          <Select value={activeElement} onValueChange={setActiveElement}>
+            <SelectTrigger
+              aria-label="Choose a question group"
+              className={cn(
+                "w-full rounded-xl border font-brmedium sm:w-[280px]",
+                dark ? "border-white/15 bg-white/5 text-white" : "border-line bg-white text-ink"
+              )}
+            >
+              <SelectValue placeholder="Individuals" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl bg-white">
+              {CATEGORIES.map((c) => (
+                <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
+        <div
+          role="tablist"
+          aria-label="Question groups"
+          aria-orientation="vertical"
+          className="flex flex-col gap-1 self-start max-lg:hidden"
+        >
+          {CATEGORIES.map((c) => {
+            const selected = c.value === activeElement;
+            return (
+              <button
+                key={c.value}
+                role="tab"
+                aria-selected={selected}
+                aria-controls="faq-panel"
+                tabIndex={selected ? 0 : -1}
+                onClick={() => setActiveElement(c.value)}
+                onKeyDown={(e) => {
+                  const i = CATEGORIES.findIndex((x) => x.value === activeElement);
+                  const step = { ArrowDown: 1, ArrowUp: -1 }[e.key];
+                  if (!step) return;
+                  e.preventDefault();
+                  const next = CATEGORIES[(i + step + CATEGORIES.length) % CATEGORIES.length];
+                  setActiveElement(next.value);
+                  e.currentTarget.parentElement.querySelector(`[data-tab="${next.value}"]`)?.focus();
+                }}
+                data-tab={c.value}
+                className={cn(
+                  "rounded-xl px-4 py-3 text-left font-brsemi text-[15px] transition-colors duration-200 ease-out-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ev-700",
+                  selected
+                    ? dark ? "bg-white/10 text-white" : "bg-ev-50 text-ev-800"
+                    : dark ? "text-white/60 hover:text-white" : "text-mute hover:bg-white hover:text-ink"
+                )}
+              >
+                {c.label}
+              </button>
+            );
+          })}
+        </div>
+        <div id="faq-panel" role="tabpanel" className="min-w-0 lg:col-start-2 lg:row-start-1">
+          <AccordionComponent category={activeElement} dark={dark} />
+        </div>
+      </div>
+
+      <div
+        className={cn(
+          "flex flex-col items-center justify-between gap-6 rounded-3xl px-8 py-10 text-center sm:px-12 md:flex-row md:text-left",
+          dark ? "border border-white/10 bg-white/5" : "bg-night"
+        )}
+      >
+        <p className="max-w-[24ch] font-brbold text-2xl leading-snug tracking-tight text-white sm:text-3xl">
+          Do you have any more questions for us?
+        </p>
+        <button
+          onClick={() => navigate("/OtherBookings")}
+          className="inline-flex items-center rounded-full bg-ev-700 hover:bg-ev-800 px-6 py-3.5 font-brsemi text-lg text-white transition-transform duration-200 ease-out-strong active:scale-[0.97]"
+        >
+          Contact Us
+        </button>
+      </div>
     </div>
   );
 }
