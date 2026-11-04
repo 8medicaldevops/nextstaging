@@ -27,9 +27,9 @@ const TONES = {
 };
 
 function Headline({ tone = "outline" }) {
-  const size = "text-[9.5vw] sm:text-[7.5vw] lg:text-[min(5.75vw,6.25rem)]";
+  const size = "text-[11vw] sm:text-[6.4vw] lg:text-[min(4.6vw,5rem)]";
   return (
-    <div className="flex flex-col items-center text-center font-brbold leading-[0.88] tracking-tight">
+    <div className="flex flex-col items-start text-left font-brbold leading-[0.92] tracking-tight">
       <span className={cn(size, TONES[tone])}>EVERY SECOND</span>
       <span className={cn(size, TONES[tone])}>COUNTS</span>
     </div>
@@ -38,7 +38,7 @@ function Headline({ tone = "outline" }) {
 
 // Elliptical light pool; its centre (--rx or --px) is moved by the pointer.
 const lightMask = (cx) => {
-  const mask = `radial-gradient(ellipse 30vw 12vw at var(${cx}) 50%, #000 0%, transparent 100%)`;
+  const mask = `radial-gradient(ellipse 55% 75% at var(${cx}) 50%, #000 0%, transparent 100%)`;
   return { WebkitMaskImage: mask, maskImage: mask };
 };
 
@@ -131,14 +131,7 @@ export default function HomeHero({ onEmergency, onBookService }) {
           { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 1.2 }
         );
       }
-      // scroll: type drifts up slower than the page (depth parallax)...
-      gsap.to(type, {
-        yPercent: -18,
-        opacity: 0.4,
-        ease: "none",
-        scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: 1 },
-      });
-      // ...while the convoy dollies toward the viewer, as if the camera follows it out of the hero
+      // scroll: the camera dollies toward the viewer, as if it follows the convoy out of the hero
       gsap.to(sceneRef.current, {
         scale: 1.22,
         yPercent: 5,
@@ -169,37 +162,13 @@ export default function HomeHero({ onEmergency, onBookService }) {
 
       <h1 className="sr-only">8medical: urgent ambulance and emergency medical care across Nigeria</h1>
 
-      {/* one column, so nothing can overlap: headline, then the scene, then caption + actions */}
-      <div className="relative flex h-[calc(100dvh-64px)] min-h-[620px] flex-col">
-        <div
-          ref={typeRef}
-          aria-hidden="true"
-          className="pointer-events-none z-0 shrink-0 select-none px-4 pt-4 sm:pt-6 lg:pt-7"
-        >
-          <div ref={introRef} className="relative mx-auto w-fit">
-            <Headline />
-            <div
-              ref={fillRef}
-              className="absolute inset-0"
-              style={{ clipPath: "inset(0 0 100% 0)", "--rx": "22%", "--px": "78%" }}
-            >
-              <Headline tone="solid" />
-              <div ref={redRef} className="absolute inset-0 opacity-0" style={lightMask("--rx")}>
-                <Headline tone="red" />
-              </div>
-              <div ref={purpleRef} className="absolute inset-0 opacity-0" style={lightMask("--px")}>
-                <Headline tone="purple" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* the story plays in whatever height is left */}
-        <div ref={sceneRef} className="relative z-10 min-h-0 flex-1 will-change-transform">
+      {/* full-bleed: the scene fills the whole hero; the words sit in a quiet strip along the bottom */}
+      <div className="relative h-[calc(100dvh-64px)] min-h-[600px]">
+        <div ref={sceneRef} className="absolute inset-0 will-change-transform">
           <div
             aria-hidden="true"
             className={cn(
-              "pointer-events-none absolute inset-x-0 bottom-[14%] h-[26%] transition-opacity duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+              "pointer-events-none absolute inset-x-0 bottom-[46%] h-[14%] transition-opacity duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
               sceneReady ? "opacity-0" : "opacity-100"
             )}
           >
@@ -220,9 +189,45 @@ export default function HomeHero({ onEmergency, onBookService }) {
           {mountScene && <StoryScene onBeat={onBeat} onReady={onReady} />}
         </div>
 
-        <div className="relative z-20 flex shrink-0 flex-col items-center gap-5 px-4 pb-8 pt-2">
+        {/* soft fade so the words always read, whatever the scene is doing behind them */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[44%] bg-gradient-to-t from-[#F4F1FF] via-[#F4F1FF]/85 to-transparent"
+        />
+
+        <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-7 px-4 pb-7 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-14 lg:pb-12">
+          <div className="flex flex-col gap-6">
+            <div ref={typeRef} aria-hidden="true" className="pointer-events-none select-none">
+              <div ref={introRef} className="relative w-fit">
+                <Headline />
+                <div
+                  ref={fillRef}
+                  className="absolute inset-0"
+                  style={{ clipPath: "inset(0 0 100% 0)", "--rx": "22%", "--px": "78%" }}
+                >
+                  <Headline tone="solid" />
+                  <div ref={redRef} className="absolute inset-0 opacity-0" style={lightMask("--rx")}>
+                    <Headline tone="red" />
+                  </div>
+                  <div ref={purpleRef} className="absolute inset-0 opacity-0" style={lightMask("--px")}>
+                    <Headline tone="purple" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div ref={ctaRef} className="flex flex-wrap items-center gap-3 sm:gap-4">
+              <Cta variant="emergency" size="lg" onClick={onEmergency}>
+                Report an Emergency
+              </Cta>
+              <Cta variant="quiet" size="lg" arrow onClick={onBookService}>
+                Explore Services
+              </Cta>
+            </div>
+          </div>
+
           {/* caption: what the scene is telling right now, and how far through it we are */}
-          <div className="pointer-events-none flex flex-col items-center gap-3">
+          <div className="pointer-events-none flex flex-col gap-3 lg:items-end lg:pb-1">
             <p
               key={beat}
               className="font-brsemi text-lg text-ink animate-in fade-in-0 slide-in-from-bottom-1 duration-500 sm:text-xl"
@@ -241,15 +246,6 @@ export default function HomeHero({ onEmergency, onBookService }) {
                 />
               ))}
             </div>
-          </div>
-
-          <div ref={ctaRef} className="flex flex-wrap items-center justify-center gap-4">
-            <Cta variant="emergency" size="lg" onClick={onEmergency}>
-              Report an Emergency
-            </Cta>
-            <Cta variant="quiet" size="lg" arrow onClick={onBookService}>
-              Explore Services
-            </Cta>
           </div>
         </div>
       </div>

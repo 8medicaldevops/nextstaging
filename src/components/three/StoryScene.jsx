@@ -40,6 +40,10 @@ const CREW_Z = 0.3; // the strip between the lanes
 const HOSPITAL_X = 41;
 const BAY_X = HOSPITAL_X - 7.5; // under the emergency canopy
 const VAN_SCALE = 0.9;
+// The scene fills the whole hero and the headline sits over its lower part, so the camera looks low:
+// the road lands about half way up the frame and the foreground below it stays calm for the text.
+const VIEW_HEIGHT = 9.5;
+const LOOK_Y = 0.2;
 
 /* --------------------------------- textures -------------------------------- */
 
@@ -291,7 +295,7 @@ export default function StoryScene({ className, onBeat, onReady }) {
     );
 
     /* ---- story state + timeline ---- */
-    const S = { hazard: 0, siren: 0, shake: 0, focus: -2.5, zoom: 1, lookY: 1.6, walk: 0, walkBlend: 0 };
+    const S = { hazard: 0, siren: 0, shake: 0, focus: -2.5, zoom: 1, lookY: LOOK_Y, walk: 0, walkBlend: 0 };
     const vehicles = [
       { group: car.group, wheels: car.wheels, scale: 1, lastX: 0 },
       { group: truck.group, wheels: truck.wheels, scale: 1, lastX: 0 },
@@ -313,7 +317,7 @@ export default function StoryScene({ className, onBeat, onReady }) {
       patient.visible = false;
       smoke.forEach((s) => (s.material.opacity = 0));
       rings.forEach((r) => (r.material.opacity = 0));
-      Object.assign(S, { hazard: 0, siren: 0, shake: 0, focus: -2.5, zoom: 1, lookY: 1.6, walk: 0, walkBlend: 0 });
+      Object.assign(S, { hazard: 0, siren: 0, shake: 0, focus: -2.5, zoom: 1, lookY: LOOK_Y, walk: 0, walkBlend: 0 });
       vehicles.forEach((v) => (v.lastX = v.group.position.x));
     };
     reset();
@@ -376,7 +380,7 @@ export default function StoryScene({ className, onBeat, onReady }) {
     tl.fromTo(van.group.position, { x: -8.5 }, { x: BAY_X + 0.4, duration: 7, ease: "power2.inOut" }, 14);
     tl.fromTo(S, { focus: -4.5 }, { focus: HOSPITAL_X - 2.5, duration: 7, ease: "power2.inOut" }, 14);
     tl.fromTo(S, { zoom: 1 }, { zoom: 1.35, duration: 3, ease: "power2.inOut" }, 18);
-    tl.fromTo(S, { lookY: 1.6 }, { lookY: 2.7, duration: 3, ease: "power2.inOut" }, 18);
+    tl.fromTo(S, { lookY: LOOK_Y }, { lookY: LOOK_Y + 0.6, duration: 3, ease: "power2.inOut" }, 18);
     // turn into the ambulance bay
     tl.fromTo(van.group.position, { z: NEAR_LANE }, { z: -0.5, duration: 1.8, ease: "power2.inOut" }, 19.2);
     tl.fromTo(van.group.rotation, { y: 0 }, { y: 0.36, duration: 0.9, ease: "power2.inOut" }, 19.2);
@@ -387,15 +391,15 @@ export default function StoryScene({ className, onBeat, onReady }) {
     /* ---- camera framing ---- */
     const viewDir = new THREE.Vector3(0, 0.2, 1).normalize();
     const cam = { baseSpan: 20 };
-    const target = new THREE.Vector3(-2.5, 1.6, 0);
+    const target = new THREE.Vector3(-2.5, LOOK_Y, 0);
     const resize = () => {
       const { clientWidth: w, clientHeight: h } = mount;
       if (!w || !h) return;
       renderer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      // ~21 world units across on wide screens, ~11.5 on phones
-      cam.baseSpan = THREE.MathUtils.clamp(camera.aspect * 6.4, 11.5, 22);
+      // the frame shows ~9.5 world units top to bottom, so a wide screen takes in ~18 across and a phone ~9
+      cam.baseSpan = THREE.MathUtils.clamp(camera.aspect * VIEW_HEIGHT, 9, 30);
     };
     resize();
     const ro = new ResizeObserver(() => {
