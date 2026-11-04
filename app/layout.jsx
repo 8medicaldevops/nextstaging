@@ -1,5 +1,5 @@
 import "@/index.css";
-import { Manrope } from "next/font/google";
+import localFont from "next/font/local";
 import Providers from "@/components/Providers";
 import CookieConsent from "@/components/CookieConsent";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, CONTACT } from "@/lib/site";
@@ -103,8 +103,11 @@ const jsonLd = {
   ],
 };
 
-const manrope = Manrope({
-  subsets: ["latin"],
+// Manrope (SIL Open Font License), bundled in the repo so builds never depend on fetching fonts
+// from Google at build time. One variable file covers every weight the site uses.
+const manrope = localFont({
+  src: "../src/assets/fonts/manrope-latin-wght-normal.woff2",
+  weight: "200 800",
   display: "swap",
   variable: "--font-manrope",
 });
