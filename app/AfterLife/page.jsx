@@ -1,4 +1,4 @@
-import AfterLife from "@/views/AfterLife";
+import AfterLifeClient from "@/client-pages/AfterLifeClient";
 
 export const metadata = {
   title: "Book Afterlife Transport",
@@ -8,5 +8,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <AfterLife />;
+  return <AfterLifeClient />;
 }

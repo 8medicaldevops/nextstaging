@@ -1,4 +1,4 @@
-import AmbulanceTp from "@/views/AmbulanceTp";
+import AmbulanceTpClient from "@/client-pages/AmbulanceTpClient";
 
 export const metadata = {
   title: "Book Ambulance Transport",
@@ -8,5 +8,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <AmbulanceTp />;
+  return <AmbulanceTpClient />;
 }
