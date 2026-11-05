@@ -168,7 +168,7 @@ function Gauge({ value, label }) {
 
 function Figure({ children, label }) {
     return (
-        <div className="flex flex-col gap-2 py-2 sm:px-8 sm:first:pl-0">
+        <div className="flex flex-col gap-2 py-2 md:px-8 md:first:pl-0">
             <span className="font-brbold text-5xl tabular-nums tracking-tight text-ev-700">{children}</span>
             <p className="max-w-[24ch] font-brmedium text-mute">{label}</p>
         </div>
@@ -289,7 +289,7 @@ export default function Impact() {
                         </Reveal>
                         <Reveal className="grid items-center gap-10 rounded-3xl border border-line bg-[#F9F9FA] p-8 sm:p-10 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-14">
                             <Gauge value={95} label="Emergency call-to-mission completion rate" />
-                            <div className="grid gap-6 sm:grid-cols-3 sm:divide-x sm:divide-line">
+                            <div className="grid gap-6 md:grid-cols-3 md:divide-x md:divide-line">
                                 <Figure label="jobs provided per day, with equal pay for work of equal value">2-3</Figure>
                                 <Figure label="female biker response medic in West Africa">1st</Figure>
                                 <Figure label="of the UN Sustainable Development Goals supported">

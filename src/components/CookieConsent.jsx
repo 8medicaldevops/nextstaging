@@ -33,22 +33,22 @@ export default function CookieConsent() {
     <div
       role="dialog"
       aria-label="Cookie consent"
-      className="fixed bottom-4 left-4 right-4 z-[9999] mx-auto flex max-w-xl flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-5 shadow-pop sm:flex-row sm:items-center"
+      className="fixed bottom-4 left-4 right-4 z-[9999] mx-auto flex max-w-xl flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-pop sm:p-5 md:flex-row md:items-center"
     >
       <p className="flex-1 text-sm leading-relaxed text-zinc-600">
         We use cookies to enhance your experience. By continuing to visit this
         site, you agree to our use of cookies.
       </p>
-      <div className="flex gap-2">
+      <div className="flex gap-2 md:shrink-0">
         <button
           onClick={() => decide("rejected")}
-          className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-brmedium text-zinc-700 transition-transform duration-150 ease-out active:scale-[0.97]"
+          className="flex-1 rounded-lg border border-zinc-300 px-4 py-2 text-sm font-brmedium text-zinc-700 transition-transform duration-150 ease-out active:scale-[0.97]"
         >
           Reject
         </button>
         <button
           onClick={() => decide("accepted")}
-          className="rounded-lg bg-ev-700 px-4 py-2 text-sm font-brmedium text-white transition-transform duration-150 ease-out active:scale-[0.97]"
+          className="flex-1 rounded-lg bg-ev-700 px-4 py-2 text-sm font-brmedium text-white transition-transform duration-150 ease-out active:scale-[0.97]"
         >
           Accept
         </button>
