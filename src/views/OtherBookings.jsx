@@ -90,7 +90,7 @@ export default function OtherBookings() {
                     />
                     <div className="relative mx-auto grid w-full max-w-[1200px] items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16 lg:px-8 lg:py-24">
                         <Reveal className="flex flex-col items-start gap-6">
-                            <h1 className="font-brbold text-5xl leading-[1.05] tracking-tight text-white sm:text-6xl">
+                            <h1 className="font-brbold text-5xl leading-[1.05] tracking-tight text-white md:text-6xl">
                                 Reach out to us
                             </h1>
                             <p className="max-w-[44ch] font-brmedium text-lg text-white/75">
@@ -135,7 +135,7 @@ export default function OtherBookings() {
 
                     <Reveal stagger={0.08} className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
                         {/* phone */}
-                        <article className="flex flex-col gap-8 rounded-3xl border border-line bg-white p-8 transition-colors duration-300 ease-out-strong hover:border-ev-300 sm:p-10">
+                        <article className="flex flex-col gap-8 rounded-3xl border border-line bg-white p-8 transition-colors duration-300 ease-out-strong hover:border-ev-300 md:p-10">
                             <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ev-50 text-ev-700">
                                 <Phone size={26} aria-hidden="true" />
                             </span>
@@ -166,7 +166,7 @@ export default function OtherBookings() {
 
                         {/* email + socials */}
                         <div className="flex flex-col gap-6">
-                            <article className="flex flex-1 flex-col justify-between gap-8 rounded-3xl border border-line bg-[#F9F9FA] p-8 sm:p-10">
+                            <article className="flex flex-1 flex-col justify-between gap-8 rounded-3xl border border-line bg-[#F9F9FA] p-6 md:p-10">
                                 <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-ev-700">
                                     <Mail size={26} aria-hidden="true" />
                                 </span>
@@ -215,7 +215,7 @@ export default function OtherBookings() {
 
                 {/* where to go next */}
                 <Section tone="mist" className="py-14 lg:py-16">
-                    <Reveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+                    <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
                         <div className="flex flex-col gap-1">
                             <h2 className="font-brsemi text-2xl tracking-tight text-ink">Looking to book a service?</h2>
                             <p className="font-brmedium text-mute">Pick your location again or head back to the start.</p>

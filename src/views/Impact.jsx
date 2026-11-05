@@ -140,7 +140,7 @@ function Gauge({ value, label }) {
     }, [C, target]);
 
     return (
-        <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
+        <div className="flex flex-col items-center gap-4 text-center md:flex-row md:text-left">
             <div className="relative h-[176px] w-[176px] shrink-0">
                 <svg viewBox="0 0 176 176" className="h-full w-full -rotate-90" role="img" aria-label={`${value} percent ${label}`}>
                     <circle cx="88" cy="88" r={R} fill="none" stroke="#ECEBED" strokeWidth="12" />
@@ -232,7 +232,7 @@ function Check() {
 function GoalEntry({ number }) {
     const goal = GOALS[number];
     return (
-        <article id={`goal-${number}`} className="grid scroll-mt-24 gap-6 py-8 first:pt-0 last:pb-0 sm:grid-cols-[120px_minmax(0,1fr)] sm:gap-8">
+        <article id={`goal-${number}`} className="grid scroll-mt-24 gap-6 py-8 first:pt-0 last:pb-0 md:grid-cols-[120px_minmax(0,1fr)] md:gap-8">
             <img
                 src={goal.image}
                 alt={`Sustainable Development Goal ${number}: ${goal.short}`}
@@ -270,7 +270,7 @@ export default function Impact() {
                     <div className="absolute inset-0 bg-[url(./assets/images/impactbackground.jpeg)] bg-cover bg-[center_35%]" aria-hidden="true" />
                     <div className="absolute inset-0 bg-gradient-to-t from-night-deep/90 via-night-deep/50 to-night-deep/20" aria-hidden="true" />
                     <div className="relative mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pb-12 sm:px-6 lg:px-8">
-                        <h1 className="font-brbold text-5xl tracking-tight text-white sm:text-6xl">Impact</h1>
+                        <h1 className="font-brbold text-5xl tracking-tight text-white md:text-6xl">Impact</h1>
                         <p className="max-w-[48ch] font-brmedium text-lg text-white/80">
                             How 8medical contributes to the UN Sustainable Development Goals.
                         </p>
@@ -287,7 +287,7 @@ export default function Impact() {
                                 lead="Fast emergency care is where health, jobs, fairness and safety meet. These are the goals our work supports, and the figures behind them."
                             />
                         </Reveal>
-                        <Reveal className="grid items-center gap-10 rounded-3xl border border-line bg-[#F9F9FA] p-8 sm:p-10 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-14">
+                        <Reveal className="grid items-center gap-10 rounded-3xl border border-line bg-[#F9F9FA] p-6 md:p-10 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-14">
                             <Gauge value={95} label="Emergency call-to-mission completion rate" />
                             <div className="grid gap-6 md:grid-cols-3 md:divide-x md:divide-line">
                                 <Figure label="jobs provided per day, with equal pay for work of equal value">2-3</Figure>

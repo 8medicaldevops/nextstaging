@@ -82,13 +82,13 @@ export default function NewsLetter() {
                     Get relevant health care updates, resources and offers straight in your inbox
                 </p>
             </div>
-            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-2">
+            <form onSubmit={handleSubmit} noValidate className="flex min-w-0 flex-col gap-2">
                 <label htmlFor="newsletter-email" className="font-brsemi text-sm text-white/80">
                     Email address
                 </label>
                 <div
                     className={
-                        "flex items-center gap-2 rounded-full border bg-white/10 p-1.5 pl-5 transition-colors duration-200 focus-within:border-ev-300 focus-within:bg-white/15 max-sm:flex-col max-sm:rounded-3xl max-sm:p-3 " +
+                        "flex w-full min-w-0 items-center gap-2 rounded-full border bg-white/10 p-1.5 pl-5 transition-colors duration-200 focus-within:border-ev-300 focus-within:bg-white/15 max-sm:flex-col max-sm:rounded-3xl max-sm:p-3 " +
                         (emailAddressEntered ? "border-white/20" : "border-[#FF6B76]")
                     }
                 >
@@ -101,14 +101,14 @@ export default function NewsLetter() {
                         placeholder="you@example.com"
                         aria-invalid={!emailAddressEntered}
                         aria-describedby={!emailAddressEntered ? "newsletter-error" : undefined}
-                        className="min-w-0 flex-1 bg-transparent py-3 font-brmedium text-white outline-none placeholder:text-white/50 max-sm:w-full max-sm:px-2"
+                        className="w-full min-w-0 flex-1 bg-transparent py-3 font-brmedium text-white outline-none placeholder:text-white/50 max-sm:px-2"
                         value={emailAddress}
                         name="emailAddress"
                         onChange={handleInputChange}
                     />
                     <button
                         type="submit"
-                        className="rounded-full bg-ev-700 px-7 py-3.5 font-brsemi text-lg text-white transition-[transform,background-color] duration-200 ease-out-strong hover:bg-ev-600 active:scale-[0.97] max-sm:w-full"
+                        className="shrink-0 rounded-full bg-ev-700 px-6 py-3.5 font-brsemi text-base text-white transition-[transform,background-color] duration-200 ease-out-strong hover:bg-ev-600 active:scale-[0.97] max-sm:w-full sm:text-lg"
                     >
                         Subscribe
                     </button>

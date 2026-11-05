@@ -314,7 +314,7 @@ export default function Faqs({ dark = false }) {
 
       <div
         className={cn(
-          "flex flex-col items-center justify-between gap-6 rounded-3xl px-8 py-10 text-center sm:px-12 md:flex-row md:text-left",
+          "flex flex-col items-center justify-between gap-6 rounded-3xl px-6 py-10 text-center md:flex-row md:px-12 md:text-left",
           dark ? "border border-white/10 bg-white/5" : "bg-night"
         )}
       >

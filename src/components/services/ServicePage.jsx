@@ -26,7 +26,7 @@ function ServiceHero({ service, onAction }) {
           >
             <Icon width="30" height="30" />
           </span>
-          <h1 className="font-brbold text-4xl leading-tight tracking-tight text-night sm:text-5xl">
+          <h1 className="font-brbold text-4xl leading-tight tracking-tight text-night md:text-5xl">
             {service.title}
           </h1>
           <p className="max-w-[52ch] font-brreg text-lg text-mute">{service.body}</p>
@@ -54,7 +54,7 @@ function StepsSection({ steps }) {
         <span className="text-ink">{steps.prefix}</span>
         <span className="text-ev-700">{steps.highlight}</span>
       </Reveal>
-      <Reveal stagger={0.08} className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Reveal stagger={0.08} className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {steps.items.map((step, i) => (
           <div
             key={step.title}
@@ -91,7 +91,7 @@ function StepsSection({ steps }) {
 function CtaBand({ band, onAction }) {
   return (
     <Section tone="white" className="py-0 lg:py-0">
-      <div className="relative my-16 overflow-hidden rounded-3xl bg-night px-8 py-14 text-center sm:px-16 lg:my-24">
+      <div className="relative my-16 overflow-hidden rounded-3xl bg-night px-6 py-12 text-center md:px-16 md:py-14 lg:my-24">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
@@ -195,7 +195,7 @@ function PolicyTabs() {
           id="policy-panel"
           aria-labelledby={`policy-tab-${active}`}
           tabIndex={0}
-          className="flex flex-col items-start gap-5 p-7 focus-visible:outline-none sm:p-10 animate-in fade-in-0 slide-in-from-bottom-1 duration-300"
+          className="flex flex-col items-start gap-5 p-6 focus-visible:outline-none md:p-10 animate-in fade-in-0 slide-in-from-bottom-1 duration-300"
         >
           <span className="rounded-full bg-ev-50 px-3.5 py-1.5 font-brsemi text-sm text-ev-800">{policy.highlight}</span>
           <h3 className="font-brbold text-2xl tracking-tight text-ink sm:text-3xl">{policy.title}</h3>
@@ -210,7 +210,7 @@ function OtherServices({ keys }) {
   return (
     <Section tone="white" className="pt-0 lg:pt-0">
       <h2 className="font-brsemi text-2xl tracking-tight text-ink sm:text-3xl">Other Services</h2>
-      <Reveal stagger={0.08} className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Reveal stagger={0.08} className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {keys.map((key) => {
           const card = SERVICE_CARDS[key];
           return (

@@ -85,7 +85,7 @@ export default function ServiceExplorer({ onOpenBookingModal }) {
       <div
         key={active.key}
         role="tabpanel"
-        className="mt-6 rounded-2xl border border-line bg-white p-8 sm:p-12 animate-in fade-in slide-in-from-bottom-2 duration-300"
+        className="mt-6 rounded-2xl border border-line bg-white p-6 md:p-12 animate-in fade-in slide-in-from-bottom-2 duration-300"
       >
         <p className="mb-3 font-brmedium text-ev-700">{active.label}</p>
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-24">

@@ -20,14 +20,14 @@ export default function MembershipCta({ onBecomeMember }) {
             aria-hidden="true"
             className="absolute inset-0 bg-gradient-to-r from-night-deep via-night-deep/85 to-night-deep/20"
           />
-          <Reveal className="relative flex max-w-[560px] flex-col items-start gap-6 px-8 py-20 sm:px-14 lg:py-28">
-            <h2 className="font-brbold text-4xl tracking-tight text-white sm:text-6xl">Membership</h2>
-            <p className="font-brmedium text-lg text-white/80">
+          <Reveal className="relative flex max-w-[560px] flex-col items-start gap-6 px-6 py-16 sm:px-8 md:px-14 md:py-20 lg:py-28">
+            <h2 className="font-brbold text-4xl tracking-tight text-white md:text-6xl">Membership</h2>
+            <p className="font-brmedium text-base text-white/80 md:text-lg">
               Enroll your family, organization, and customers in our plan for access to urgent and emergency care services.
             </p>
             <button
               onClick={onBecomeMember}
-              className="inline-flex items-center gap-2 rounded-full bg-ev-700 hover:bg-ev-800 px-6 py-3.5 font-brsemi text-lg text-white transition-transform duration-200 ease-out-strong active:scale-[0.97]"
+              className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-ev-700 hover:bg-ev-800 px-6 py-3.5 font-brsemi text-lg text-white transition-transform duration-200 ease-out-strong active:scale-[0.97]"
             >
               Become a Member
               <svg width="16" height="16" viewBox="0 0 16 17" fill="none" aria-hidden="true">

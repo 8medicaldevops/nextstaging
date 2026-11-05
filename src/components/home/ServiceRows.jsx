@@ -58,14 +58,20 @@ export default function ServiceRows({ onOpenBookingModal }) {
                   </span>
                   <span
                     className={cn(
-                      "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-[transform,border-color] duration-300 ease-out-strong sm:h-14 sm:w-14",
+                      "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors duration-300 ease-out-strong sm:h-14 sm:w-14",
                       open
-                        ? "rotate-45 border-ev-700 text-ev-700"
+                        ? "border-ev-700 text-ev-700"
                         : "border-line bg-white text-ink group-hover:border-ev-700 group-hover:text-ev-700"
                     )}
                     aria-hidden="true"
                   >
-                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      className={cn("transition-transform duration-300 ease-out-strong", open && "rotate-45")}
+                    >
                       <path d="M8 2V14M2 8H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
                   </span>

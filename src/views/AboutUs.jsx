@@ -143,7 +143,7 @@ export default function AboutUs() {
                     <div className="absolute inset-0 bg-[url(./assets/images/abt-bg.jpeg)] bg-cover bg-[center_30%]" aria-hidden="true" />
                     <div className="absolute inset-0 bg-gradient-to-t from-night-deep/90 via-night-deep/50 to-night-deep/20" aria-hidden="true" />
                     <div className="relative mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pb-12 sm:px-6 lg:px-8">
-                        <h1 className="font-brbold text-5xl tracking-tight text-white sm:text-6xl">About Us</h1>
+                        <h1 className="font-brbold text-5xl tracking-tight text-white md:text-6xl">About Us</h1>
                         <p className="max-w-[44ch] font-brmedium text-lg text-white/80">
                             Transforming emergency care response in Nigeria and Africa at large.
                         </p>
@@ -188,7 +188,7 @@ export default function AboutUs() {
                 {/* mission and vision */}
                 <Section tone="mist">
                     <Reveal stagger={0.1} className="grid gap-6 lg:grid-cols-2">
-                        <article className="relative flex flex-col gap-6 overflow-hidden rounded-3xl bg-night p-8 sm:p-12">
+                        <article className="relative flex flex-col gap-6 overflow-hidden rounded-3xl bg-night p-6 md:p-12">
                             <div
                                 aria-hidden="true"
                                 className="pointer-events-none absolute inset-0"
@@ -199,7 +199,7 @@ export default function AboutUs() {
                                 To provide and ensure rapid access to life-saving medical intervention by empowering smarter emergency response.
                             </p>
                         </article>
-                        <article className="flex flex-col gap-6 rounded-3xl border border-ev-100 bg-ev-50 p-8 sm:p-12">
+                        <article className="flex flex-col gap-6 rounded-3xl border border-ev-100 bg-ev-50 p-6 md:p-12">
                             <h2 className="font-brbold text-2xl tracking-tight text-ev-800">Our Vision</h2>
                             <p className="font-brsemi text-2xl leading-snug text-night sm:text-3xl">
                                 To be the infrastructural framework for provision and distribution of prompt, affordable, reliable and integrated access to emergency response solutions.
