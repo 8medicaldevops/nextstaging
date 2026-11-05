@@ -4,9 +4,9 @@ import useEmblaCarousel from 'embla-carousel-react';
 import AutoScroll from 'embla-carousel-auto-scroll';
 
 const EmblaCarousel = (props) => {
-  const { slides, options } = props;
+  const { slides, options, speed = 2 } = props; // speed: px per frame, Embla's default is 2
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [
-    AutoScroll({ playOnInit: true })
+    AutoScroll({ playOnInit: true, speed })
   ]);
   const [isPlaying, setIsPlaying] = useState(true);
 

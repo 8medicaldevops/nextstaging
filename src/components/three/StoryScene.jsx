@@ -40,10 +40,10 @@ const CREW_Z = 0.3; // the strip between the lanes
 const HOSPITAL_X = 41;
 const BAY_X = HOSPITAL_X - 7.5; // under the emergency canopy
 const VAN_SCALE = 0.9;
-// The scene fills the whole hero and the headline sits over its lower part, so the camera looks low:
-// the road lands about half way up the frame and the foreground below it stays calm for the text.
-const VIEW_HEIGHT = 9.5;
-const LOOK_Y = 0.2;
+// The words sit in their own band below the scene, so the camera aims higher: the road lands in the
+// lower quarter of the frame and the vehicles fill the view instead of an empty foreground.
+const VIEW_HEIGHT = 8.4;
+const LOOK_Y = 2.2;
 
 /* --------------------------------- textures -------------------------------- */
 

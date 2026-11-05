@@ -21,10 +21,10 @@ const StoryScene = dynamic(() => import("@/components/three/StoryScene"), {
 // bottom by a clip-path wipe, and two siren layers (red, purple) that light the letters through
 // moving masks, pulsing in step with the beacons in the 3D scene.
 const TONES = {
-  outline: "text-transparent [-webkit-text-stroke:2px_rgba(109,9,249,0.38)]",
-  solid: "text-night",
+  outline: "text-transparent [-webkit-text-stroke:2px_rgba(190,168,255,0.5)]",
+  solid: "text-white",
   red: "text-alarm",
-  purple: "text-ev-500",
+  purple: "text-ev-400",
 };
 
 function Headline({ tone = "outline" }) {
@@ -163,93 +163,93 @@ export default function HomeHero({ onEmergency, onBookService }) {
 
       <h1 className="sr-only">8medical: urgent ambulance and emergency medical care across Nigeria</h1>
 
-      {/* full-bleed: the scene fills the whole hero; the words sit in a quiet strip along the bottom */}
-      <div className="relative h-[calc(100dvh-64px)] min-h-[600px]">
-        <div ref={sceneRef} className="absolute inset-0 will-change-transform">
-          <div
-            aria-hidden="true"
-            className={cn(
-              "pointer-events-none absolute inset-x-0 bottom-[46%] h-[14%] transition-opacity duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
-              sceneReady ? "opacity-0" : "opacity-100"
-            )}
-          >
-            {/* the road, drawn in CSS: black asphalt, white edge lines, dashed centre */}
+      {/* the scene on top, then a dark purple band carrying the words: shorter than a full screen */}
+      <div className="relative flex flex-col">
+        <div className="relative h-[min(56vh,540px)] min-h-[340px] sm:min-h-[400px]">
+          <div ref={sceneRef} className="absolute inset-0 will-change-transform">
             <div
-              className="h-full w-full bg-[#222227]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(#F4F4F6,#F4F4F6), linear-gradient(#F4F4F6,#F4F4F6), repeating-linear-gradient(90deg,#F4F4F6 0 56px,transparent 56px 112px)",
-                backgroundSize: "100% 3px, 100% 3px, 100% 3px",
-                backgroundPosition: "0 10%, 0 90%, 0 50%",
-                backgroundRepeat: "no-repeat, no-repeat, repeat-x",
-                maskImage: "linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent)",
-                WebkitMaskImage: "linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent)",
-              }}
-            />
+              aria-hidden="true"
+              className={cn(
+                "pointer-events-none absolute inset-x-0 bottom-[20%] h-[13%] transition-opacity duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                sceneReady ? "opacity-0" : "opacity-100"
+              )}
+            >
+              {/* the road, drawn in CSS: black asphalt, white edge lines, dashed centre */}
+              <div
+                className="h-full w-full bg-[#222227]"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(#F4F4F6,#F4F4F6), linear-gradient(#F4F4F6,#F4F4F6), repeating-linear-gradient(90deg,#F4F4F6 0 56px,transparent 56px 112px)",
+                  backgroundSize: "100% 3px, 100% 3px, 100% 3px",
+                  backgroundPosition: "0 10%, 0 90%, 0 50%",
+                  backgroundRepeat: "no-repeat, no-repeat, repeat-x",
+                  maskImage: "linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent)",
+                  WebkitMaskImage: "linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent)",
+                }}
+              />
+            </div>
+            {mountScene && <StoryScene onBeat={onBeat} onReady={onReady} />}
           </div>
-          {mountScene && <StoryScene onBeat={onBeat} onReady={onReady} />}
+          {/* feather the scene into the band below */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-night to-transparent" />
         </div>
 
-        {/* soft fade so the words always read, whatever the scene is doing behind them */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[44%] bg-gradient-to-t from-[#F4F1FF] via-[#F4F1FF]/85 to-transparent"
-        />
-
-        <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-6 px-4 pb-6 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:gap-7 lg:px-14 lg:pb-12">
-          <div className="flex flex-col items-center gap-5 lg:items-start lg:gap-6">
-            <div ref={typeRef} aria-hidden="true" className="pointer-events-none select-none">
-              <div ref={introRef} className="relative w-fit">
-                <Headline />
-                <div
-                  ref={fillRef}
-                  className="absolute inset-0"
-                  style={{ clipPath: "inset(0 0 100% 0)", "--rx": "22%", "--px": "78%" }}
-                >
-                  <Headline tone="solid" />
-                  <div ref={redRef} className="absolute inset-0 opacity-0" style={lightMask("--rx")}>
-                    <Headline tone="red" />
-                  </div>
-                  <div ref={purpleRef} className="absolute inset-0 opacity-0" style={lightMask("--px")}>
-                    <Headline tone="purple" />
+        <div className="relative bg-night px-4 pb-7 pt-1 sm:px-8 lg:px-14 lg:pb-9">
+          <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-5 lg:flex-row lg:items-end lg:justify-between lg:gap-7">
+            <div className="flex flex-col items-center gap-5 lg:items-start lg:gap-6">
+              <div ref={typeRef} aria-hidden="true" className="pointer-events-none select-none">
+                <div ref={introRef} className="relative w-fit">
+                  <Headline />
+                  <div
+                    ref={fillRef}
+                    className="absolute inset-0"
+                    style={{ clipPath: "inset(0 0 100% 0)", "--rx": "22%", "--px": "78%" }}
+                  >
+                    <Headline tone="solid" />
+                    <div ref={redRef} className="absolute inset-0 opacity-0" style={lightMask("--rx")}>
+                      <Headline tone="red" />
+                    </div>
+                    <div ref={purpleRef} className="absolute inset-0 opacity-0" style={lightMask("--px")}>
+                      <Headline tone="purple" />
+                    </div>
                   </div>
                 </div>
               </div>
+
+              {/* side by side on phones (short labels so both fit at 360px), full labels from tablet up */}
+              <div ref={ctaRef} className="grid w-full max-w-[420px] grid-cols-2 gap-3 md:flex md:w-auto md:max-w-none md:gap-4">
+                <Cta variant="emergency" onClick={onEmergency} className="px-3 text-[15px] md:px-6 md:py-3.5 md:text-lg">
+                  <Siren size={18} aria-hidden="true" className="shrink-0" />
+                  <span className="md:hidden">Report Emergency</span>
+                  <span className="hidden md:inline">Report an Emergency</span>
+                </Cta>
+                <Cta variant="light" onClick={onBookService} className="px-3 text-[15px] md:px-6 md:py-3.5 md:text-lg">
+                  <Ambulance size={18} aria-hidden="true" className="shrink-0" />
+                  Explore Services
+                </Cta>
+              </div>
             </div>
 
-            {/* side by side on phones (short labels so both fit at 360px), full labels from tablet up */}
-            <div ref={ctaRef} className="grid w-full max-w-[420px] grid-cols-2 gap-3 md:flex md:w-auto md:max-w-none md:gap-4">
-              <Cta variant="emergency" onClick={onEmergency} className="px-3 text-[15px] md:px-6 md:py-3.5 md:text-lg">
-                <Siren size={18} aria-hidden="true" className="shrink-0" />
-                <span className="md:hidden">Report Emergency</span>
-                <span className="hidden md:inline">Report an Emergency</span>
-              </Cta>
-              <Cta variant="quiet" onClick={onBookService} className="px-3 text-[15px] md:px-6 md:py-3.5 md:text-lg">
-                <Ambulance size={18} aria-hidden="true" className="shrink-0" />
-                Explore Services
-              </Cta>
-            </div>
-          </div>
-
-          {/* caption: what the scene is telling right now, and how far through it we are */}
-          <div className="pointer-events-none flex flex-col items-center gap-2.5 lg:items-end lg:gap-3 lg:pb-1">
-            <p
-              key={beat}
-              className="font-brsemi text-lg text-ink animate-in fade-in-0 slide-in-from-bottom-1 duration-500 sm:text-xl"
-              aria-hidden="true"
-            >
-              {BEATS[beat]}
-            </p>
-            <div className="flex gap-1.5" aria-hidden="true">
-              {BEATS.map((_, i) => (
-                <span
-                  key={i}
-                  className={cn(
-                    "h-1 w-8 rounded-full transition-colors duration-500",
-                    i <= beat ? "bg-ev-700" : "bg-ev-700/15"
-                  )}
-                />
-              ))}
+            {/* caption: what the scene is telling right now, and how far through it we are */}
+            <div className="pointer-events-none flex flex-col items-center gap-2.5 lg:items-end lg:gap-3 lg:pb-1">
+              <p
+                key={beat}
+                className="font-brsemi text-lg text-white animate-in fade-in-0 slide-in-from-bottom-1 duration-500 sm:text-xl"
+                aria-hidden="true"
+              >
+                {BEATS[beat]}
+              </p>
+              <div className="flex gap-1.5" aria-hidden="true">
+                {BEATS.map((_, i) => (
+                  <span
+                    key={i}
+                    className={cn(
+                      "h-1 w-8 rounded-full transition-colors duration-500",
+                      i <= beat ? "bg-ev-400" : "bg-white/20"
+                    )}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
