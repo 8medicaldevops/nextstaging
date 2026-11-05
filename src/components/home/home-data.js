@@ -1,5 +1,5 @@
 // Content for the homepage sections. Copy preserved from the previous build.
-import afterlife__asset from "../../assets/images/afterlife.png";
+import afterlife__asset from "../../assets/images/afterlife.webp";
 
 const afterlife = afterlife__asset.src ?? afterlife__asset;
 
@@ -25,7 +25,7 @@ export const services = [
     body: "Be it sporting events, film shoots, conferences or weddings, let's provide round the clock medical support.",
     learnMore: { label: "Learn more about Ambulance Standby", to: "/ServiceAmb" },
     action: { label: "Book Now", type: "navigate", to: "/StandBy" },
-    image: "../ServiceImage.png",
+    image: "../ServiceImage.webp",
   },
   {
     key: "transport",
@@ -35,7 +35,7 @@ export const services = [
     body: "Arrange ambulance transport for a loved one or patient, whether by land or air.",
     learnMore: { label: "Learn more about Ambulance Transport", to: "/ServiceAgt" },
     action: { label: "Book Now", type: "navigate", to: "/AmbulanceTp" },
-    image: "../air.png",
+    image: "../air.webp",
   },
   {
     key: "afterLife",
@@ -55,7 +55,7 @@ export const services = [
     body: "Need periodic ambulance transport or standby for your individual, family or business use? Curate a package to suit your needs.",
     learnMore: { label: "Learn more about Urgent Care", to: "/ServiceUg" },
     action: { label: "Get Started", type: "modal" },
-    image: "../ug.png",
+    image: "../ug.webp",
   },
 ];
 
@@ -75,13 +75,13 @@ export const serviceCards = [
     link: "/ServiceEr",
   },
   {
-    image: "../air.png",
+    image: "../air.webp",
     title: "Ambulance Transport (Air and Ground)",
     desc: "Our state-of-the-art air and ground ambulances, staffed by skilled professionals, are ready 24/7 for rapid transport or specialized care.",
     link: "/ServiceAgt",
   },
   {
-    image: "../ServiceImage.png",
+    image: "../ServiceImage.webp",
     title: "Ambulance Standby",
     desc: "We provide ambulance standby for events or emergencies, ensuring immediate assistance with trained staff and well-equipped ambulances.",
     link: "/ServiceAmb",
@@ -93,7 +93,7 @@ export const serviceCards = [
     link: "/ServiceAfterLife",
   },
   {
-    image: "../ug.png",
+    image: "../ug.webp",
     title: "Urgent Care",
     desc: "We address non-life threatening medical issues to ensure that they don't escalate.",
     link: "/ServiceUg",

@@ -186,7 +186,7 @@ export const SERVICES = {
 // Images + titles used on "Other Services" cards.
 export const SERVICE_CARDS = {
   er: { image: players, title: "Emergency Response", to: "/ServiceEr" },
-  amb: { image: "/ServiceImage.png", title: "Ambulance Standby", to: "/ServiceAmb" },
+  amb: { image: "/ServiceImage.webp", title: "Ambulance Standby", to: "/ServiceAmb" },
   agt: { image: "/air.png", title: "Air and Ground Ambulance Transport", to: "/ServiceAgt" },
   ug: { image: "/ugtwo.png", title: "Urgent Care", to: "/ServiceUg" },
   afterlife: { image: afterlife, title: "AfterLife Transport", to: "/ServiceAfterLife" },

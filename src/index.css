@@ -13,6 +13,11 @@
         font-family: var(--font-manrope), system-ui, sans-serif;
     }
 
+    /* cookie banner already answered: hidden before first paint (set by the inline script in the layout) */
+    html.consented #cookie-consent {
+        display: none;
+    }
+
     /* Partner logos: slides size to their content and every mark renders at one legible height
        (the source files are only 36px tall, so they are drawn up, never squeezed into a % slide) */
     .partner-marquee .embla__slide {

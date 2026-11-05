@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { initializeAnalytics } from "@/lib/analytics";
 
 export default function CookieConsent() {
-  const [visible, setVisible] = useState(false);
+  // Rendered visible from the server so it paints with the first frame. For visitors who already
+  // answered, the inline script in the layout hides it (html.consented) before that first paint.
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     let consent = null;
@@ -14,7 +16,7 @@ export default function CookieConsent() {
       return;
     }
     if (consent === "accepted") initializeAnalytics();
-    else if (consent !== "rejected") setVisible(true);
+    if (consent === "accepted" || consent === "rejected") setVisible(false);
   }, []);
 
   const decide = (choice) => {
@@ -31,6 +33,7 @@ export default function CookieConsent() {
 
   return (
     <div
+      id="cookie-consent"
       role="dialog"
       aria-label="Cookie consent"
       className="fixed bottom-4 left-4 right-4 z-[9999] mx-auto flex max-w-xl flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-pop sm:p-5 md:flex-row md:items-center"

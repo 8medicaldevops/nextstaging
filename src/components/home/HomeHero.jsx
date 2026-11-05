@@ -31,8 +31,11 @@ function Headline({ tone = "outline" }) {
   const size = "text-[11vw] sm:text-[6.4vw] lg:text-[min(4.6vw,5rem)]";
   return (
     <div className="flex flex-col items-center text-center font-brbold leading-[0.92] tracking-tight lg:items-start lg:text-left">
-      <span className={cn(size, TONES[tone])}>EVERY SECOND</span>
-      <span className={cn(size, TONES[tone])}>COUNTS</span>
+      <span className={cn(size, TONES[tone])}>
+        EVERY SECOND
+        <br />
+        COUNTS
+      </span>
     </div>
   );
 }
@@ -62,13 +65,25 @@ export default function HomeHero({ onEmergency, onBookService }) {
   const onReady = useCallback(() => setSceneReady(true), []);
 
   useEffect(() => {
+    // Not worth it on a metered or very slow connection: the headline, road and actions stand alone.
+    const conn = navigator.connection;
+    if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) return;
+
+    let idleId = 0;
+    let timer = 0;
     const start = () => setMountScene(true);
-    if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(start, { timeout: 900 });
-      return () => window.cancelIdleCallback(id);
-    }
-    const id = window.setTimeout(start, 300);
-    return () => window.clearTimeout(id);
+    const whenIdle = () => {
+      if ("requestIdleCallback" in window) idleId = window.requestIdleCallback(start, { timeout: 1500 });
+      else timer = window.setTimeout(start, 400);
+    };
+    // after the page has finished loading (fonts, images, hydration), then when the browser is idle
+    if (document.readyState === "complete") whenIdle();
+    else window.addEventListener("load", whenIdle, { once: true });
+    return () => {
+      window.removeEventListener("load", whenIdle);
+      if (idleId) window.cancelIdleCallback(idleId);
+      if (timer) window.clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -112,8 +127,8 @@ export default function HomeHero({ onEmergency, onBookService }) {
     gsap.ticker.add(tick);
 
     const ctx = gsap.context(() => {
-      // intro: the outlined type rises in, then the fill pours down from EVERY to COUNTS
-      gsap.fromTo(intro, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.1, ease: "power3.out", delay: 0.2 });
+      // The outlined headline and the actions are visible from the server render (they are the
+      // page's largest paint, so nothing hides them until JS runs); the fill pours down afterwards.
       gsap.fromTo(
         fill,
         { clipPath: "inset(0 0 100% 0)" },
@@ -125,13 +140,6 @@ export default function HomeHero({ onEmergency, onBookService }) {
           onComplete: () => (lightsReady = true), // once the letters are solid, the sirens can light them
         }
       );
-      if (ctaRef.current) {
-        gsap.fromTo(
-          ctaRef.current,
-          { opacity: 0, y: 24 },
-          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 1.2 }
-        );
-      }
       // scroll: the camera dollies toward the viewer, as if it follows the convoy out of the hero
       gsap.to(sceneRef.current, {
         scale: 1.22,

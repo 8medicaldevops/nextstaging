@@ -109,6 +109,14 @@ export default function StoryScene({ className, onBeat, onReady }) {
     const mount = mountRef.current;
     if (!mount) return;
 
+    // The scene is built in slices with a yield to the browser between them, so no single task
+    // blocks input for long on a slow phone. `cancelled` stops a build that outlives the component.
+    let cancelled = false;
+    const cleanups = [];
+    const settle = () =>
+      new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0)));
+
+    (async () => {
     let renderer;
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
@@ -136,6 +144,11 @@ export default function StoryScene({ className, onBeat, onReady }) {
 
     const disposables = [];
     const track = (o) => (disposables.push(o), o);
+    cleanups.push(() => {
+      disposables.forEach((d) => d.dispose?.());
+      renderer.dispose();
+      if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement);
+    });
     const M = makePBR(track);
 
     const scene = new THREE.Scene();
@@ -162,6 +175,10 @@ export default function StoryScene({ className, onBeat, onReady }) {
     const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = envTex;
     scene.environmentIntensity = 0.8;
+    cleanups.push(() => {
+      envTex.dispose();
+      pmrem.dispose();
+    });
 
     scene.add(new THREE.HemisphereLight(0xffffff, 0xcfc8e8, 0.95));
     const key = new THREE.DirectionalLight(0xfff1de, 2.6);
@@ -174,6 +191,9 @@ export default function StoryScene({ className, onBeat, onReady }) {
     const rim = new THREE.DirectionalLight(0x9d7bff, 0.55);
     rim.position.set(10, 5, -9);
     scene.add(rim);
+
+    await settle();
+    if (cancelled) return;
 
     /* ---- the world ---- */
     const ground = new THREE.Mesh(
@@ -226,6 +246,9 @@ export default function StoryScene({ className, onBeat, onReady }) {
       scene.add(kerb);
     });
 
+    await settle();
+    if (cancelled) return;
+
     // a Nigerian roadside: painted blocks with balconies, shop rows under zinc roofs, walled compounds, palms.
     // The hospital stands in the gap left between x = 26 and 53.
     const furniture = new THREE.Group(); // static: merged below into a few draw calls
@@ -251,12 +274,23 @@ export default function StoryScene({ className, onBeat, onReady }) {
     const roadSign = buildRoadSign(M, track);
     roadSign.position.set(9.5, 0, -3.3);
     furniture.add(roadSign);
-    scene.add(mergeStatic(furniture, track));
+    // merge the static roadside into few draw calls, six pieces per frame so no task runs long
+    const pieces = furniture.children.flatMap((c) => (c.children.length > 20 ? c.children : [c]));
+    for (let i = 0; i < pieces.length; i += 6) {
+      const batch = new THREE.Group();
+      pieces.slice(i, i + 6).forEach((piece) => batch.add(piece));
+      scene.add(mergeStatic(batch, track));
+      await settle();
+      if (cancelled) return;
+    }
 
     // the hospital, far down the road
     const hospital = buildHospital(M, track);
     hospital.position.set(HOSPITAL_X, 0, -6.6);
     scene.add(hospital);
+
+    await settle();
+    if (cancelled) return;
 
     /* ---- actors ---- */
     const car = buildSedan(M, track);
@@ -280,6 +314,9 @@ export default function StoryScene({ className, onBeat, onReady }) {
       van.group.add(p);
       return m;
     });
+
+    await settle();
+    if (cancelled) return;
 
     // paramedics + stretcher, moving as one crew group
     const crew = new THREE.Group();
@@ -320,6 +357,9 @@ export default function StoryScene({ className, onBeat, onReady }) {
         }
       })
     );
+
+    await settle();
+    if (cancelled) return;
 
     /* ---- story state + timeline ---- */
     const S = { hazard: 0, siren: 0, shake: 0, focus: -2.5, zoom: 1, lookY: LOOK_Y, walk: 0, walkBlend: 0 };
@@ -573,7 +613,7 @@ export default function StoryScene({ className, onBeat, onReady }) {
       startLoop();
     }
 
-    return () => {
+    cleanups.push(() => {
       stopLoop();
       tl.kill();
       io.disconnect();
@@ -583,11 +623,12 @@ export default function StoryScene({ className, onBeat, onReady }) {
       mount.removeEventListener("pointerleave", onPointerLeave);
       canvas.removeEventListener("webglcontextlost", onContextLost);
       medics.forEach((m) => m.mixer.stopAllAction());
-      disposables.forEach((d) => d.dispose?.());
-      envTex.dispose();
-      pmrem.dispose();
-      renderer.dispose();
-      if (canvas.parentNode === mount) mount.removeChild(canvas);
+    });
+    })();
+
+    return () => {
+      cancelled = true;
+      cleanups.reverse().forEach((fn) => fn());
     };
   }, []);
 

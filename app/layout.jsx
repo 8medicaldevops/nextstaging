@@ -116,6 +116,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={manrope.variable}>
       <body>
+        {/* runs before the banner is painted: hides it for visitors who already answered */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var c=localStorage.getItem('cookieConsent');if(c==='accepted'||c==='rejected')document.documentElement.classList.add('consented')}catch(e){}",
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
