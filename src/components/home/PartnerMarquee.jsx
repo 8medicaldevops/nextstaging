@@ -4,11 +4,12 @@ import { partnerLogos } from "./home-data";
 export default function PartnerMarquee() {
   return (
     <section className="partner-marquee border-b border-line bg-white py-10" aria-label="Partner organizations">
-      <p className="mb-6 text-center font-brmedium text-sm text-mute">Trusted by leading organizations</p>
+      <p className="mb-6 text-center font-brmedium text-sm text-mute sm:text-base">Trusted by leading organizations</p>
       <div className="[mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]">
         <EmblaCarousel
-        slides={partnerLogos}
+        slides={[...partnerLogos, ...partnerLogos, ...partnerLogos]} // 3 sets: the loop needs more than a wide screen's worth of slides
         options={{ loop: true, stopOnMouseEnter: true, stopOnInteraction: false }}
+        speed={0.6}
         className="flex"
         />
       </div>

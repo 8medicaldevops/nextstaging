@@ -19,6 +19,7 @@ import {
   buildTree,
   buildTruck,
   makePBR,
+  makePavementTexture,
   mergeStatic,
 } from "./realistic";
 import { BEATS } from "./story-beats";
@@ -40,10 +41,10 @@ const CREW_Z = 0.3; // the strip between the lanes
 const HOSPITAL_X = 41;
 const BAY_X = HOSPITAL_X - 7.5; // under the emergency canopy
 const VAN_SCALE = 0.9;
-// The scene fills the whole hero and the headline sits over its lower part, so the camera looks low:
-// the road lands about half way up the frame and the foreground below it stays calm for the text.
-const VIEW_HEIGHT = 9.5;
-const LOOK_Y = 0.2;
+// The words sit in their own band below the scene, so the camera aims higher: the road lands in the
+// lower quarter of the frame and the vehicles fill the view instead of an empty foreground.
+const VIEW_HEIGHT = 8.4;
+const LOOK_Y = 2.2;
 
 /* --------------------------------- textures -------------------------------- */
 
@@ -108,6 +109,14 @@ export default function StoryScene({ className, onBeat, onReady }) {
     const mount = mountRef.current;
     if (!mount) return;
 
+    // The scene is built in slices with a yield to the browser between them, so no single task
+    // blocks input for long on a slow phone. `cancelled` stops a build that outlives the component.
+    let cancelled = false;
+    const cleanups = [];
+    const settle = () =>
+      new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0)));
+
+    (async () => {
     let renderer;
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
@@ -135,10 +144,29 @@ export default function StoryScene({ className, onBeat, onReady }) {
 
     const disposables = [];
     const track = (o) => (disposables.push(o), o);
+    cleanups.push(() => {
+      disposables.forEach((d) => d.dispose?.());
+      renderer.dispose();
+      if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement);
+    });
     const M = makePBR(track);
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0xf1edff, 28, 66); // matches the hero wash
+    {
+      const c = document.createElement("canvas");
+      c.width = 4; c.height = 256;
+      const ctx = c.getContext("2d");
+      const g = ctx.createLinearGradient(0, 0, 0, 256);
+      g.addColorStop(0, "#F8F6FF");
+      g.addColorStop(0.55, "#EFEAFF");
+      g.addColorStop(1, "#E8E2FF");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 4, 256);
+      const sky = new THREE.CanvasTexture(c);
+      sky.colorSpace = THREE.SRGBColorSpace;
+      scene.background = track(sky);
+    }
     const FOV = 30;
     const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 140);
 
@@ -147,6 +175,10 @@ export default function StoryScene({ className, onBeat, onReady }) {
     const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = envTex;
     scene.environmentIntensity = 0.8;
+    cleanups.push(() => {
+      envTex.dispose();
+      pmrem.dispose();
+    });
 
     scene.add(new THREE.HemisphereLight(0xffffff, 0xcfc8e8, 0.95));
     const key = new THREE.DirectionalLight(0xfff1de, 2.6);
@@ -159,6 +191,9 @@ export default function StoryScene({ className, onBeat, onReady }) {
     const rim = new THREE.DirectionalLight(0x9d7bff, 0.55);
     rim.position.set(10, 5, -9);
     scene.add(rim);
+
+    await settle();
+    if (cancelled) return;
 
     /* ---- the world ---- */
     const ground = new THREE.Mesh(
@@ -193,11 +228,26 @@ export default function StoryScene({ className, onBeat, onReady }) {
     scene.add(shadowCatcher);
     track(shadowCatcher.material);
 
-    const verge = new THREE.Mesh(track(new THREE.PlaneGeometry(ROAD_LEN, 1.1)), M.concreteDark);
-    verge.rotation.x = -Math.PI / 2;
-    verge.position.set(25, 0.02, -3.3);
-    verge.receiveShadow = true;
-    scene.add(verge);
+    // paved sidewalks with kerb stones on both sides of the road (road spans z = -2.7 .. 3.1)
+    const paveTex = track(makePavementTexture());
+    paveTex.repeat.set(ROAD_LEN / 2, 1);
+    const paveMat = track(new THREE.MeshStandardMaterial({ map: paveTex, roughness: 0.9 }));
+    [[-3.75, 2.0], [3.95, 1.6]].forEach(([z, d]) => {
+      const pave = new THREE.Mesh(track(new THREE.PlaneGeometry(ROAD_LEN, d)), paveMat);
+      pave.rotation.x = -Math.PI / 2;
+      pave.position.set(25, 0.12, z);
+      pave.receiveShadow = true;
+      scene.add(pave);
+    });
+    [-2.78, 3.18].forEach((z) => {
+      const kerb = new THREE.Mesh(track(new THREE.BoxGeometry(ROAD_LEN, 0.13, 0.22)), M.concreteDark);
+      kerb.position.set(25, 0.065, z);
+      kerb.receiveShadow = true;
+      scene.add(kerb);
+    });
+
+    await settle();
+    if (cancelled) return;
 
     // a Nigerian roadside: painted blocks with balconies, shop rows under zinc roofs, walled compounds, palms.
     // The hospital stands in the gap left between x = 26 and 53.
@@ -224,12 +274,23 @@ export default function StoryScene({ className, onBeat, onReady }) {
     const roadSign = buildRoadSign(M, track);
     roadSign.position.set(9.5, 0, -3.3);
     furniture.add(roadSign);
-    scene.add(mergeStatic(furniture, track));
+    // merge the static roadside into few draw calls, six pieces per frame so no task runs long
+    const pieces = furniture.children.flatMap((c) => (c.children.length > 20 ? c.children : [c]));
+    for (let i = 0; i < pieces.length; i += 6) {
+      const batch = new THREE.Group();
+      pieces.slice(i, i + 6).forEach((piece) => batch.add(piece));
+      scene.add(mergeStatic(batch, track));
+      await settle();
+      if (cancelled) return;
+    }
 
     // the hospital, far down the road
     const hospital = buildHospital(M, track);
     hospital.position.set(HOSPITAL_X, 0, -6.6);
     scene.add(hospital);
+
+    await settle();
+    if (cancelled) return;
 
     /* ---- actors ---- */
     const car = buildSedan(M, track);
@@ -254,6 +315,9 @@ export default function StoryScene({ className, onBeat, onReady }) {
       return m;
     });
 
+    await settle();
+    if (cancelled) return;
+
     // paramedics + stretcher, moving as one crew group
     const crew = new THREE.Group();
     const medicA = buildParamedic(M, track);
@@ -268,8 +332,8 @@ export default function StoryScene({ className, onBeat, onReady }) {
 
     // crash smoke
     const smokeTex = track(makeSmokeTexture());
-    const smoke = Array.from({ length: 8 }, () => {
-      const m = track(new THREE.SpriteMaterial({ map: smokeTex, transparent: true, opacity: 0, depthWrite: false }));
+    const smoke = Array.from({ length: 12 }, () => {
+      const m = track(new THREE.SpriteMaterial({ map: smokeTex, color: 0x6e6878, transparent: true, opacity: 0, depthWrite: false }));
       const s = new THREE.Sprite(m);
       scene.add(s);
       return s;
@@ -294,6 +358,9 @@ export default function StoryScene({ className, onBeat, onReady }) {
       })
     );
 
+    await settle();
+    if (cancelled) return;
+
     /* ---- story state + timeline ---- */
     const S = { hazard: 0, siren: 0, shake: 0, focus: -2.5, zoom: 1, lookY: LOOK_Y, walk: 0, walkBlend: 0 };
     const vehicles = [
@@ -309,7 +376,16 @@ export default function StoryScene({ className, onBeat, onReady }) {
       car.nose.scale.set(1, 1, 1);
       car.nose.rotation.set(0, 0, 0);
       truck.group.position.set(3.0, 0, FAR_LANE);
-      van.group.position.set(-16, 0, NEAR_LANE);
+      car.group.position.y = 0;
+      car.bonnet.rotation.z = -0.06;
+      car.crackMat.opacity = 0;
+      car.debris.forEach((d) => {
+        d.visible = false;
+        d.position.copy(d.userData.home);
+        d.rotation.set(0, 0, 0);
+      });
+      van.group.visible = false; // nowhere in sight until the call is made
+      van.group.position.set(-26, 0, NEAR_LANE);
       van.group.rotation.set(0, 0, 0);
       crew.position.set(-7.2, 0, CREW_Z);
       crew.rotation.y = 0;
@@ -324,6 +400,7 @@ export default function StoryScene({ className, onBeat, onReady }) {
 
     const beat = (i) => beatRef.current?.(i, BEATS[i]);
     const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.3, paused: true, defaults: { ease: "none", immediateRender: false } });
+    if (process.env.NODE_ENV !== "production") window.__storyTl = tl; // dev-only: lets tests seek the story
     const canvas = renderer.domElement;
     tl.call(reset, null, 0);
     tl.fromTo(canvas, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0);
@@ -331,21 +408,43 @@ export default function StoryScene({ className, onBeat, onReady }) {
 
     // 1. the drive
     tl.fromTo(car.group.position, { x: -13 }, { x: -2.3, duration: 3, ease: "power1.in" }, 0);
-    // 2. the crash
+    // 2. the crash: the front crushes and lifts, the bonnet pops, the screen shatters, the car slews
+    //    and bounces, debris scatters, dark smoke pours out for the rest of the scene
     tl.call(beat, [1], 3);
-    tl.to(car.nose.scale, { x: 0.55, duration: 0.1, ease: "power3.out" }, 3);
-    tl.to(car.nose.rotation, { z: 0.05, duration: 0.15, ease: "power3.out" }, 3);
-    tl.to(car.group.position, { x: -2.08, duration: 0.12, ease: "power3.out" }, 3);
-    tl.to(car.group.position, { x: -2.2, duration: 0.5, ease: "power2.out" }, 3.12);
-    tl.to(car.group.rotation, { y: 0.04, z: -0.012, duration: 0.3, ease: "power2.out" }, 3);
-    tl.to(truck.group.position, { x: 3.22, duration: 0.25, ease: "power3.out" }, 3);
-    tl.fromTo(S, { shake: 1 }, { shake: 0, duration: 0.8, ease: "power2.out" }, 3);
+    tl.to(car.nose.scale, { x: 0.32, y: 0.86, duration: 0.1, ease: "power3.out" }, 3);
+    tl.to(car.nose.rotation, { z: 0.26, duration: 0.14, ease: "power3.out" }, 3);
+    tl.to(car.nose.position, { y: 0.06, duration: 0.14, ease: "power3.out" }, 3);
+    tl.to(car.bonnet.rotation, { z: 1.0, duration: 0.16, ease: "power3.out" }, 3.02);
+    tl.to(car.bonnet.rotation, { z: 0.82, duration: 0.5, ease: "elastic.out(1, 0.5)" }, 3.18);
+    tl.set(car.crackMat, { opacity: 1 }, 3.03);
+    tl.to(car.group.position, { x: -2.02, duration: 0.12, ease: "power3.out" }, 3);
+    tl.to(car.group.position, { x: -2.14, duration: 0.5, ease: "power2.out" }, 3.12);
+    tl.to(car.group.position, { y: 0.11, duration: 0.14, ease: "power2.out" }, 3.02);
+    tl.to(car.group.position, { y: 0, duration: 0.32, ease: "bounce.out" }, 3.16);
+    tl.to(car.group.rotation, { y: 0.24, z: -0.035, x: 0.02, duration: 0.42, ease: "power2.out" }, 3);
+    tl.to(truck.group.position, { x: 3.4, duration: 0.3, ease: "power3.out" }, 3);
+    tl.to(truck.group.rotation, { z: 0.012, duration: 0.3, ease: "power2.out" }, 3);
+    tl.to(truck.group.rotation, { z: 0, duration: 0.5, ease: "power2.inOut" }, 3.3);
+    tl.fromTo(S, { shake: 1.9 }, { shake: 0, duration: 1.0, ease: "power2.out" }, 3);
     tl.set(S, { hazard: 1 }, 3.1);
-    smoke.forEach((s, i) => {
-      const t0 = 3.05 + i * 0.28;
-      tl.fromTo(s.position, { x: -0.6 + i * 0.05, y: 1.0, z: FAR_LANE + 0.1 }, { x: -0.4 + i * 0.12, y: 3.1, z: FAR_LANE + 0.1, duration: 2.6, ease: "power1.out" }, t0);
-      tl.fromTo(s.scale, { x: 0.5, y: 0.5, z: 1 }, { x: 2.4, y: 2.4, z: 1, duration: 2.6 }, t0);
-      tl.fromTo(s.material, { opacity: 0.6 }, { opacity: 0, duration: 2.6, ease: "power1.in" }, t0);
+    car.debris.forEach((d, i) => {
+      const rnd = (k) => (Math.sin((i + 1) * 12.9898 * k) * 43758.5453) % 1; // fixed per piece
+      const dx = 0.6 + Math.abs(rnd(1)) * 1.6;
+      const dz = (rnd(2) - 0.5) * 2.4;
+      const home = d.userData.home;
+      tl.call(() => (d.visible = true), null, 3.02);
+      tl.to(d.position, { x: home.x + dx, z: home.z + dz, duration: 0.55 + Math.abs(rnd(3)) * 0.3, ease: "power1.out" }, 3.02);
+      tl.to(d.position, { y: home.y + 0.35 + Math.abs(rnd(4)) * 0.3, duration: 0.22, ease: "power2.out" }, 3.02);
+      tl.to(d.position, { y: 0.03, duration: 0.4, ease: "bounce.out" }, 3.24);
+      tl.to(d.rotation, { x: rnd(5) * 6, y: rnd(6) * 6, z: rnd(7) * 4, duration: 0.8, ease: "power1.out" }, 3.02);
+    });
+    smoke.forEach((sp, i) => {
+      const t0 = 3.05 + i * 0.3;
+      const life = 3.4;
+      const puffs = { repeat: 3, repeatDelay: 0 };
+      tl.fromTo(sp.position, { x: -0.9 + i * 0.04, y: 1.0, z: FAR_LANE + 0.15 }, { x: -0.5 + i * 0.12, y: 3.4, z: FAR_LANE + 0.15, duration: life, ease: "power1.out", ...puffs }, t0);
+      tl.fromTo(sp.scale, { x: 0.5, y: 0.5, z: 1 }, { x: 2.8, y: 2.8, z: 1, duration: life, ...puffs }, t0);
+      tl.fromTo(sp.material, { opacity: 0.7 }, { opacity: 0, duration: life, ease: "power1.in", ...puffs }, t0);
     });
     // 3. the call
     tl.call(beat, [2], 4.2);
@@ -355,7 +454,8 @@ export default function StoryScene({ className, onBeat, onReady }) {
       tl.fromTo(r.material, { opacity: 0.85 }, { opacity: 0, duration: 1.4, ease: "power1.in" }, t0);
     });
     // 4. help arrives
-    tl.fromTo(van.group.position, { x: -16 }, { x: -8.5, duration: 2.4, ease: "power2.out" }, 5.2);
+    tl.call(() => (van.group.visible = true), null, 4.9);
+    tl.fromTo(van.group.position, { x: -26 }, { x: -8.5, duration: 3.1, ease: "power2.out" }, 4.9);
     tl.call(beat, [3], 5.4);
     tl.fromTo(S, { siren: 0 }, { siren: 1, duration: 0.6 }, 5.6);
     tl.fromTo(S, { focus: -2.5 }, { focus: -4.5, duration: 2, ease: "power2.inOut" }, 5.2);
@@ -534,6 +634,9 @@ export default function StoryScene({ className, onBeat, onReady }) {
       // one still frame: the crew reaching the patient
       tl.time(10.2, true);
       crew.visible = true;
+      van.group.visible = true;
+      car.bonnet.rotation.z = 0.82;
+      car.crackMat.opacity = 1;
       S.siren = 1;
       S.walk = 0;
       canvas.style.opacity = 1;
@@ -546,7 +649,7 @@ export default function StoryScene({ className, onBeat, onReady }) {
       startLoop();
     }
 
-    return () => {
+    cleanups.push(() => {
       stopLoop();
       tl.kill();
       io.disconnect();
@@ -556,11 +659,12 @@ export default function StoryScene({ className, onBeat, onReady }) {
       mount.removeEventListener("pointerleave", onPointerLeave);
       canvas.removeEventListener("webglcontextlost", onContextLost);
       medics.forEach((m) => m.mixer.stopAllAction());
-      disposables.forEach((d) => d.dispose?.());
-      envTex.dispose();
-      pmrem.dispose();
-      renderer.dispose();
-      if (canvas.parentNode === mount) mount.removeChild(canvas);
+    });
+    })();
+
+    return () => {
+      cancelled = true;
+      cleanups.reverse().forEach((fn) => fn());
     };
   }, []);
 

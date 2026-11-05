@@ -66,12 +66,14 @@ function StepsSection({ steps }) {
             <h3 className="font-brbold text-lg text-ink">{step.title}</h3>
             <p className="font-brmedium text-mute">{step.body}</p>
             {step.contact && (
-              <p className="font-brmedium text-ev-700">
+              <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 font-brmedium text-ev-700 [overflow-wrap:anywhere]">
                 {step.contact.map((c, j) => (
-                  <span key={c}>
-                    {j > 0 && <span className="px-1 font-brreg text-sm text-mute">or</span>}
+                  <span key={c} className="contents">
+                    {j > 0 && <span className="font-brreg text-sm text-mute">or</span>}
                     {c.startsWith("+") ? (
-                      <a href={`tel:${c}`} className="hover:underline">{c}</a>
+                      <a href={`tel:${c}`} className="whitespace-nowrap hover:underline">
+                        {c.replace(/^(\+234)(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3 $4")}
+                      </a>
                     ) : (
                       <a href={`mailto:${c}`} className="hover:underline">{c}</a>
                     )}
@@ -154,7 +156,7 @@ function PolicyTabs() {
           aria-label="Booking policies"
           aria-orientation="vertical"
           onKeyDown={onKeyDown}
-          className="flex gap-1 overflow-x-auto border-b border-line p-3 lg:flex-col lg:overflow-visible lg:border-b-0 lg:border-r lg:p-4"
+          className="flex flex-wrap gap-1 border-b border-line p-3 lg:flex-col lg:flex-nowrap lg:border-b-0 lg:border-r lg:p-4"
         >
           {BOOKING_POLICIES.map((p, i) => {
             const selected = i === active;

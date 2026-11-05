@@ -13,12 +13,33 @@
         font-family: var(--font-manrope), system-ui, sans-serif;
     }
 
-    /* Partner logos sit in white tiles so colored marks stay legible on the night theme */
+    /* cookie banner already answered: hidden before first paint (set by the inline script in the layout) */
+    html.consented #cookie-consent {
+        display: none;
+    }
+
+    /* Partner logos: slides size to their content and every mark renders at one legible height
+       (the source files are only 36px tall, so they are drawn up, never squeezed into a % slide) */
+    .partner-marquee .embla__slide {
+        flex: 0 0 auto;
+    }
+
     .partner-marquee .embla__slide img {
+        box-sizing: border-box;
+        height: 60px;
+        width: auto;
+        max-width: none;
         background: #ffffff;
         border: 1px solid #ECEBED;
         border-radius: 12px;
-        padding: 10px 16px;
+        padding: 12px 18px;
+    }
+
+    @media (min-width: 768px) {
+        .partner-marquee .embla__slide img {
+            height: 68px;
+            padding: 14px 22px;
+        }
     }
 
     /* Press feedback on plain buttons (Radix triggers carry data-state and are excluded) */

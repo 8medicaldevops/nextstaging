@@ -115,6 +115,7 @@ export default function NavBar({ dark = false }) {
   const isServicePage = SERVICE_LINKS.some((s) => isActive(s.to));
 
   return (
+    <>
     <header
       className={cn(
         "sticky top-0 z-50 border-b backdrop-blur-md",
@@ -131,7 +132,7 @@ export default function NavBar({ dark = false }) {
         </Link>
 
         {/* centered desktop nav */}
-        <nav className="hidden justify-center md:flex" aria-label="Main">
+        <nav className="hidden justify-center lg:flex" aria-label="Main">
           <ul className="flex items-center gap-7">
             <li><NavLink dark={dark} to="/" label="Home" active={isActive("/")} /></li>
             <li><NavLink dark={dark} to="/AboutUs" label="About Us" active={isActive("/AboutUs")} /></li>
@@ -174,7 +175,7 @@ export default function NavBar({ dark = false }) {
         </nav>
 
         {/* right-side actions */}
-        <div className="hidden items-center gap-5 md:flex">
+        <div className="hidden items-center gap-5 lg:flex">
           {!isSignedIn && (
             <>
               <NavLink dark={dark} to="/SignIn" label="Sign In" active={isActive("/SignIn")} />
@@ -207,7 +208,7 @@ export default function NavBar({ dark = false }) {
 
         {/* mobile trigger */}
         <button
-          className="justify-self-end md:hidden"
+          className="justify-self-end lg:hidden"
           onClick={() => setIsMenuOpen(true)}
           aria-label="Open menu"
           aria-expanded={isMenuOpen}
@@ -220,9 +221,14 @@ export default function NavBar({ dark = false }) {
         </button>
       </div>
 
+    </header>
+
+      {/* mobile drawer: rendered as a sibling of the header, not inside it. The header's
+          backdrop-filter would otherwise become the containing block for these fixed panels,
+          trapping the drawer inside the 64px header strip. */}
       {/* mobile drawer */}
       {isMenuOpen && (
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <div
             className="fixed inset-0 z-40 bg-night-deep/50 backdrop-blur-sm"
             onClick={() => setIsMenuOpen(false)}
@@ -304,6 +310,6 @@ export default function NavBar({ dark = false }) {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

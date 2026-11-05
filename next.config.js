@@ -19,6 +19,14 @@ const nextConfig = {
     // (the legacy code uses <img>, background-image etc., not next/image).
     disableStaticImages: true,
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*.(png|jpg|jpeg|webp|svg|woff2)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=2592000, stale-while-revalidate=86400" }],
+      },
+    ];
+  },
   async redirects() {
     // Legacy SPA funnel URLs contained spaces; they now live at hyphenated slugs.
     const base = "/StandBy/Nigeria/Event/Schedule";

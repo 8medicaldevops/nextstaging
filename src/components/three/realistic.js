@@ -9,6 +9,174 @@ import { brandFont, drawCross, makeBusDecal, makeDecal, makeKit } from "./Ambula
  * Conventions: +x is the nose, y is up, models sit on y = 0.
  */
 
+/* -------------------------------- textures --------------------------------- */
+// All procedural (canvas) so nothing is fetched. Grey-scale maps multiply the material colour,
+// so one grime map serves every paint colour.
+
+function seeded(seed) {
+  return () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+}
+
+// Wall grime: fine grain, faint vertical streaks, darker toward the base. Tiles horizontally.
+export function makeGrimeTexture() {
+  const W = 256, H = 256;
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const ctx = c.getContext("2d");
+  const rnd = seeded(17);
+  ctx.fillStyle = "#f2f2f2";
+  ctx.fillRect(0, 0, W, H);
+  for (let i = 0; i < 9000; i++) {
+    const g = 200 + Math.floor(rnd() * 55);
+    ctx.fillStyle = `rgba(${g},${g},${g},0.5)`;
+    ctx.fillRect(Math.floor(rnd() * W), Math.floor(rnd() * H), 2, 2);
+  }
+  for (let i = 0; i < 14; i++) {
+    const x = rnd() * W, w = 2 + rnd() * 6;
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, "rgba(120,110,100,0)");
+    grad.addColorStop(1, `rgba(120,110,100,${0.12 + rnd() * 0.18})`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, 0, w, H);
+  }
+  const base = ctx.createLinearGradient(0, H * 0.6, 0, H);
+  base.addColorStop(0, "rgba(90,80,70,0)");
+  base.addColorStop(1, "rgba(90,80,70,0.35)");
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, W, H);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+// Tyre tread as a bump map: blocks and sipes repeating around the circumference.
+export function makeTreadBump() {
+  const c = document.createElement("canvas");
+  c.width = 64; c.height = 64;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#808080";
+  ctx.fillRect(0, 0, 64, 64);
+  ctx.fillStyle = "#d0d0d0";
+  ctx.fillRect(0, 6, 64, 20);
+  ctx.fillRect(0, 36, 64, 20);
+  ctx.fillStyle = "#404040";
+  for (let y = 2; y < 64; y += 10) ctx.fillRect(0, y, 64, 2); // grooves
+  ctx.fillRect(20, 0, 3, 64); ctx.fillRect(42, 0, 3, 64); // sipes
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(26, 1);
+  return t;
+}
+
+// Corrugation ridges as a bump map (grey-scale stripes).
+export function makeCorrugationBump() {
+  const c = document.createElement("canvas");
+  c.width = 64; c.height = 8;
+  const ctx = c.getContext("2d");
+  for (let x = 0; x < 64; x++) {
+    const v = 128 + Math.round(Math.sin((x / 8) * Math.PI * 2) * 90);
+    ctx.fillStyle = `rgb(${v},${v},${v})`;
+    ctx.fillRect(x, 0, 1, 8);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(10, 1);
+  return t;
+}
+
+// Paving slabs for the pavement: light concrete with joint lines and grain.
+export function makePavementTexture() {
+  const W = 256, H = 128;
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const ctx = c.getContext("2d");
+  const rnd = seeded(23);
+  ctx.fillStyle = "#c9c6c0";
+  ctx.fillRect(0, 0, W, H);
+  for (let i = 0; i < 5000; i++) {
+    const g = 170 + Math.floor(rnd() * 50);
+    ctx.fillStyle = `rgba(${g},${g - 3},${g - 8},0.6)`;
+    ctx.fillRect(Math.floor(rnd() * W), Math.floor(rnd() * H), 2, 2);
+  }
+  ctx.strokeStyle = "rgba(70,65,60,0.55)";
+  ctx.lineWidth = 3;
+  for (let x = 0; x <= W; x += 64) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y <= H; y += 64) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 8;
+  return t;
+}
+
+// Nigerian-style number plate: white, blue characters, state name along the top.
+const makePlateTexture = (text) =>
+  makeDecal(256, 64, (ctx) => {
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, 256, 64);
+    ctx.strokeStyle = "#1B1F6B";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(3, 3, 250, 58);
+    ctx.fillStyle = "#1B1F6B";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `700 11px ${brandFont()}`;
+    ctx.fillText("LAGOS", 128, 13);
+    ctx.font = `700 30px ${brandFont()}`;
+    ctx.fillText(text, 128, 40);
+  });
+
+// Shattered-glass web for the windscreen, drawn from an impact point low on the passenger side.
+const makeCrackTexture = () =>
+  makeDecal(256, 256, (ctx) => {
+    ctx.clearRect(0, 0, 256, 256);
+    const rnd = seeded(41);
+    const cx = 96, cy = 168;
+    ctx.strokeStyle = "rgba(255,255,255,0.85)";
+    ctx.lineCap = "round";
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2 + rnd() * 0.3;
+      const len = 90 + rnd() * 120;
+      ctx.lineWidth = 1.2 + rnd() * 1.4;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      let x = cx, y = cy;
+      for (let k = 1; k <= 5; k++) {
+        x = cx + Math.cos(a) * (len * k) / 5 + (rnd() - 0.5) * 10;
+        y = cy + Math.sin(a) * (len * k) / 5 + (rnd() - 0.5) * 10;
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    for (let r = 14; r < 70; r += 14) { // concentric rings
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i <= 28; i++) {
+        const a = (i / 28) * Math.PI * 2;
+        const rr = r + (rnd() - 0.5) * 6;
+        const x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr;
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+    }
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI * 2); ctx.fill();
+  });
+
+// Rear chevrons for the ambulance: red and yellow diagonals.
+const makeChevronTexture = () =>
+  makeDecal(512, 128, (ctx) => {
+    ctx.fillStyle = "#F2C230";
+    ctx.fillRect(0, 0, 512, 128);
+    ctx.fillStyle = "#D90818";
+    for (let x = -128; x < 640; x += 96) {
+      ctx.beginPath();
+      ctx.moveTo(x, 128); ctx.lineTo(x + 48, 128); ctx.lineTo(x + 112, 0); ctx.lineTo(x + 64, 0);
+      ctx.closePath(); ctx.fill();
+    }
+  });
+
 /* -------------------------------- materials -------------------------------- */
 
 export function makePBR(track) {
@@ -23,7 +191,7 @@ export function makePBR(track) {
     paintAlarm: P({ color: 0xf9091d, roughness: 0.35, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.1 }),
     trim: S({ color: 0x15131c, roughness: 0.62, metalness: 0.1 }),
     glass: P({ color: 0x0a0816, roughness: 0.03, metalness: 0.2, envMapIntensity: 1.8 }),
-    rubber: S({ color: 0x0c0c10, roughness: 0.95, side: THREE.DoubleSide }),
+    rubber: S({ color: 0x0c0c10, roughness: 0.95, side: THREE.DoubleSide, bumpMap: track(makeTreadBump()), bumpScale: 0.012 }),
     alloy: S({ color: 0xd9dbe4, roughness: 0.22, metalness: 1 }),
     steel: S({ color: 0x7d7f8d, roughness: 0.4, metalness: 0.9 }),
     chrome: S({ color: 0xcfd0dc, roughness: 0.1, metalness: 1 }),
@@ -33,7 +201,10 @@ export function makePBR(track) {
     vest: S({ color: 0x6d09f9, roughness: 0.7 }),
     reflect: S({ color: 0xd8dae6, roughness: 0.3, metalness: 0.6, emissive: 0x6a6a7a, emissiveIntensity: 0.4 }),
     skin: S({ color: 0x8d5a3b, roughness: 0.7 }),
-    concrete: S({ color: 0xdfe3ee, roughness: 0.85 }),
+    concrete: S({ color: 0xdfe3ee, roughness: 0.85, map: track(makeGrimeTexture()) }),
+    plate: S({ color: 0xffffff, roughness: 0.35, metalness: 0.1 }),
+    lens: P({ color: 0x1a1a22, roughness: 0.05, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.02 }),
+    orangeLens: S({ color: 0xff8c2a, emissive: 0xff7a1a, emissiveIntensity: 0.25, roughness: 0.2 }),
     concreteDark: S({ color: 0x5b5a6e, roughness: 0.9 }),
     apron: S({ color: 0x24213a, roughness: 0.95 }),
     windowGlass: P({ color: 0x1d3a6b, roughness: 0.06, metalness: 0.5, envMapIntensity: 1.6 }),
@@ -67,6 +238,23 @@ const mesh = (geo, material, x = 0, y = 0, z = 0) => {
   m.position.set(x, y, z);
   return m;
 };
+
+// Number plate on a vehicle end. facing: +1 = nose (+x), -1 = tail (-x).
+function addPlate(group, track, M, text, x, y, z, facing) {
+  const tex = track(makePlateTexture(text));
+  const m = new THREE.Mesh(track(new THREE.PlaneGeometry(0.46, 0.115)), track(new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })));
+  m.position.set(x, y, z);
+  m.rotation.y = facing > 0 ? Math.PI / 2 : -Math.PI / 2;
+  group.add(m);
+  const backer = new THREE.Mesh(track(new THREE.BoxGeometry(0.02, 0.14, 0.5)), M.trim);
+  backer.position.set(x - facing * 0.012, y, z);
+  group.add(backer);
+}
+
+// Horizontal chrome slats inside a grille opening.
+function addGrilleSlats(kit, M, x, y, z, width, height, n = 4) {
+  for (let i = 0; i < n; i++) kit.box(0.02, 0.018, width, M.chrome, x, y - height / 2 + (height / (n + 1)) * (i + 1), z);
+}
 
 // A tire (lathe profile) + alloy rim with spokes, brake disc and centre cap. Axle along z.
 export function makeRealWheelFactory(track, M, r, w) {
@@ -193,9 +381,47 @@ export function buildSedan(M, track) {
   nk.rbox(0.07, 0.22, 1.2, 0.03, M.trim, 0.5, 0.52, 0); // grille
   nk.rbox(0.04, 0.03, 1.1, 0.015, M.chrome, 0.52, 0.6, 0);
   nk.rbox(0.12, 0.1, FW - 0.1, 0.04, M.trim, 0.47, 0.36, 0); // splitter
+  addGrilleSlats(nk, M, 0.535, 0.52, 0, 1.15, 0.2, 4);
   [-1, 1].forEach((s) => {
-    nk.rbox(0.1, 0.13, 0.4, 0.04, M.headlight, 0.43, 0.78, s * 0.55);
-    nk.box(0.05, 0.08, 0.16, M.hazardFront || M.headlight, 0.5, 0.42, s * 0.68);
+    nk.rbox(0.14, 0.2, 0.5, 0.04, M.trim, 0.4, 0.78, s * 0.55); // lamp housing
+    nk.rbox(0.05, 0.14, 0.42, 0.03, M.lens, 0.47, 0.79, s * 0.55); // clear lens
+    nk.rbox(0.03, 0.06, 0.34, 0.02, M.headlight, 0.49, 0.8, s * 0.55); // projector strip
+    nk.box(0.02, 0.025, 0.3, M.headlight, 0.495, 0.72, s * 0.55); // daytime running light
+    nk.rbox(0.05, 0.07, 0.12, 0.02, M.lens, 0.5, 0.42, s * 0.6); // fog lamp
+  });
+  addPlate(noseGroup, track, M, "LND 482 KP", 0.52, 0.56, 0, 1);
+  addPlate(group, track, M, "LND 482 KP", -2.2, 0.72, 0, -1);
+  group.add(mesh(track(new THREE.CylinderGeometry(0.008, 0.008, 0.3, 6)), M.trim, -1.2, 1.58, -0.5)); // aerial
+  rbox(0.14, 0.04, 1.3, 0.015, M.paintCar, -2.0, 1.1, 0); // boot lip
+  const exhaust = mesh(track(new THREE.CylinderGeometry(0.035, 0.035, 0.14, 12)), M.chrome, -2.2, 0.33, 0.5);
+  exhaust.rotation.z = Math.PI / 2;
+  group.add(exhaust);
+  [-1, 1].forEach((s) => box(0.02, 0.07, 0.11, M.lens, 0.595, 1.12, s * 1.1)); // mirror glass
+
+  // crash parts: a bonnet that pops on its rear hinge, a windscreen crack overlay, loose debris
+  const bonnet = new THREE.Group();
+  bonnet.position.set(0.975, 0.99, 0);
+  bonnet.add(mesh(track(new THREE.BoxGeometry(0.86, 0.03, W - 0.1)), M.paintCar, 0.43, 0, 0));
+  bonnet.rotation.z = -0.06; // follows the hood line at rest
+  group.add(bonnet);
+  const crackMat = track(new THREE.MeshBasicMaterial({ map: track(makeCrackTexture()), transparent: true, opacity: 0, depthWrite: false }));
+  const crack = mesh(track(new THREE.BoxGeometry(0.78, 0.002, W - 0.12)), crackMat, 0.566, 1.325, 0);
+  crack.rotation.z = -0.55;
+  crack.renderOrder = 4;
+  group.add(crack);
+  const debris = [
+    [0.14, 0.09, 0.03, M.lens, 2.3, 0.8, 0.5],
+    [0.1, 0.07, 0.03, M.lens, 2.3, 0.8, -0.55],
+    [0.4, 0.06, 0.08, M.trim, 2.32, 0.36, 0.3],
+    [0.22, 0.02, 0.05, M.chrome, 2.3, 0.6, 0],
+    [0.16, 0.1, 0.02, M.paintCar, 2.2, 0.9, 0.3],
+    [0.12, 0.12, 0.02, M.paintCar, 2.2, 0.9, -0.25],
+  ].map(([w, h, d, material, x, y, z]) => {
+    const piece = mesh(track(new THREE.BoxGeometry(w, h, d)), material, x, y, z);
+    piece.visible = false;
+    piece.userData.home = new THREE.Vector3(x, y, z);
+    group.add(piece);
+    return piece;
   });
 
   // wheels
@@ -215,7 +441,7 @@ export function buildSedan(M, track) {
     box(0.05, 0.08, 0.16, hazard, -2.19, 0.66, s * 0.7);
     nk.box(0.05, 0.08, 0.16, hazard, 0.5, 0.66, s * 0.7);
   });
-  return { group, nose: noseGroup, wheels, hazards: [hazard], seamX: SEAM };
+  return { group, nose: noseGroup, wheels, hazards: [hazard], seamX: SEAM, bonnet, crackMat, debris };
 }
 
 /* ------------------------------ ambulance (van) ------------------------------ */
@@ -289,11 +515,34 @@ export function buildAmbulanceBus(M, track, lamps) {
   box(0.03, 0.04, 1.3, M.chrome, 2.7, 1.1, 0);
   rbox(0.24, 0.3, FW + 0.02, 0.06, M.trim, 2.62, 0.55, 0); // bumper
   rbox(0.22, 0.3, FW + 0.02, 0.06, M.trim, -2.62, 0.55, 0);
+  addGrilleSlats({ box }, M, 2.705, 0.98, 0, 1.25, 0.26, 4);
   [-1, 1].forEach((s) => {
-    rbox(0.07, 0.2, 0.46, 0.03, M.headlight, 2.68, 1.3, s * 0.68);
+    rbox(0.12, 0.26, 0.52, 0.04, M.trim, 2.64, 1.3, s * 0.68); // lamp housing
+    rbox(0.05, 0.2, 0.46, 0.03, M.lens, 2.7, 1.3, s * 0.68);
+    rbox(0.03, 0.08, 0.38, 0.02, M.headlight, 2.72, 1.32, s * 0.68);
+    box(0.03, 0.05, 0.2, M.orangeLens, 2.72, 1.18, s * 0.78); // indicator
     box(0.06, 0.1, 0.16, M.tail, -2.69, 1.0, s * 0.8);
     box(0.06, 0.4, 0.14, M.tail, -2.69, 1.45, s * 0.82);
+    box(0.02, 0.1, 0.12, M.lens, 2.165, 1.55, s * 1.13); // mirror glass
+    box(0.03, 0.02, 0.6, M.chrome, -2.72, 1.9, s * 0.0 + s * 0.3); // rear door handles
   });
+  addPlate(group, track, M, "8MD 112 LA", 2.69, 0.72, 0, 1);
+  addPlate(group, track, M, "8MD 112 LA", -2.7, 0.72, 0, -1);
+  // rear: chevron panel, cross, door split line, step
+  const chev = new THREE.Mesh(track(new THREE.PlaneGeometry(1.7, 0.36)), track(new THREE.MeshBasicMaterial({ map: track(makeChevronTexture()), toneMapped: false })));
+  chev.position.set(-2.715, 0.97, 0);
+  chev.rotation.y = -Math.PI / 2;
+  group.add(chev);
+  const crossTexAmb = track(makeDecal(128, 128, (ctx) => { ctx.clearRect(0, 0, 128, 128); drawCross(ctx, 64, 64, 100); }));
+  const crossAmb = new THREE.Mesh(track(new THREE.PlaneGeometry(0.42, 0.42)), track(new THREE.MeshBasicMaterial({ map: crossTexAmb, transparent: true, toneMapped: false })));
+  crossAmb.position.set(-2.715, 1.6, 0.52);
+  crossAmb.rotation.y = -Math.PI / 2;
+  group.add(crossAmb);
+  box(0.02, 1.5, 0.02, M.trim, -2.705, 1.45, 0); // door split
+  rbox(0.3, 0.05, 1.2, 0.02, M.steel, -2.75, 0.4, 0); // rear step
+  rbox(1.2, 0.04, 0.22, 0.02, M.steel, 0.4, 0.42, FW / 2 + 0.08); // side step
+  group.add(mesh(track(new THREE.CylinderGeometry(0.008, 0.008, 0.4, 6)), M.trim, 1.0, 2.55, -0.6)); // aerial
+  rbox(0.4, 0.07, 0.5, 0.03, M.paintWhite, -0.2, 2.4, 0.3); // roof vent
 
   // roof: vent + light bar with alternating beacons
   rbox(1.2, 0.16, 1.1, 0.05, M.paintWhite, -1.3, 2.4, 0);
@@ -337,6 +586,13 @@ export function buildTruck(M, track) {
   rbox(0.14, 0.34, 2.05, 0.04, M.trim, -2.88, 0.6, 0); // rear bumper bar
   rbox(0.2, 0.3, 2.0, 0.05, M.trim, 2.6, 0.6, 0);
   box(0.04, 1.95, 0.04, M.trim, -2.8, 1.8, 0.0); // rear door split
+  [-1, 1].forEach((s) => box(0.03, 0.02, 0.5, M.chrome, -2.82, 1.5, s * 0.45)); // rear door bars
+  addPlate(group, track, M, "KJA 760 XY", 2.62, 0.7, 0, 1);
+  addPlate(group, track, M, "KJA 760 XY", -2.9, 0.75, 0, -1);
+  group.add(mesh(track(new THREE.CylinderGeometry(0.05, 0.05, 1.6, 10)), M.steel, 1.05, 2.0, -1.0)); // exhaust stack
+  [-1, 1].forEach((s) => rbox(0.05, 0.4, 0.34, 0.01, M.rubber, -2.55, 0.35, s * 0.86)); // mud flaps
+  addGrilleSlats({ box }, M, 2.645, 1.45, 0, 1.3, 0.3, 5);
+  [-0.6, 0, 0.6].forEach((z) => box(0.04, 0.05, 0.08, M.orangeLens, 2.25, 2.72, z)); // roof markers
   [-1, 1].forEach((s) => {
     box(0.95, 0.65, 0.03, M.glass, 1.6, 2.0, s * 0.985);
     box(0.05, 0.22, 0.4, M.tail, -2.84, 0.98, s * 0.75);
@@ -628,8 +884,9 @@ export function buildNigerianStreet(M, track, { from, to, skip = [0, 0] }) {
   const pick = (arr) => arr[Math.floor(rnd() * arr.length)];
   const FRONT_Z = -6.6;
 
+  const grimeMap = track(makeGrimeTexture());
   const paints = [0xf2c94c, 0x2fa36b, 0x3b82c4, 0xe98fa0, 0xf28c4a, 0xe9e4d6, 0xb9503e, 0x7bc8c0].map((c) =>
-    track(new THREE.MeshStandardMaterial({ color: c, roughness: 0.9 }))
+    track(new THREE.MeshStandardMaterial({ color: c, roughness: 0.9, map: grimeMap }))
   );
   const white = track(new THREE.MeshStandardMaterial({ color: 0xf5f3ee, roughness: 0.9 }));
   const ironDark = track(new THREE.MeshStandardMaterial({ color: 0x23222b, roughness: 0.6, metalness: 0.6 }));
@@ -644,7 +901,29 @@ export function buildNigerianStreet(M, track, { from, to, skip = [0, 0] }) {
     ctx.strokeStyle = "#2c2b38";
     ctx.lineWidth = 8;
     ctx.strokeRect(4, 4, 120, 184);
+    ctx.fillStyle = "#2c2b38"; // burglar-proof bars
+    for (let x = 22; x < 120; x += 20) ctx.fillRect(x, 4, 4, 184);
+    ctx.fillRect(4, 96, 120, 4);
   }));
+  const grime = track(makeGrimeTexture());
+  const corrugation = track(makeCorrugationBump());
+  const acMat = track(new THREE.MeshStandardMaterial({ color: 0xd9dbe0, roughness: 0.7, metalness: 0.3 }));
+  const awningTex = (a, b) => track(makeDecal(128, 32, (ctx) => { for (let x = 0; x < 128; x += 16) { ctx.fillStyle = (x / 16) % 2 ? a : b; ctx.fillRect(x, 0, 16, 32); } }));
+  const awningMats = [["#C0392B", "#F4F1EA"], ["#1F7A4D", "#F4F1EA"], ["#1B5FB5", "#F4F1EA"]].map(([a, b]) => {
+    const t = awningTex(a, b); t.wrapS = THREE.RepeatWrapping; t.repeat.set(4, 1);
+    return track(new THREE.MeshStandardMaterial({ map: t, roughness: 0.9, side: THREE.DoubleSide }));
+  });
+  // wall-mounted air conditioner: grey box with a vent grille and a drip pipe
+  const acUnit = (parent, x, y, z) => {
+    const g = new THREE.Group();
+    const k = makeKit(g, track);
+    k.rbox(0.7, 0.5, 0.3, 0.03, acMat, 0, 0, 0);
+    for (let i = 0; i < 5; i++) k.box(0.62, 0.02, 0.01, M.trim, 0, -0.18 + i * 0.09, 0.16);
+    k.box(0.72, 0.03, 0.34, M.steel, 0, -0.27, 0);
+    g.position.set(x, y, z);
+    parent.add(g);
+  };
+  const downpipe = (parent, x, h, z) => parent.add(mesh(track(new THREE.CylinderGeometry(0.045, 0.045, h, 8)), M.steel, x, h / 2, z));
   const shutterTex = track(makeDecal(128, 192, (ctx) => {
     ctx.fillStyle = "#a3a9b3";
     ctx.fillRect(0, 0, 128, 192);
@@ -665,7 +944,7 @@ export function buildNigerianStreet(M, track, { from, to, skip = [0, 0] }) {
     return track(t);
   };
   const roofMats = [["#8b3a2b", "#a54a37"], ["#6b7280", "#8a909c"], ["#2f6f4f", "#3a8a63"]].map(([a, b]) =>
-    track(new THREE.MeshStandardMaterial({ map: roofStripes(a, b), roughness: 0.55, metalness: 0.45 }))
+    track(new THREE.MeshStandardMaterial({ map: roofStripes(a, b), bumpMap: corrugation, bumpScale: 0.04, roughness: 0.55, metalness: 0.45 }))
   );
   const louvreMat = track(new THREE.MeshStandardMaterial({ map: louvreTex, roughness: 0.4, metalness: 0.2 }));
   const shutterMat = track(new THREE.MeshStandardMaterial({ map: shutterTex, roughness: 0.55, metalness: 0.5 }));
@@ -730,6 +1009,12 @@ export function buildNigerianStreet(M, track, { from, to, skip = [0, 0] }) {
     box(w * 0.8, 0.14, 0.9, M.concrete, 0, 3.6, d / 2 + 0.45);
     box(w * 0.8, 0.07, 0.07, white, 0, 4.4, d / 2 + 0.88);
     for (let i = 0; i <= 8; i++) box(0.05, 0.8, 0.05, white, -w * 0.4 + (w * 0.8 / 8) * i, 4.0, d / 2 + 0.88);
+    // first-floor air conditioners, window sills, corner downpipes
+    acUnit(g, w * 0.33, 4.9, d / 2 + 0.17);
+    acUnit(g, -w * 0.38, 4.75, d / 2 + 0.17);
+    for (let i = 0; i < 3; i++) box(1.0, 0.06, 0.12, M.concrete, -w / 2 + (w / 3) * (i + 0.5), 3.84, d / 2 + 0.06);
+    downpipe(g, -w / 2 + 0.12, 6.0, d / 2 + 0.06);
+    downpipe(g, w / 2 - 0.12, 6.0, d / 2 + 0.06);
     // rooftop water tank on a stand + stair head
     g.add(mesh(track(new THREE.CylinderGeometry(0.55, 0.55, 1.0, 16)), tankMat, w * 0.2, 7.4, 0));
     [[-0.35, -0.35], [0.35, -0.35], [-0.35, 0.35], [0.35, 0.35]].forEach(([dx, dz]) => box(0.07, 0.5, 0.07, ironDark, w * 0.2 + dx, 6.7, dz));
@@ -750,6 +1035,14 @@ export function buildNigerianStreet(M, track, { from, to, skip = [0, 0] }) {
       plane(1.6, 2.3, shutterMat, x, 1.3, fz, g);
       plane(Math.min(2.1, w / bays - 0.2), 0.5, pick(signMats), x, 2.85, fz, g);
     }
+    // striped awning over every other bay (hangs below the verandah roof)
+    for (let i = 0; i < bays; i += 2) {
+      const x = -w / 2 + (w / bays) * (i + 0.5);
+      const aw = mesh(track(new THREE.PlaneGeometry(Math.min(2.2, w / bays - 0.1), 0.9)), pick(awningMats), x, 2.85, d / 2 + 0.55);
+      aw.rotation.x = -0.9;
+      g.add(aw);
+    }
+    downpipe(g, w / 2 - 0.1, 3.3, d / 2 + 0.05);
     // verandah on slim pillars + corrugated zinc gable roof
     box(w + 0.4, 0.07, 1.2, roofMats[0], 0, 3.25, d / 2 + 0.6);
     for (let i = 0; i <= bays; i++) box(0.09, 3.2, 0.09, white, -w / 2 + (w / bays) * i, 1.6, d / 2 + 1.15);

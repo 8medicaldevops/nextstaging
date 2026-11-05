@@ -15,9 +15,35 @@ import { AlertCircle } from "lucide-react"
 import { useToasts } from 'react-toast-notifications';
 import ErrorPopup from "@/components/ErrorPopup";
 import ProgressBar from "@/components/ProgressBar";
+import PageLoader from "@/components/PageLoader";
 
+const readJSON = (storage, key) => {
+    try {
+        return JSON.parse(storage.getItem(key));
+    } catch {
+        return null;
+    }
+};
 
+// The order summary needs every earlier booking step. If they are missing (a direct visit, a new
+// browser, cleared storage) go back to the start of the flow instead of crashing on a null read.
 export default function ConfirmOrder() {
+    const navigate = useNavigate();
+    const complete =
+        !!readJSON(localStorage, "callerData") &&
+        !!readJSON(localStorage, "eventData") &&
+        Array.isArray(readJSON(localStorage, "schedule")) &&
+        !!readJSON(localStorage, "ambulanceData");
+
+    useEffect(() => {
+        if (!complete) navigate("/StandBy");
+    }, [complete, navigate]);
+
+    return complete ? <ConfirmOrderInner /> : <PageLoader />;
+}
+
+
+function ConfirmOrderInner() {
     let [loading, setLoading] = useState(false);
     const { addToast } = useToasts();
     // eslint-disable-next-line no-unused-vars

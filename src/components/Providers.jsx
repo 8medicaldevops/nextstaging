@@ -1,17 +1,13 @@
 "use client";
 
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ToastProvider } from "react-toast-notifications";
 
-const GOOGLE_CLIENT_ID =
-  "29064234798-89ki79v2rroat8nr0i7800u8fvnsa30m.apps.googleusercontent.com";
-
+// Site-wide providers only. Google OAuth is wrapped around the two pages that use it
+// (SignInClient, CreateAccountClient), so its 100kB script is not loaded on every page.
 export default function Providers({ children }) {
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <ToastProvider autoDismiss autoDismissTimeout={6000} placement="bottom-center">
-        {children}
-      </ToastProvider>
-    </GoogleOAuthProvider>
+    <ToastProvider autoDismiss autoDismissTimeout={6000} placement="bottom-center">
+      {children}
+    </ToastProvider>
   );
 }
