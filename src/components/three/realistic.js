@@ -127,6 +127,43 @@ const makePlateTexture = (text) =>
     ctx.fillText(text, 128, 40);
   });
 
+// Shattered-glass web for the windscreen, drawn from an impact point low on the passenger side.
+const makeCrackTexture = () =>
+  makeDecal(256, 256, (ctx) => {
+    ctx.clearRect(0, 0, 256, 256);
+    const rnd = seeded(41);
+    const cx = 96, cy = 168;
+    ctx.strokeStyle = "rgba(255,255,255,0.85)";
+    ctx.lineCap = "round";
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2 + rnd() * 0.3;
+      const len = 90 + rnd() * 120;
+      ctx.lineWidth = 1.2 + rnd() * 1.4;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      let x = cx, y = cy;
+      for (let k = 1; k <= 5; k++) {
+        x = cx + Math.cos(a) * (len * k) / 5 + (rnd() - 0.5) * 10;
+        y = cy + Math.sin(a) * (len * k) / 5 + (rnd() - 0.5) * 10;
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    for (let r = 14; r < 70; r += 14) { // concentric rings
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i <= 28; i++) {
+        const a = (i / 28) * Math.PI * 2;
+        const rr = r + (rnd() - 0.5) * 6;
+        const x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr;
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+    }
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI * 2); ctx.fill();
+  });
+
 // Rear chevrons for the ambulance: red and yellow diagonals.
 const makeChevronTexture = () =>
   makeDecal(512, 128, (ctx) => {
@@ -361,6 +398,32 @@ export function buildSedan(M, track) {
   group.add(exhaust);
   [-1, 1].forEach((s) => box(0.02, 0.07, 0.11, M.lens, 0.595, 1.12, s * 1.1)); // mirror glass
 
+  // crash parts: a bonnet that pops on its rear hinge, a windscreen crack overlay, loose debris
+  const bonnet = new THREE.Group();
+  bonnet.position.set(0.975, 0.99, 0);
+  bonnet.add(mesh(track(new THREE.BoxGeometry(0.86, 0.03, W - 0.1)), M.paintCar, 0.43, 0, 0));
+  bonnet.rotation.z = -0.06; // follows the hood line at rest
+  group.add(bonnet);
+  const crackMat = track(new THREE.MeshBasicMaterial({ map: track(makeCrackTexture()), transparent: true, opacity: 0, depthWrite: false }));
+  const crack = mesh(track(new THREE.BoxGeometry(0.78, 0.002, W - 0.12)), crackMat, 0.566, 1.325, 0);
+  crack.rotation.z = -0.55;
+  crack.renderOrder = 4;
+  group.add(crack);
+  const debris = [
+    [0.14, 0.09, 0.03, M.lens, 2.3, 0.8, 0.5],
+    [0.1, 0.07, 0.03, M.lens, 2.3, 0.8, -0.55],
+    [0.4, 0.06, 0.08, M.trim, 2.32, 0.36, 0.3],
+    [0.22, 0.02, 0.05, M.chrome, 2.3, 0.6, 0],
+    [0.16, 0.1, 0.02, M.paintCar, 2.2, 0.9, 0.3],
+    [0.12, 0.12, 0.02, M.paintCar, 2.2, 0.9, -0.25],
+  ].map(([w, h, d, material, x, y, z]) => {
+    const piece = mesh(track(new THREE.BoxGeometry(w, h, d)), material, x, y, z);
+    piece.visible = false;
+    piece.userData.home = new THREE.Vector3(x, y, z);
+    group.add(piece);
+    return piece;
+  });
+
   // wheels
   const wheels = [];
   const makeWheel = makeRealWheelFactory(track, M, 0.34, 0.24);
@@ -378,7 +441,7 @@ export function buildSedan(M, track) {
     box(0.05, 0.08, 0.16, hazard, -2.19, 0.66, s * 0.7);
     nk.box(0.05, 0.08, 0.16, hazard, 0.5, 0.66, s * 0.7);
   });
-  return { group, nose: noseGroup, wheels, hazards: [hazard], seamX: SEAM };
+  return { group, nose: noseGroup, wheels, hazards: [hazard], seamX: SEAM, bonnet, crackMat, debris };
 }
 
 /* ------------------------------ ambulance (van) ------------------------------ */
