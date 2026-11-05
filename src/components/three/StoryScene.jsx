@@ -19,6 +19,7 @@ import {
   buildTree,
   buildTruck,
   makePBR,
+  makePavementTexture,
   mergeStatic,
 } from "./realistic";
 import { BEATS } from "./story-beats";
@@ -139,6 +140,20 @@ export default function StoryScene({ className, onBeat, onReady }) {
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0xf1edff, 28, 66); // matches the hero wash
+    {
+      const c = document.createElement("canvas");
+      c.width = 4; c.height = 256;
+      const ctx = c.getContext("2d");
+      const g = ctx.createLinearGradient(0, 0, 0, 256);
+      g.addColorStop(0, "#F8F6FF");
+      g.addColorStop(0.55, "#EFEAFF");
+      g.addColorStop(1, "#E8E2FF");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 4, 256);
+      const sky = new THREE.CanvasTexture(c);
+      sky.colorSpace = THREE.SRGBColorSpace;
+      scene.background = track(sky);
+    }
     const FOV = 30;
     const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 140);
 
@@ -193,11 +208,23 @@ export default function StoryScene({ className, onBeat, onReady }) {
     scene.add(shadowCatcher);
     track(shadowCatcher.material);
 
-    const verge = new THREE.Mesh(track(new THREE.PlaneGeometry(ROAD_LEN, 1.1)), M.concreteDark);
-    verge.rotation.x = -Math.PI / 2;
-    verge.position.set(25, 0.02, -3.3);
-    verge.receiveShadow = true;
-    scene.add(verge);
+    // paved sidewalks with kerb stones on both sides of the road (road spans z = -2.7 .. 3.1)
+    const paveTex = track(makePavementTexture());
+    paveTex.repeat.set(ROAD_LEN / 2, 1);
+    const paveMat = track(new THREE.MeshStandardMaterial({ map: paveTex, roughness: 0.9 }));
+    [[-3.75, 2.0], [3.95, 1.6]].forEach(([z, d]) => {
+      const pave = new THREE.Mesh(track(new THREE.PlaneGeometry(ROAD_LEN, d)), paveMat);
+      pave.rotation.x = -Math.PI / 2;
+      pave.position.set(25, 0.12, z);
+      pave.receiveShadow = true;
+      scene.add(pave);
+    });
+    [-2.78, 3.18].forEach((z) => {
+      const kerb = new THREE.Mesh(track(new THREE.BoxGeometry(ROAD_LEN, 0.13, 0.22)), M.concreteDark);
+      kerb.position.set(25, 0.065, z);
+      kerb.receiveShadow = true;
+      scene.add(kerb);
+    });
 
     // a Nigerian roadside: painted blocks with balconies, shop rows under zinc roofs, walled compounds, palms.
     // The hospital stands in the gap left between x = 26 and 53.
