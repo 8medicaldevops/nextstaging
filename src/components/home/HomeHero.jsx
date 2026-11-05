@@ -204,7 +204,7 @@ export default function HomeHero({ onEmergency, onBookService }) {
 
         <div className="relative bg-night px-4 pb-7 pt-1 sm:px-8 lg:px-14 lg:pb-9">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-5 lg:flex-row lg:items-end lg:justify-between lg:gap-7">
-            <div className="flex flex-col items-center gap-5 lg:items-start lg:gap-6">
+            <div className="flex w-full flex-col items-center gap-5 lg:w-auto lg:items-start lg:gap-6">
               <div ref={typeRef} aria-hidden="true" className="pointer-events-none select-none">
                 <div ref={introRef} className="relative w-fit">
                   <Headline />
@@ -224,15 +224,16 @@ export default function HomeHero({ onEmergency, onBookService }) {
                 </div>
               </div>
 
-              {/* side by side on phones (short labels so both fit at 360px), full labels from tablet up */}
-              <div ref={ctaRef} className="grid w-full max-w-[420px] grid-cols-2 gap-3 md:flex md:w-auto md:max-w-none md:gap-4">
-                <Cta variant="emergency" onClick={onEmergency} className="px-3 text-[15px] md:px-6 md:py-3.5 md:text-lg">
-                  <Siren size={18} aria-hidden="true" className="shrink-0" />
-                  <span className="md:hidden">Report Emergency</span>
+              {/* side by side on phones when both fit; each wraps to its own full-width row when the text
+                  is too wide for half the screen (narrow phones, enlarged system text). Full labels from tablet up. */}
+              <div ref={ctaRef} className="flex w-full max-w-[420px] flex-wrap gap-3 md:w-auto md:max-w-none md:flex-nowrap md:gap-4">
+                <Cta variant="emergency" onClick={onEmergency} className="flex-1 basis-[calc(50%-0.375rem)] gap-1.5 px-2.5 text-sm md:flex-none md:basis-auto md:gap-2 md:px-6 md:py-3.5 md:text-lg">
+                  <Siren size={16} aria-hidden="true" className="shrink-0 md:h-[18px] md:w-[18px]" />
+                  <span className="md:hidden">Emergency</span>
                   <span className="hidden md:inline">Report an Emergency</span>
                 </Cta>
-                <Cta variant="light" onClick={onBookService} className="px-3 text-[15px] md:px-6 md:py-3.5 md:text-lg">
-                  <Ambulance size={18} aria-hidden="true" className="shrink-0" />
+                <Cta variant="light" onClick={onBookService} className="flex-1 basis-[calc(50%-0.375rem)] gap-1.5 px-2.5 text-sm md:flex-none md:basis-auto md:gap-2 md:px-6 md:py-3.5 md:text-lg">
+                  <Ambulance size={16} aria-hidden="true" className="shrink-0 md:h-[18px] md:w-[18px]" />
                   Explore Services
                 </Cta>
               </div>

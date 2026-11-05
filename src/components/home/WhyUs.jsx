@@ -4,6 +4,7 @@ import Section from "@/components/site/Section";
 import SectionHeading from "@/components/site/SectionHeading";
 import Reveal from "@/components/site/Reveal";
 import { cn } from "@/lib/utils";
+import { CalendarClock, HeartPulse } from "lucide-react";
 import { stats, whyUs } from "./home-data";
 /* Existing brand feature icons, kept as-is */
 const icons = {
@@ -116,11 +117,11 @@ function PillVisual() {
   return (
     <div className="absolute inset-0 flex items-center justify-center px-6">
       <div className="relative flex w-full max-w-[320px] rounded-full border border-line bg-white p-1.5" role="img" aria-label="Care now, pay later">
-        <span className="flex-1 py-3 text-center font-brsemi text-ink/45">Care now</span>
-        <span className="flex-1 py-3 text-center font-brsemi text-ink/45">Pay later</span>
+        <span className="flex flex-1 items-center justify-center gap-2 py-3 font-brsemi text-ink/45"><HeartPulse size={18} aria-hidden="true" />Care now</span>
+        <span className="flex flex-1 items-center justify-center gap-2 py-3 font-brsemi text-ink/45"><CalendarClock size={18} aria-hidden="true" />Pay later</span>
         <span className="absolute inset-y-1.5 left-1.5 w-[calc(50%-6px)] rounded-full bg-ev-700 motion-safe:animate-pill" aria-hidden="true">
-          <span className="absolute inset-0 flex items-center justify-center font-brsemi text-white motion-safe:animate-pill-a">Care now</span>
-          <span className="absolute inset-0 flex items-center justify-center font-brsemi text-white opacity-0 motion-safe:animate-pill-b">Pay later</span>
+          <span className="absolute inset-0 flex items-center justify-center gap-2 font-brsemi text-white motion-safe:animate-pill-a"><HeartPulse size={18} aria-hidden="true" />Care now</span>
+          <span className="absolute inset-0 flex items-center justify-center gap-2 font-brsemi text-white opacity-0 motion-safe:animate-pill-b"><CalendarClock size={18} aria-hidden="true" />Pay later</span>
         </span>
       </div>
     </div>
