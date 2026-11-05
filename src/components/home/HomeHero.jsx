@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Ambulance, Siren } from "lucide-react";
 import Cta from "@/components/site/Cta";
 import { cn } from "@/lib/utils";
 import { siren } from "@/components/three/siren";
@@ -29,7 +30,7 @@ const TONES = {
 function Headline({ tone = "outline" }) {
   const size = "text-[11vw] sm:text-[6.4vw] lg:text-[min(4.6vw,5rem)]";
   return (
-    <div className="flex flex-col items-start text-left font-brbold leading-[0.92] tracking-tight">
+    <div className="flex flex-col items-center text-center font-brbold leading-[0.92] tracking-tight lg:items-start lg:text-left">
       <span className={cn(size, TONES[tone])}>EVERY SECOND</span>
       <span className={cn(size, TONES[tone])}>COUNTS</span>
     </div>
@@ -195,8 +196,8 @@ export default function HomeHero({ onEmergency, onBookService }) {
           className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[44%] bg-gradient-to-t from-[#F4F1FF] via-[#F4F1FF]/85 to-transparent"
         />
 
-        <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-7 px-4 pb-7 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-14 lg:pb-12">
-          <div className="flex flex-col gap-6">
+        <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-6 px-4 pb-6 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:gap-7 lg:px-14 lg:pb-12">
+          <div className="flex flex-col items-center gap-5 lg:items-start lg:gap-6">
             <div ref={typeRef} aria-hidden="true" className="pointer-events-none select-none">
               <div ref={introRef} className="relative w-fit">
                 <Headline />
@@ -216,18 +217,22 @@ export default function HomeHero({ onEmergency, onBookService }) {
               </div>
             </div>
 
-            <div ref={ctaRef} className="flex flex-wrap items-center gap-3 sm:gap-4">
-              <Cta variant="emergency" size="lg" onClick={onEmergency}>
-                Report an Emergency
+            {/* side by side on phones (short labels so both fit at 360px), full labels from tablet up */}
+            <div ref={ctaRef} className="grid w-full max-w-[420px] grid-cols-2 gap-3 md:flex md:w-auto md:max-w-none md:gap-4">
+              <Cta variant="emergency" onClick={onEmergency} className="px-3 text-[15px] md:px-6 md:py-3.5 md:text-lg">
+                <Siren size={18} aria-hidden="true" className="shrink-0" />
+                <span className="md:hidden">Report Emergency</span>
+                <span className="hidden md:inline">Report an Emergency</span>
               </Cta>
-              <Cta variant="quiet" size="lg" arrow onClick={onBookService}>
+              <Cta variant="quiet" onClick={onBookService} className="px-3 text-[15px] md:px-6 md:py-3.5 md:text-lg">
+                <Ambulance size={18} aria-hidden="true" className="shrink-0" />
                 Explore Services
               </Cta>
             </div>
           </div>
 
           {/* caption: what the scene is telling right now, and how far through it we are */}
-          <div className="pointer-events-none flex flex-col gap-3 lg:items-end lg:pb-1">
+          <div className="pointer-events-none flex flex-col items-center gap-2.5 lg:items-end lg:gap-3 lg:pb-1">
             <p
               key={beat}
               className="font-brsemi text-lg text-ink animate-in fade-in-0 slide-in-from-bottom-1 duration-500 sm:text-xl"

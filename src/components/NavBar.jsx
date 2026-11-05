@@ -115,6 +115,7 @@ export default function NavBar({ dark = false }) {
   const isServicePage = SERVICE_LINKS.some((s) => isActive(s.to));
 
   return (
+    <>
     <header
       className={cn(
         "sticky top-0 z-50 border-b backdrop-blur-md",
@@ -220,6 +221,11 @@ export default function NavBar({ dark = false }) {
         </button>
       </div>
 
+    </header>
+
+      {/* mobile drawer: rendered as a sibling of the header, not inside it. The header's
+          backdrop-filter would otherwise become the containing block for these fixed panels,
+          trapping the drawer inside the 64px header strip. */}
       {/* mobile drawer */}
       {isMenuOpen && (
         <div className="lg:hidden">
@@ -304,6 +310,6 @@ export default function NavBar({ dark = false }) {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
