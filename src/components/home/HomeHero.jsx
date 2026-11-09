@@ -1,267 +1,51 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Ambulance, Siren } from "lucide-react";
-import Cta from "@/components/site/Cta";
-import { cn } from "@/lib/utils";
-import { siren } from "@/components/three/siren";
-import { BEATS } from "@/components/three/story-beats";
 
-gsap.registerPlugin(ScrollTrigger);
-
-// Three.js is heavy: load it client-side only; the lavender gradient shows until it mounts.
-const StoryScene = dynamic(() => import("@/components/three/StoryScene"), {
-  ssr: false,
-  loading: () => null,
-});
-
-// The headline is drawn in layers, pixel-aligned: an outline, a solid ink layer revealed top to
-// bottom by a clip-path wipe, and two siren layers (red, purple) that light the letters through
-// moving masks, pulsing in step with the beacons in the 3D scene.
-const TONES = {
-  outline: "text-transparent [-webkit-text-stroke:2px_rgba(190,168,255,0.5)]",
-  solid: "text-white",
-  red: "text-alarm",
-  purple: "text-ev-400",
-};
-
-function Headline({ tone = "outline" }) {
-  const size = "text-[11vw] sm:text-[6.4vw] lg:text-[min(4.6vw,5rem)]";
-  return (
-    <div className="flex flex-col items-center text-center font-brbold leading-[0.92] tracking-tight lg:items-start lg:text-left">
-      <span className={cn(size, TONES[tone])}>
-        EVERY SECOND
-        <br />
-        COUNTS
-      </span>
-    </div>
-  );
-}
-
-// Elliptical light pool; its centre (--rx or --px) is moved by the pointer.
-const lightMask = (cx) => {
-  const mask = `radial-gradient(ellipse 55% 75% at var(${cx}) 50%, #000 0%, transparent 100%)`;
-  return { WebkitMaskImage: mask, maskImage: mask };
-};
-
+// The default hero, as on www.8medical.co: headline, supporting line and the two actions,
+// centred over the siren backdrop.
 export default function HomeHero({ onEmergency, onBookService }) {
-  const sectionRef = useRef(null);
-  const typeRef = useRef(null);
-  const introRef = useRef(null);
-  const fillRef = useRef(null);
-  const redRef = useRef(null);
-  const purpleRef = useRef(null);
-  const sceneRef = useRef(null);
-  const ctaRef = useRef(null);
-  const [beat, setBeat] = useState(0);
-  const onBeat = useCallback((i) => setBeat(i), []);
-  // The 3D scene is heavy to parse and build, so it waits for the browser to go idle after first paint
-  // (the headline and buttons are already interactive), and a light placeholder holds the space until
-  // its first frame is on screen.
-  const [mountScene, setMountScene] = useState(false);
-  const [sceneReady, setSceneReady] = useState(false);
-  const onReady = useCallback(() => setSceneReady(true), []);
-
-  useEffect(() => {
-    // Not worth it on a metered or very slow connection: the headline, road and actions stand alone.
-    const conn = navigator.connection;
-    if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) return;
-
-    let idleId = 0;
-    let timer = 0;
-    const start = () => setMountScene(true);
-    const whenIdle = () => {
-      if ("requestIdleCallback" in window) idleId = window.requestIdleCallback(start, { timeout: 1500 });
-      else timer = window.setTimeout(start, 400);
-    };
-    // after the page has finished loading (fonts, images, hydration), then when the browser is idle
-    if (document.readyState === "complete") whenIdle();
-    else window.addEventListener("load", whenIdle, { once: true });
-    return () => {
-      window.removeEventListener("load", whenIdle);
-      if (idleId) window.cancelIdleCallback(idleId);
-      if (timer) window.clearTimeout(timer);
-    };
-  }, []);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const type = typeRef.current;
-    const intro = introRef.current;
-    const fill = fillRef.current;
-    if (!section || !type || !intro || !fill) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      fill.style.clipPath = "inset(0 0 0 0)"; // no motion: show the finished headline
-      return;
-    }
-
-    let lightsReady = false;
-    const pointer = { target: 50, x: 50 }; // pointer position across the hero, in %
-    const onMove = (e) => {
-      const r = section.getBoundingClientRect();
-      pointer.target = ((e.clientX - r.left) / r.width) * 100;
-    };
-    const onLeave = () => (pointer.target = 50);
-    section.addEventListener("pointermove", onMove);
-    section.addEventListener("pointerleave", onLeave);
-
-    // the siren light: strength follows the 3D beacons, centres lean toward the cursor
-    const setRed = gsap.quickSetter(redRef.current, "opacity");
-    const setPurple = gsap.quickSetter(purpleRef.current, "opacity");
-    let lastShift = 0;
-    const tick = () => {
-      if (!lightsReady) return;
-      const live = siren.live;
-      setRed(live ? Math.max(0, siren.pulse) * 0.95 : 0);
-      setPurple(live ? Math.max(0, -siren.pulse) * 0.95 : 0);
-      pointer.x += (pointer.target - pointer.x) * 0.06;
-      const shift = (pointer.x - 50) * 0.55;
-      if (Math.abs(shift - lastShift) > 0.05) {
-        lastShift = shift;
-        fill.style.setProperty("--rx", `${22 + shift}%`);
-        fill.style.setProperty("--px", `${78 + shift}%`);
-      }
-    };
-    gsap.ticker.add(tick);
-
-    const ctx = gsap.context(() => {
-      // The outlined headline and the actions are visible from the server render (they are the
-      // page's largest paint, so nothing hides them until JS runs); the fill pours down afterwards.
-      gsap.fromTo(
-        fill,
-        { clipPath: "inset(0 0 100% 0)" },
-        {
-          clipPath: "inset(0 0 0% 0)",
-          duration: 2.6,
-          ease: "power2.inOut",
-          delay: 1.0,
-          onComplete: () => (lightsReady = true), // once the letters are solid, the sirens can light them
-        }
-      );
-      // scroll: the camera dollies toward the viewer, as if it follows the convoy out of the hero
-      gsap.to(sceneRef.current, {
-        scale: 1.22,
-        yPercent: 5,
-        transformOrigin: "50% 100%",
-        ease: "none",
-        scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: 1 },
-      });
-    }, section);
-    return () => {
-      gsap.ticker.remove(tick);
-      section.removeEventListener("pointermove", onMove);
-      section.removeEventListener("pointerleave", onLeave);
-      ctx.revert();
-    };
-  }, []);
-
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-[#F4F1FF]">
-      {/* soft lavender wash, static (no repaint cost) */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(900px 520px at 50% 100%, rgba(133,64,255,0.16), transparent 65%), radial-gradient(700px 420px at 92% 0%, rgba(190,168,255,0.4), transparent 60%), linear-gradient(180deg, #F9F8FF 0%, #F1EDFF 100%)",
-        }}
-      />
-
-      <h1 className="sr-only">8medical: urgent ambulance and emergency medical care across Nigeria</h1>
-
-      {/* the scene on top, then a dark purple band carrying the words: shorter than a full screen */}
-      <div className="relative flex flex-col">
-        <div className="relative h-[min(56vh,540px)] min-h-[340px] sm:min-h-[400px]">
-          <div ref={sceneRef} className="absolute inset-0 will-change-transform">
-            <div
-              aria-hidden="true"
-              className={cn(
-                "pointer-events-none absolute inset-x-0 bottom-[20%] h-[13%] transition-opacity duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
-                sceneReady ? "opacity-0" : "opacity-100"
-              )}
-            >
-              {/* the road, drawn in CSS: black asphalt, white edge lines, dashed centre */}
-              <div
-                className="h-full w-full bg-[#222227]"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(#F4F4F6,#F4F4F6), linear-gradient(#F4F4F6,#F4F4F6), repeating-linear-gradient(90deg,#F4F4F6 0 56px,transparent 56px 112px)",
-                  backgroundSize: "100% 3px, 100% 3px, 100% 3px",
-                  backgroundPosition: "0 10%, 0 90%, 0 50%",
-                  backgroundRepeat: "no-repeat, no-repeat, repeat-x",
-                  maskImage: "linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent)",
-                  WebkitMaskImage: "linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent)",
-                }}
+    <section className="flex flex-col items-center justify-center gap-6 bg-[#30056B] bg-[url(/assets/Siren.gif)] bg-cover bg-center bg-no-repeat px-4 py-20 bg-blend-soft-light lg:h-[85vh]">
+      <h1 className="w-[794px] text-center font-brbold text-[56px] leading-snug text-white max-lg:w-[396px] max-lg:text-5xl max-sm:w-full">
+        Get urgent ambulance and medical care services
+      </h1>
+      <p className="w-[694px] text-center font-brreg text-2xl text-white max-lg:w-[396px] max-lg:text-lg max-sm:w-full">
+        We offer responsive and dependable ambulance and medical care services according to your needs.
+      </p>
+      <div className="flex items-center gap-4 max-lg:w-[396px] max-lg:flex-col max-sm:w-full max-sm:px-1">
+        <button
+          type="button"
+          onClick={onEmergency}
+          className="flex cursor-pointer items-center gap-1 rounded-mm bg-[#F9091D] px-5 py-3 font-brsemi text-xl text-white max-lg:w-full max-lg:justify-center max-sm:px-4"
+        >
+          Report an Emergency
+          <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g clipPath="url(#home-hero-siren)">
+              <path
+                d="M8.4175 5.99312L8.40715 6.05476C9.56297 6.24892 10.4375 7.29955 10.4375 8.5C10.4375 8.64918 10.4968 8.79226 10.6023 8.89775C10.7077 9.00324 10.8508 9.0625 11 9.0625C11.1492 9.0625 11.2923 9.00324 11.3977 8.89775C11.5032 8.79226 11.5625 8.64918 11.5625 8.5C11.5625 6.75778 10.2869 5.22932 8.59311 4.94528C8.52002 4.93239 8.44511 4.9341 8.37268 4.95029C8.30017 4.96651 8.23158 4.99693 8.17089 5.0398C8.1102 5.08267 8.0586 5.13714 8.01908 5.20007C7.97956 5.263 7.9529 5.33313 7.94064 5.40642C7.92838 5.47971 7.93076 5.5547 7.94764 5.62706C7.96453 5.69943 7.99559 5.76773 8.03902 5.82802C8.08245 5.88831 8.1374 5.9394 8.20069 5.97834C8.26398 6.01727 8.33436 6.04328 8.40776 6.05486L8.4175 5.99312ZM8.4175 5.99312C9.60437 6.1925 10.5 7.27 10.5 8.5C10.5 8.63261 10.5527 8.75979 10.6464 8.85355C10.7402 8.94732 10.8674 9 11 9C11.1326 9 11.2598 8.94732 11.3536 8.85355C11.4473 8.75979 11.5 8.63261 11.5 8.5C11.5 6.7875 10.2456 5.28562 8.5825 5.00688C8.51746 4.99537 8.45078 4.99687 8.38632 5.01128C8.32186 5.0257 8.2609 5.05274 8.20695 5.09085C8.153 5.12896 8.10714 5.17738 8.07201 5.23331C8.03688 5.28925 8.01318 5.35159 8.00228 5.41673C7.99138 5.48188 7.9935 5.54854 8.00851 5.61286C8.02352 5.67718 8.05113 5.73789 8.08973 5.79149C8.12834 5.84508 8.17718 5.89049 8.23344 5.9251C8.2897 5.95971 8.35226 5.98283 8.4175 5.99312ZM12.1462 2.64625C12.0762 2.71618 12.0286 2.8053 12.0092 2.90235C11.9899 2.99939 11.9998 3.09998 12.0377 3.1914C12.0756 3.28281 12.1397 3.36092 12.222 3.41586C12.3043 3.4708 12.4011 3.50008 12.5 3.5C12.5657 3.50005 12.6307 3.48716 12.6914 3.46207C12.7521 3.43697 12.8073 3.40017 12.8538 3.35375L13.3538 2.85375C13.4476 2.75993 13.5003 2.63268 13.5003 2.5C13.5003 2.36732 13.4476 2.24007 13.3538 2.14625C13.2599 2.05243 13.1327 1.99972 13 1.99972C12.8673 1.99972 12.7401 2.05243 12.6462 2.14625L12.1462 2.64625ZM12.8096 3.30953L12.8096 3.30956C12.7689 3.35016 12.7206 3.38236 12.6675 3.40431C12.6144 3.42627 12.5575 3.43755 12.5 3.4375H12.5C12.4134 3.43757 12.3287 3.41195 12.2567 3.36388C12.1847 3.31581 12.1286 3.24746 12.0954 3.16747C12.0623 3.08749 12.0536 2.99946 12.0705 2.91455C12.0874 2.82964 12.1292 2.75166 12.1904 2.69047L12.1904 2.69044L12.6904 2.19044C12.7725 2.10834 12.8839 2.06222 13 2.06222C13.1161 2.06222 13.2275 2.10834 13.3096 2.19044C13.3917 2.27254 13.4378 2.38389 13.4378 2.5C13.4378 2.61611 13.3917 2.72746 13.3096 2.80956L12.8096 3.30953ZM2.5 10.5625H2.5625V10.5V8.5C2.56248 7.78244 2.70448 7.07197 2.98033 6.40955C3.25617 5.74713 3.6604 5.14586 4.16972 4.64039C4.67903 4.13493 5.28335 3.73527 5.94784 3.46446C6.61234 3.19365 7.32386 3.05703 8.0414 3.0625L8.04141 3.0625C11.0158 3.08474 13.4375 5.55178 13.4375 8.5625V10.5V10.5625H13.5C13.7486 10.5625 13.9871 10.6613 14.1629 10.8371C14.3387 11.0129 14.4375 11.2514 14.4375 11.5V13C14.4375 13.2486 14.3387 13.4871 14.1629 13.6629C13.9871 13.8387 13.7486 13.9375 13.5 13.9375H2.5C2.25136 13.9375 2.0129 13.8387 1.83709 13.6629C1.66127 13.4871 1.5625 13.2486 1.5625 13V11.5C1.5625 11.2514 1.66127 11.0129 1.83709 10.8371C2.0129 10.6613 2.25136 10.5625 2.5 10.5625ZM13.5 13.0625H13.5625V13V11.5V11.4375H13.5H2.5H2.4375V11.5V13V13.0625H2.5H13.5ZM7.5625 1.5V1C7.5625 0.883968 7.60859 0.772688 7.69064 0.690641C7.77269 0.608594 7.88397 0.5625 8 0.5625C8.11603 0.5625 8.22731 0.608594 8.30936 0.690641C8.39141 0.772688 8.4375 0.883968 8.4375 1V1.5C8.4375 1.61603 8.39141 1.72731 8.30936 1.80936C8.22731 1.89141 8.11603 1.9375 8 1.9375C7.88397 1.9375 7.77269 1.89141 7.69064 1.80936C7.60859 1.72731 7.5625 1.61603 7.5625 1.5ZM3.33247 3.40445C3.27936 3.38245 3.2311 3.35021 3.19044 3.30956L2.69044 2.80956C2.60834 2.72746 2.56222 2.61611 2.56222 2.5C2.56222 2.38389 2.60834 2.27254 2.69044 2.19044C2.77254 2.10834 2.88389 2.06222 3 2.06222C3.11611 2.06222 3.22746 2.10834 3.30956 2.19044L3.80956 2.69044C3.85021 2.7311 3.88245 2.77936 3.90445 2.83247C3.92645 2.88558 3.93778 2.94251 3.93778 3C3.93778 3.05749 3.92645 3.11442 3.90445 3.16753C3.88245 3.22064 3.85021 3.2689 3.80956 3.30956C3.7689 3.35021 3.72064 3.38245 3.66753 3.40445C3.61442 3.42645 3.55749 3.43778 3.5 3.43778C3.44251 3.43778 3.38558 3.42645 3.33247 3.40445Z"
+                fill="white"
+                stroke="white"
+                strokeWidth="0.125"
               />
-            </div>
-            {mountScene && <StoryScene onBeat={onBeat} onReady={onReady} />}
-          </div>
-          {/* feather the scene into the band below */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-night to-transparent" />
-        </div>
+            </g>
+            <defs>
+              <clipPath id="home-hero-siren">
+                <rect width="16" height="16" fill="white" transform="translate(0 0.5)" />
+              </clipPath>
+            </defs>
+          </svg>
+        </button>
 
-        <div className="relative bg-night px-4 pb-7 pt-1 sm:px-8 lg:px-14 lg:pb-9">
-          <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-5 lg:flex-row lg:items-end lg:justify-between lg:gap-7">
-            <div className="flex w-full flex-col items-center gap-5 lg:w-auto lg:items-start lg:gap-6">
-              <div ref={typeRef} aria-hidden="true" className="pointer-events-none select-none">
-                <div ref={introRef} className="relative w-fit">
-                  <Headline />
-                  <div
-                    ref={fillRef}
-                    className="absolute inset-0"
-                    style={{ clipPath: "inset(0 0 100% 0)", "--rx": "22%", "--px": "78%" }}
-                  >
-                    <Headline tone="solid" />
-                    <div ref={redRef} className="absolute inset-0 opacity-0" style={lightMask("--rx")}>
-                      <Headline tone="red" />
-                    </div>
-                    <div ref={purpleRef} className="absolute inset-0 opacity-0" style={lightMask("--px")}>
-                      <Headline tone="purple" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* side by side on phones when both fit; each wraps to its own full-width row when the text
-                  is too wide for half the screen (narrow phones, enlarged system text). Full labels from tablet up. */}
-              <div ref={ctaRef} className="flex w-full max-w-[420px] flex-wrap gap-3 md:w-auto md:max-w-none md:flex-nowrap md:gap-4">
-                <Cta variant="emergency" onClick={onEmergency} className="flex-1 basis-[calc(50%-0.375rem)] gap-1.5 px-2.5 text-sm md:flex-none md:basis-auto md:gap-2 md:px-6 md:py-3.5 md:text-lg">
-                  <Siren size={16} aria-hidden="true" className="shrink-0 md:h-[18px] md:w-[18px]" />
-                  <span className="md:hidden">Emergency</span>
-                  <span className="hidden md:inline">Report an Emergency</span>
-                </Cta>
-                <Cta variant="light" onClick={onBookService} className="flex-1 basis-[calc(50%-0.375rem)] gap-1.5 px-2.5 text-sm md:flex-none md:basis-auto md:gap-2 md:px-6 md:py-3.5 md:text-lg">
-                  <Ambulance size={16} aria-hidden="true" className="shrink-0 md:h-[18px] md:w-[18px]" />
-                  Explore Services
-                </Cta>
-              </div>
-            </div>
-
-            {/* caption: what the scene is telling right now, and how far through it we are */}
-            <div className="pointer-events-none flex flex-col items-center gap-2.5 lg:items-end lg:gap-3 lg:pb-1">
-              <p
-                key={beat}
-                className="font-brsemi text-lg text-white animate-in fade-in-0 slide-in-from-bottom-1 duration-500 sm:text-xl"
-                aria-hidden="true"
-              >
-                {BEATS[beat]}
-              </p>
-              <div className="flex gap-1.5" aria-hidden="true">
-                {BEATS.map((_, i) => (
-                  <span
-                    key={i}
-                    className={cn(
-                      "h-1 w-8 rounded-full transition-colors duration-500",
-                      i <= beat ? "bg-ev-400" : "bg-white/20"
-                    )}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={onBookService}
+          className="flex cursor-pointer items-center gap-1 rounded-mm bg-ev-700 px-5 py-3 font-brsemi text-xl text-white max-lg:w-full max-lg:justify-center"
+        >
+          Book a Service
+          <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M9.62 4.45331L13.6667 8.49998L9.62 12.5466" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M2.33337 8.5H13.5534" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
       </div>
     </section>
   );
